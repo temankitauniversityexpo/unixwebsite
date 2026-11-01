@@ -1,0 +1,1165 @@
+---
+import { Image } from 'astro:assets';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import Slide from '../components/SlideHero.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+
+// Import Logo
+import logoImg from '../assets/logo nama.png';
+
+// Import Core Values (PNG)
+import bertumbuhIcon from '../assets/bertumbuh.png';
+import berdampakIcon from '../assets/berdampak.png';
+import dekatIcon from '../assets/dekat.png';
+import keterbukaanIcon from '../assets/keterbukaan.png';
+
+// Import File Audio dari src/assets/
+import anthemTemanKita from '../assets/TemanKita.mp3';
+
+// Import Maskot Owix
+import owixTitleImg from '../assets/owix.png'; // Judul "HELLO! It's OWIX"
+import owixPose1 from '../assets/owix1.png';
+import owixPose2 from '../assets/owix2.png';
+import owixPose3 from '../assets/owix3.png';
+import owixPose4 from '../assets/owix4.png';
+
+// ==========================================
+// IMPORT ASET FOTO SUPERTEAM DARI src/assets/superteam/
+// ==========================================
+
+// Superteam 2027 (10 Orang)
+import st1_2027 from '../assets/superteam/3_2027.png';
+import st2_2027 from '../assets/superteam/1_2027.png';
+import st3_2027 from '../assets/superteam/2_2027.png';
+import st4_2027 from '../assets/superteam/4_2027.png';
+import st5_2027 from '../assets/superteam/5_2027.png';
+import st6_2027 from '../assets/superteam/6_2027.png';
+import st7_2027 from '../assets/superteam/7_2027.png';
+import st8_2027 from '../assets/superteam/8_2027.png';
+import st9_2027 from '../assets/superteam/9_2027.png';
+import st10_2027 from '../assets/superteam/10_2027.png';
+
+const superteam2027 = [
+  { img: st1_2027, ig: 'https://instagram.com/shifaqalbiya' },
+  { img: st2_2027, ig: 'https://instagram.com/fazl.islami.pasha2303' },
+  { img: st3_2027, ig: 'https://instagram.com/flovidelfioo_' },
+  { img: st4_2027, ig: 'https://instagram.com/husainn.albn' },
+  { img: st5_2027, ig: 'https://instagram.com/z.zzerrr' },
+  { img: st6_2027, ig: 'https://instagram.com/hazivazuliiisss' },
+  { img: st7_2027, ig: 'https://instagram.com/mfahri_hariadi' },
+  { img: st8_2027, ig: 'https://instagram.com/anhslwaa' },
+  { img: st9_2027, ig: 'https://instagram.com/jvarmdhni' },
+  { img: st10_2027, ig: 'https://instagram.com/nacyyeetaa' },
+];
+
+// Superteam 2026 (10 Orang)
+import st1_2026 from '../assets/superteam/2_2026.png';
+import st2_2026 from '../assets/superteam/1_2026.png';
+import st3_2026 from '../assets/superteam/3_2026.png';
+import st4_2026 from '../assets/superteam/4_2026.png';
+import st5_2026 from '../assets/superteam/5_2026.png';
+import st6_2026 from '../assets/superteam/6_2026.png';
+import st7_2026 from '../assets/superteam/7_2026.png';
+import st8_2026 from '../assets/superteam/8_2026.png';
+import st9_2026 from '../assets/superteam/9_2026.png';
+import st10_2026 from '../assets/superteam/10_2026.png';
+
+const superteam2026 = [
+  { img: st1_2026, ig: 'https://instagram.com/_kila13' },
+  { img: st2_2026, ig: 'https://instagram.com/sybr_sukra' },
+  { img: st3_2026, ig: 'https://instagram.com/fazl.islami.pasha2303' },
+  { img: st4_2026, ig: 'https://instagram.com/hsaan.ai' },
+  { img: st5_2026, ig: 'https://instagram.com/ourry.ja' },
+  { img: st6_2026, ig: 'https://instagram.com/refhaneea' },
+  { img: st7_2026, ig: 'https://instagram.com/imamzinky_' },
+  { img: st8_2026, ig: 'https://instagram.com/najwzaraa' },
+  { img: st9_2026, ig: 'https://instagram.com/hiiiii__see' },
+  { img: st10_2026, ig: 'https://instagram.com/arifrsyd_' },
+];
+
+// Superteam 2025 (10 Orang)
+import st1_2025 from '../assets/superteam/3_2025.png';
+import st2_2025 from '../assets/superteam/1_2025.png';
+import st3_2025 from '../assets/superteam/2_2025.png';
+import st4_2025 from '../assets/superteam/4_2025.png';
+import st5_2025 from '../assets/superteam/5_2025.png';
+import st6_2025 from '../assets/superteam/6_2025.png';
+import st7_2025 from '../assets/superteam/7_2025.png';
+import st8_2025 from '../assets/superteam/8_2025.png';
+import st9_2025 from '../assets/superteam/9_2025.png';
+import st10_2025 from '../assets/superteam/10_2025.png';
+
+const superteam2025 = [
+  { img: st1_2025, ig: 'https://instagram.com/tazkiya_14141' },
+  { img: st2_2025, ig: 'https://instagram.com/naddatykia_' },
+  { img: st3_2025, ig: 'https://instagram.com/irghiemnbl' },
+  { img: st4_2025, ig: 'https://instagram.com/putrinurzaira' },
+  { img: st5_2025, ig: 'https://instagram.com/ayabillaa' },
+  { img: st6_2025, ig: 'https://instagram.com/marsyaqrr' },
+  { img: st7_2025, ig: 'https://instagram.com/rifanikraa' },
+  { img: st8_2025, ig: 'https://instagram.com/nesyangela' },
+  { img: st9_2025, ig: 'https://instagram.com/assyifaaherbi' },
+  { img: st10_2025, ig: 'https://instagram.com/syakirakameela' },
+];
+
+// Superteam 2024 (9 Orang)
+import st1_2024 from '../assets/superteam/3_2024.png';
+import st2_2024 from '../assets/superteam/1_2024.png';
+import st3_2024 from '../assets/superteam/2_2024.png';
+import st4_2024 from '../assets/superteam/5_2024.png';
+import st5_2024 from '../assets/superteam/4_2024.png';
+import st6_2024 from '../assets/superteam/8_2024.png';
+import st7_2024 from '../assets/superteam/7_2024.png';
+import st8_2024 from '../assets/superteam/6_2024.png';
+import st9_2024 from '../assets/superteam/9_2024.png';
+
+const superteam2024 = [
+  { img: st1_2024, ig: 'https://instagram.com/aditalmsyhh' },
+  { img: st2_2024, ig: 'https://instagram.com/zaldass.rifqii' },
+  { img: st3_2024, ig: 'https://instagram.com/faayyvaa' },
+  { img: st4_2024, ig: 'https://instagram.com/taaqiiyyaa' },
+  { img: st5_2024, ig: 'https://instagram.com/naddatykia_' },
+  { img: st6_2024, ig: 'https://instagram.com/salwaa.nabiilah' },
+  { img: st7_2024, ig: 'https://instagram.com/tazkiya_14141' },
+  { img: st8_2024, ig: 'https://instagram.com/huussnnul' },
+  { img: st9_2024, ig: 'https://instagram.com/thiahamatullah' },
+];
+---
+
+<!doctype html>
+<html lang="id">
+  <head>
+    <BaseHead 
+      title={`About Us - ${SITE_TITLE}`} 
+      description={SITE_DESCRIPTION} 
+    />
+  </head>
+  <body>
+    <Header />
+    <Slide />
+
+    <main class="about-page">
+      <!-- ==========================================
+           SEKAT 1: MENGENAL LEBIH DEKAT (LATAR DONGKER #12055f)
+           ========================================== -->
+      <section class="about-section bg-navy fullwidth-section">
+        <div class="site-container">
+          <div class="intro-glass-card">
+            <div class="intro-logo-col">
+              <Image src={logoImg} alt="Logo TemanKita" class="intro-side-logo" />
+            </div>
+            <div class="intro-text-col">
+              <h2 class="intro-heading">
+                Mengenal Lebih Dekat <br />
+                <span class="highlight-yellow">TemanKita University Expo</span>
+              </h2>
+              <p class="intro-paragraph">
+                TemanKita University Expo (UNIX) merupakan ajang bedah kampus terbesar di Sumatra Barat yang didedikasikan untuk menjembatani siswa/i SMA/sederajat menuju perguruan tinggi impian. Disusun dalam tiga rangkaian komprehensif, acara ini diawali dengan fase pra-event berupa roadshow edukatif ke sekolah-sekolah, tantangan interaktif Dare Series, serta simulasi Try Out dan Tes Minat Bakat guna memetakan potensi akademis siswa sejak dini. Puncaknya pada main event, peserta diajak menyelami dunia perkuliahan secara langsung bersama belasan kampus top di Indonesia melalui Campus Fair, Parade Kampus, Scholarship Fair, Talk Show inspiratif, hingga ruang diskusi terarah dalam Focus Group Discussion (FGD). Rangkaian ini kemudian disempurnakan dengan after event berupa program mentoring intensif untuk memberikan pendampingan personal, menjadikan TemanKita University Expo wadah terlengkap dan terdepan bagi generasi muda Sumatra Barat dalam memantapkan pilihan jurusan, meraih beasiswa, dan menyongsong masa depan.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           SEKAT 2: VISI & MISI BUBBLE BIRU (#12055f)
+           ========================================== -->
+      <section class="about-section bg-white">
+        <div class="site-container">
+          <div class="vm-bubble-wrapper">
+            <!-- Bubble Visi -->
+            <div class="vm-blue-bubble">
+              <h3 class="vm-bubble-heading">VISI</h3>
+              <p class="vm-bubble-desc">
+                Menjadi wadah edukasi dan inspirasi terdepan di Sumatra Barat yang memberdayakan siswa/i SMA/sederajat agar percaya diri, terarah, dan memiliki akses menyeluruh dalam mewujudkan langkah menuju perguruan tinggi impian.
+              </p>
+            </div>
+
+            <!-- Bubble Misi -->
+            <div class="vm-blue-bubble">
+              <h3 class="vm-bubble-heading">MISI</h3>
+              <div class="misi-cards-container">
+                <div class="misi-discrete-card">
+                  <div class="misi-badge-num">1</div>
+                  <div class="misi-content">
+                    <h4 class="misi-point-title">Membuka Akses Informasi Finansial dan Beasiswa</h4>
+                    <p class="misi-point-desc">
+                      Menyediakan referensi kredibel dan komprehensif terkait skema bantuan pembiayaan kuliah serta peluang beasiswa guna mengatasi hambatan finansial pelajar menuju pendidikan tinggi (melalui Scholarship Fair).
+                    </p>
+                  </div>
+                </div>
+
+                <div class="misi-discrete-card">
+                  <div class="misi-badge-num">2</div>
+                  <div class="misi-content">
+                    <h4 class="misi-point-title">Membangun Percaya Diri dan Mentalitas Positif</h4>
+                    <p class="misi-point-desc">
+                      Membangkitkan motivasi, keberanian, dan kesiapan mental siswa dalam menghadapi seleksi masuk perguruan tinggi serta mengikis rasa takut akan kegagalan (melalui Talk Show).
+                    </p>
+                  </div>
+                </div>
+
+                <div class="misi-discrete-card">
+                  <div class="misi-badge-num">3</div>
+                  <div class="misi-content">
+                    <h4 class="misi-point-title">Menyajikan Informasi Kampus dan Jurusan yang Kredibel</h4>
+                    <p class="misi-point-desc">
+                      Memfasilitasi pengenalan mendalam mengenai profil perguruan tinggi, program studi, dan prospek masa depan untuk membantu siswa menentukan pilihan yang tepat sesuai minat dan bakat (melalui Campus Fair).
+                    </p>
+                  </div>
+                </div>
+
+                <div class="misi-discrete-card">
+                  <div class="misi-badge-num">4</div>
+                  <div class="misi-content">
+                    <h4 class="misi-point-title">Menyediakan Ruang Diskusi dan Pendampingan yang Suportif</h4>
+                    <p class="misi-point-desc">
+                      Menciptakan ekosistem interaktif yang terbuka dan suportif bagi para pelajar untuk berkonsultasi langsung, bertukar pengalaman, dan mempersiapkan strategi perkuliahan secara intensif (melalui Focus Group Discussion dan Mentoring).
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           SEKAT 3: OUR MASKOT (OWIX.PNG DI KIRI ATAS & TEKS MENGALIR RAPAT)
+           ========================================== -->
+      <section class="about-section bg-white section-divider-top">
+        <div class="site-container">
+          <div class="mascot-tight-container">
+            <!-- Kolom Kiri: Judul OWIX.png + Paragraf Rapat Langsung Menimpa Area Bawahnya -->
+            <div class="mascot-text-flow">
+              <div class="owix-title-wrap">
+                <Image src={owixTitleImg} alt="HELLO! It's OWIX" class="owix-title-badge-img" />
+              </div>
+
+              <p class="mascot-clean-p">
+                <strong>Kepala dan mata</strong> terinspirasi dari burung hantu yang melambangkan ilmu pengetahuan, kebijaksanaan, dan semangat belajar. <strong>Sayap elang</strong> menggambarkan keberanian, semangat, dan tekad untuk terbang tinggi meraih cita-cita. Sedangkan <strong>tubuh dari karakter rubah</strong> mencerminkan kecerdasan, kelincahan, serta keceriaan yang membuat <strong>Owix</strong> lebih fun dan dekat dengan generasi muda.
+              </p>
+              <p class="mascot-clean-p">
+                Melalui perpaduan ketiga filosofi tersebut, <strong>Owix</strong> menjadi representasi semangat UNIX 2027 untuk menemani SobatKita memperluas wawasan, mengenal berbagai pilihan kampus, dan berani melangkah menuju masa depan.
+              </p>
+            </div>
+
+            <!-- Kolom Kanan: Karakter Maskot 4 Pose Slideshow Bergantian -->
+            <div class="mascot-character-col">
+              <div class="mascot-slideshow-box" id="owix-slideshow">
+                <Image src={owixPose1} alt="Maskot Owix Pose 1" class="mascot-slide-img active" />
+                <Image src={owixPose2} alt="Maskot Owix Pose 2" class="mascot-slide-img" />
+                <Image src={owixPose3} alt="Maskot Owix Pose 3" class="mascot-slide-img" />
+                <Image src={owixPose4} alt="Maskot Owix Pose 4" class="mascot-slide-img" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           SEKAT 4: CORE VALUES (LATAR DONGKER #12055f - DESKRIPSI PUTIH)
+           ========================================== -->
+      <section class="about-section bg-navy fullwidth-section">
+        <div class="site-container">
+          <div class="section-center-head">
+            <h2 class="core-heading-title white-text">Core Values</h2>
+            <p class="core-subheading-desc gold-text">
+              Merupakan prinsip atau landasan kegiatan setiap project di TemanKita
+            </p>
+          </div>
+
+          <div class="values-grid">
+            <div class="value-item-card">
+              <div class="value-png-box">
+                <Image src={bertumbuhIcon} alt="Bertumbuh" class="value-img" />
+              </div>
+              <h4 class="value-title">Bertumbuh</h4>
+              <p class="value-desc white-desc">Selalu berkembang dan meningkatkan potensi diri secara berkelanjutan.</p>
+            </div>
+
+            <div class="value-item-card">
+              <div class="value-png-box">
+                <Image src={berdampakIcon} alt="Berdampak" class="value-img" />
+              </div>
+              <h4 class="value-title">Berdampak</h4>
+              <p class="value-desc white-desc">Memberikan kontribusi nyata dan kebermanfaatan luas bagi masyarakat.</p>
+            </div>
+
+            <div class="value-item-card">
+              <div class="value-png-box">
+                <Image src={dekatIcon} alt="Dekat" class="value-img" />
+              </div>
+              <h4 class="value-title">Dekat</h4>
+              <p class="value-desc white-desc">Menciptakan hubungan yang erat dan lingkungan kekeluargaan yang suportif.</p>
+            </div>
+
+            <div class="value-item-card">
+              <div class="value-png-box">
+                <Image src={keterbukaanIcon} alt="Keterbukaan" class="value-img" />
+              </div>
+              <h4 class="value-title">Keterbukaan</h4>
+              <p class="value-desc white-desc">Membangun komunikasi yang transparan, jujur, serta inklusif.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           SEKAT 5: SUPERTEAM 2027 (LATAR PUTIH - ZOOM FRAME)
+           ========================================== -->
+      <section class="about-section bg-white">
+        <div class="site-container">
+          <div class="section-center-head">
+            <div class="superteam-badge-pill">CORE LEADER</div>
+            <h2 class="styled-superteam-title navy-text">
+              SUPERTEAM
+              <span class="styled-sub-expo">TEMANKITA UNIVERSITY EXPO 2027</span>
+            </h2>
+          </div>
+
+          <div class="team-grid-center">
+            {superteam2027.map((member) => (
+              <a href={member.ig} target="_blank" rel="noopener noreferrer" class="team-card-link">
+                <div class="square-frame frame-navy">
+                  <Image src={member.img} alt="Superteam 2027" class="square-img" />
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           SEKAT 6: THE LEGEND'S TRAIL (BINGKAI BIRU FULL KIRI-KANAN)
+           ========================================== -->
+      <section class="legends-fullwidth-section bg-navy fullwidth-section">
+        <div class="site-container text-center">
+          <h2 class="legends-banner-text">THE LEGEND’S TRAIL</h2>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           SEKAT 7: SUPERTEAM 2026 (LATAR PUTIH)
+           ========================================== -->
+      <section class="about-section bg-white">
+        <div class="site-container">
+          <div class="section-center-head">
+            <div class="superteam-badge-pill">CORE LEADER</div>
+            <h3 class="styled-superteam-title navy-text">
+              SUPERTEAM
+              <span class="styled-sub-expo">TEMANKITA UNIVERSITY EXPO 2026</span>
+            </h3>
+          </div>
+
+          <div class="team-grid-center">
+            {superteam2026.map((member) => (
+              <a href={member.ig} target="_blank" rel="noopener noreferrer" class="team-card-link">
+                <div class="square-frame frame-navy">
+                  <Image src={member.img} alt="Superteam 2026" class="square-img" />
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           SEKAT 8: SUPERTEAM 2025 (LATAR PUTIH DENGAN SEKAT PEMISAH)
+           ========================================== -->
+      <section class="about-section bg-white section-divider-top">
+        <div class="site-container">
+          <div class="section-center-head">
+            <div class="superteam-badge-pill">CORE LEADER</div>
+            <h3 class="styled-superteam-title navy-text">
+              SUPERTEAM
+              <span class="styled-sub-expo">TEMANKITA UNIVERSITY EXPO 2025</span>
+            </h3>
+          </div>
+
+          <div class="team-grid-center">
+            {superteam2025.map((member) => (
+              <a href={member.ig} target="_blank" rel="noopener noreferrer" class="team-card-link">
+                <div class="square-frame frame-navy">
+                  <Image src={member.img} alt="Superteam 2025" class="square-img" />
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           SEKAT 9: SUPERTEAM 2024 (LATAR PUTIH DENGAN SEKAT PEMISAH)
+           ========================================== -->
+      <section class="about-section bg-white section-divider-top">
+        <div class="site-container">
+          <div class="section-center-head">
+            <div class="superteam-badge-pill">CORE LEADER</div>
+            <h3 class="styled-superteam-title navy-text">
+              SUPERTEAM
+              <span class="styled-sub-expo">TEMANKITA UNIVERSITY EXPO 2024</span>
+            </h3>
+          </div>
+
+          <div class="team-grid-center">
+            {superteam2024.map((member) => (
+              <a href={member.ig} target="_blank" rel="noopener noreferrer" class="team-card-link">
+                <div class="square-frame frame-navy">
+                  <Image src={member.img} alt="Superteam 2024" class="square-img" />
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ==========================================
+         ANTHEM TEMANKITA (CD SETENGAH MASUK KE DALAM FRAME TULISAN)
+         ========================================== -->
+    <div class="cd-merged-widget" id="anthem-widget">
+      <!-- Piringan CD Berputar: setengah masuk ke frame tulisan -->
+      <div class="cd-vinyl-disc" id="cd-vinyl">
+        <div class="cd-groove-ring ring-1"></div>
+        <div class="cd-groove-ring ring-2"></div>
+        <div class="cd-label-core">
+          <div class="cd-hole"></div>
+        </div>
+      </div>
+
+      <!-- Frame Wadah Tulisan dengan Keterangan Status -->
+      <div class="cd-frame-label">
+        <span class="cd-main-text">Anthem TemanKita</span>
+        <span class="cd-status-indicator" id="cd-status">Sedang diputar</span>
+      </div>
+
+      <audio id="anthem-audio" src={anthemTemanKita} preload="auto" loop></audio>
+    </div>
+
+    <Footer />
+  </body>
+</html>
+
+<script>
+  // ==========================================
+  // SLIDESHOW MASKOT OWIX (4 FOTO BERUBAH BERGANTIAN)
+  // ==========================================
+  const owixSlides = document.querySelectorAll('#owix-slideshow .mascot-slide-img');
+  let currentOwixIdx = 0;
+
+  if (owixSlides.length > 1) {
+    setInterval(() => {
+      owixSlides[currentOwixIdx]?.classList.remove('active');
+      currentOwixIdx = (currentOwixIdx + 1) % owixSlides.length;
+      owixSlides[currentOwixIdx]?.classList.add('active');
+    }, 2800);
+  }
+
+  // ==========================================
+  // LOGIKA AUDIO CD ANTHEM (1x PAUSE/PLAY, 2x DOWNLOAD)
+  // ==========================================
+  const anthemAudio = document.getElementById('anthem-audio') as HTMLAudioElement;
+  const anthemWidget = document.getElementById('anthem-widget');
+  const cdVinyl = document.getElementById('cd-vinyl');
+  const cdStatus = document.getElementById('cd-status');
+
+  let clickTimer: any = null;
+
+  function startMusic() {
+    if (!anthemAudio) return;
+    anthemAudio.play().then(() => {
+      cdVinyl?.classList.add('cd-spinning');
+      if (cdStatus) cdStatus.textContent = 'Sedang diputar';
+    }).catch(() => {
+      if (cdStatus) cdStatus.textContent = 'Jeda';
+    });
+  }
+
+  function stopMusic() {
+    if (!anthemAudio) return;
+    anthemAudio.pause();
+    cdVinyl?.classList.remove('cd-spinning');
+    if (cdStatus) cdStatus.textContent = 'Jeda';
+  }
+
+  function toggleMusic() {
+    if (!anthemAudio) return;
+    if (anthemAudio.paused) {
+      startMusic();
+    } else {
+      stopMusic();
+    }
+  }
+
+  function downloadAudio() {
+    const link = document.createElement('a');
+    link.href = (anthemAudio as any)?.src || '/TemanKita.mp3';
+    link.download = 'TemanKita.mp3';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  // 1x klik: Pause/Play | 2x klik cepat: Download
+  anthemWidget?.addEventListener('click', () => {
+    if (clickTimer === null) {
+      clickTimer = setTimeout(() => {
+        clickTimer = null;
+        toggleMusic();
+      }, 260);
+    }
+  });
+
+  anthemWidget?.addEventListener('dblclick', () => {
+    if (clickTimer) {
+      clearTimeout(clickTimer);
+      clickTimer = null;
+    }
+    downloadAudio();
+  });
+
+  // Otomatis mulai saat masuk halaman
+  window.addEventListener('DOMContentLoaded', () => {
+    startMusic();
+  });
+
+  // Fallback 1x interaksi jika terhalang autoplay policy browser
+  const docInteractionPlay = () => {
+    if (anthemAudio && anthemAudio.paused) {
+      startMusic();
+    }
+    window.removeEventListener('click', docInteractionPlay);
+    window.removeEventListener('keydown', docInteractionPlay);
+  };
+  window.addEventListener('click', docInteractionPlay, { once: true });
+  window.addEventListener('keydown', docInteractionPlay, { once: true });
+
+  // Mati saat keluar dari halaman
+  window.addEventListener('pagehide', stopMusic);
+  window.addEventListener('beforeunload', stopMusic);
+</script>
+
+<style>
+  /* ===================================================
+     [CSS 1] PENGATURAN DASAR & CONTAINER
+     =================================================== */
+  .site-container {
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding-left: clamp(1.25rem, 4vw, 3.5rem);
+    padding-right: clamp(1.25rem, 4vw, 3.5rem);
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    font-family: inherit;
+  }
+
+  .about-page {
+    width: 100%;
+    overflow-x: hidden;
+    flex: 1;
+  }
+
+  .navy-text {
+    color: #12055f;
+  }
+
+  .white-text {
+    color: #ffffff;
+  }
+
+  .highlight-yellow,
+  .gold-text {
+    color: #facc15;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+
+  .section-center-head {
+    text-align: center;
+    max-width: 860px;
+    margin: 0 auto clamp(2.5rem, 4vw, 3.5rem) auto;
+  }
+
+  /* ===================================================
+     [CSS 2] SISTEM SEKAT WARNA
+     =================================================== */
+  .about-section {
+    padding: clamp(3.5rem, 6vw, 5.5rem) 0;
+    box-sizing: border-box;
+  }
+
+  .bg-white {
+    background-color: #ffffff;
+  }
+
+  .bg-navy {
+    background-color: #12055f;
+  }
+
+  .fullwidth-section {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+  }
+
+  .section-divider-top {
+    border-top: 1px solid #e2e8f0;
+  }
+
+  /* ===================================================
+     [CSS 3] SEKAT 1: MENGENAL LEBIH DEKAT
+     =================================================== */
+  .intro-glass-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 16px 35px rgba(0, 0, 0, 0.25);
+    padding: clamp(2rem, 4vw, 3.5rem);
+    display: flex;
+    align-items: center;
+    gap: clamp(2rem, 4vw, 4rem);
+  }
+
+  .intro-logo-col {
+    flex: 0.8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .intro-side-logo {
+    max-width: 100%;
+    height: auto;
+    max-height: 120px;
+    object-fit: contain;
+  }
+
+  .intro-text-col {
+    flex: 2;
+  }
+
+  .intro-heading {
+    font-size: clamp(1.8rem, 2.5vw, 2.4rem);
+    font-weight: 900;
+    color: #ffffff;
+    margin: 0 0 1.25rem 0;
+    line-height: 1.25;
+  }
+
+  .intro-paragraph {
+    font-size: clamp(0.95rem, 1.05vw, 1.05rem);
+    line-height: 1.8;
+    color: #e2e8f0;
+    text-align: justify;
+    text-justify: inter-word;
+    margin: 0;
+  }
+
+  /* ===================================================
+     [CSS 4] SEKAT 2: VISI & MISI BUBBLE BIRU (#12055f)
+     =================================================== */
+  .vm-bubble-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    max-width: 1040px;
+    margin: 0 auto;
+  }
+
+  .vm-blue-bubble {
+    background-color: #12055f;
+    border-radius: 28px;
+    padding: clamp(2rem, 4vw, 3.5rem);
+    box-shadow: 0 16px 36px rgba(18, 5, 95, 0.2);
+    border: 2px solid rgba(250, 204, 21, 0.2);
+  }
+
+  .vm-bubble-heading {
+    font-size: 1.7rem;
+    font-weight: 950;
+    color: #facc15;
+    letter-spacing: 0.08em;
+    margin: 0 0 1.25rem 0;
+    text-align: center;
+    position: relative;
+    padding-bottom: 0.5rem;
+  }
+
+  .vm-bubble-heading::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3.5px;
+    background-color: #facc15;
+    border-radius: 999px;
+  }
+
+  .vm-bubble-desc {
+    font-size: clamp(1.05rem, 1.15vw, 1.18rem);
+    line-height: 1.8;
+    color: #ffffff;
+    font-weight: 500;
+    text-align: justify;
+    text-justify: inter-word;
+    margin: 0;
+  }
+
+  .misi-cards-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .misi-discrete-card {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(250, 204, 21, 0.35);
+    border-radius: 16px;
+    padding: 1.35rem 1.6rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1.25rem;
+  }
+
+  .misi-badge-num {
+    width: 38px;
+    height: 38px;
+    background-color: #facc15;
+    color: #12055f;
+    font-size: 1.15rem;
+    font-weight: 900;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .misi-content {
+    flex: 1;
+  }
+
+  .misi-point-title {
+    font-size: 1.08rem;
+    font-weight: 800;
+    color: #facc15;
+    margin: 0 0 0.35rem 0;
+    line-height: 1.35;
+  }
+
+  .misi-point-desc {
+    font-size: 0.94rem;
+    line-height: 1.7;
+    color: #ffffff;
+    text-align: justify;
+    text-justify: inter-word;
+    margin: 0;
+  }
+
+  /* ===================================================
+     [CSS 5] SEKAT 3: OUR MASKOT (OWIX.PNG DI KIRI ATAS & TEKS RAPAT)
+     =================================================== */
+  .mascot-tight-container {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: clamp(1.5rem, 3.5vw, 3rem);
+    max-width: 1150px;
+    margin: 0 auto;
+  }
+
+  .mascot-text-flow {
+    flex: 1.4;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+
+  .owix-title-wrap {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 0.2rem;
+    margin-top: -10px;
+  }
+
+  .owix-title-badge-img {
+    height: clamp(80px, 10vw, 125px);
+    width: auto;
+    object-fit: contain;
+    display: block;
+  }
+
+  .mascot-clean-p {
+    font-size: clamp(0.95rem, 1.05vw, 1.05rem);
+    line-height: 1.75;
+    color: #1e293b;
+    text-align: justify;
+    text-justify: inter-word;
+    margin: 0;
+  }
+
+  .mascot-character-col {
+    flex: 0.85;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-self: center;
+  }
+
+  .mascot-slideshow-box {
+    position: relative;
+    width: 290px;
+    height: 350px;
+  }
+
+  .mascot-slide-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    opacity: 0;
+    transform: scale(0.96);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .mascot-slide-img.active {
+    opacity: 1;
+    transform: scale(1);
+    z-index: 2;
+  }
+
+  /* ===================================================
+     [CSS 6] SEKAT 4: CORE VALUES
+     =================================================== */
+  .core-heading-title {
+    font-size: clamp(2rem, 3vw, 2.7rem);
+    font-weight: 900;
+    margin: 0 0 0.5rem 0;
+  }
+
+  .core-subheading-desc {
+    font-size: clamp(0.95rem, 1.1vw, 1.05rem);
+    margin: 0;
+  }
+
+  .values-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: clamp(1rem, 2vw, 1.75rem);
+  }
+
+  .value-item-card {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 18px;
+    padding: clamp(1.5rem, 2vw, 2rem) 1.25rem;
+    text-align: center;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.3s ease;
+  }
+
+  .value-item-card:hover {
+    transform: translateY(-5px);
+    border-color: #facc15;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .value-png-box {
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.2rem;
+  }
+
+  .value-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .value-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0 0 0.5rem 0;
+  }
+
+  .white-desc {
+    font-size: 0.85rem;
+    line-height: 1.55;
+    color: #ffffff;
+    margin: 0;
+  }
+
+  /* ===================================================
+     [CSS 7] SEKAT 5 & 6: SUPERTEAM & THE LEGEND'S TRAIL FULLWIDTH
+     =================================================== */
+  .superteam-badge-pill {
+    display: inline-block;
+    padding: 0.3rem 0.95rem;
+    background-color: rgba(18, 5, 95, 0.08);
+    color: #12055f;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    margin-bottom: 0.6rem;
+  }
+
+  .styled-superteam-title {
+    font-size: clamp(2.4rem, 4vw, 3.4rem);
+    font-weight: 950;
+    letter-spacing: 0.04em;
+    line-height: 1.1;
+    margin: 0;
+  }
+
+  .styled-sub-expo {
+    display: block;
+    font-size: clamp(1.2rem, 1.8vw, 1.6rem);
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    margin-top: 0.4rem;
+  }
+
+  .legends-fullwidth-section {
+    padding: clamp(1.2rem, 2vw, 1.8rem) 0;
+  }
+
+  .legends-banner-text {
+    font-size: clamp(1.8rem, 3.2vw, 2.6rem);
+    font-weight: 950;
+    letter-spacing: 0.08em;
+    color: #ffffff;
+    margin: 0;
+  }
+
+  .team-grid-center {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: clamp(1.5rem, 2.5vw, 2.5rem);
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .team-card-link {
+    flex: 0 1 calc(33.333% - 2rem);
+    max-width: 320px;
+    min-width: 260px;
+    text-decoration: none;
+    display: block;
+    outline: none;
+  }
+
+  .square-frame {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    box-sizing: border-box;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, border-color 0.35s ease;
+  }
+
+  .frame-navy {
+    background-color: #12055f;
+    border: 4px solid #12055f;
+    box-shadow: 0 10px 24px rgba(18, 5, 95, 0.12);
+  }
+
+  .team-card-link:hover .square-frame {
+    transform: scale(1.08);
+    border-color: #facc15;
+    box-shadow: 0 20px 40px rgba(18, 5, 95, 0.25);
+  }
+
+  .square-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* ===================================================
+     [CSS 8] ANTHEM CD SETENGAH MASUK KE DALAM FRAME TULISAN
+     =================================================== */
+  .cd-merged-widget {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.25s ease;
+  }
+
+  .cd-merged-widget:hover {
+    transform: translateY(-3px) scale(1.02);
+  }
+
+  .cd-vinyl-disc {
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #334155 15%, #0f172a 60%, #020617 100%);
+    border: 2px solid #facc15;
+    position: relative;
+    box-shadow: -4px 6px 14px rgba(0, 0, 0, 0.35);
+    flex-shrink: 0;
+    margin-right: -29px;
+    z-index: 2;
+  }
+
+  .cd-groove-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px dashed rgba(255, 255, 255, 0.22);
+  }
+
+  .ring-1 {
+    inset: 7px;
+  }
+
+  .ring-2 {
+    inset: 14px;
+    border-style: solid;
+    border-color: rgba(255, 255, 255, 0.15);
+  }
+
+  .cd-label-core {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: #facc15;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .cd-hole {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #0f172a;
+  }
+
+  .cd-spinning {
+    animation: spinVinylCD 3s linear infinite;
+  }
+
+  @keyframes spinVinylCD {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .cd-frame-label {
+    background-color: #12055f;
+    border: 2px solid #facc15;
+    padding: 0.55rem 1.25rem 0.55rem 2.2rem;
+    border-radius: 999px;
+    box-shadow: 0 10px 25px rgba(18, 5, 95, 0.3);
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .cd-main-text {
+    font-size: 0.88rem;
+    font-weight: 800;
+    color: #ffffff;
+    white-space: nowrap;
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+  }
+
+  .cd-status-indicator {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #facc15;
+    line-height: 1.2;
+    margin-top: 2px;
+  }
+
+  /* ===================================================
+     [CSS 9] RESPONSIF
+     =================================================== */
+  @media (max-width: 1024px) {
+    .intro-glass-card {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .intro-paragraph {
+      text-align: justify;
+    }
+
+    .mascot-tight-container {
+      flex-direction: column-reverse;
+      gap: 2rem;
+    }
+
+    .owix-title-wrap {
+      justify-content: center;
+      margin-top: 0;
+    }
+
+    .values-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .team-card-link {
+      flex: 0 1 calc(50% - 1.5rem);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .values-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .team-card-link {
+      flex: 0 1 100%;
+      max-width: 320px;
+    }
+
+    .cd-merged-widget {
+      bottom: 1.25rem;
+      right: 1.25rem;
+    }
+
+    .mascot-slideshow-box {
+      width: 240px;
+      height: 290px;
+      margin: 0 auto;
+    }
+  }
+</style>

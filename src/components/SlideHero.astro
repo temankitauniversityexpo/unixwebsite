@@ -1,0 +1,337 @@
+---
+import { Image } from 'astro:assets';
+
+// 1. Import 5 Gambar Slide (Pastikan file ada di src/assets/)
+import hero1 from '../assets/Header/hero1.png';
+import hero2 from '../assets/Header/hero3.png';
+import hero3 from '../assets/Header/hero2.png';
+import hero4 from '../assets/Header/hero4.png';
+import hero5 from '../assets/Header/hero5.png';
+
+// 2. Import Gambar Tombol Interaktif
+import btnDaftarImg from '../assets/daftar.png';
+import btnBuyImg from '../assets/buying.png';
+
+const slides = [
+  { img: hero1, alt: 'Slide 1' },
+  { img: hero2, alt: 'Slide 2', isSlide2: true },
+  { img: hero3, alt: 'Slide 3', isSlide3: true },
+  { img: hero4, alt: 'Slide 4' },
+  { img: hero5, alt: 'Slide 5' },
+];
+---
+
+<div class="slider-container" id="hero-slider">
+  <!-- Track Slide -->
+  <div class="slider-track" id="slider-track">
+    {slides.map((slide, index) => (
+      <div class="slide" data-index={index}>
+        <div class="slide-inner">
+          <!-- Gambar Background Slide (Tidak bisa diklik) -->
+          <Image src={slide.img} alt={slide.alt} class="slide-bg-img" />
+
+          <!-- Slide 2: Gambar Tombol Daftar Sekarang -->
+          {slide.isSlide2 && (
+            <div class="action-layer position-daftar">
+              <a href="/daftar" class="clickable-btn" title="Daftar Sekarang">
+                <Image src={btnDaftarImg} alt="Daftar Sekarang" class="custom-btn-img" />
+              </a>
+            </div>
+          )}
+
+          <!-- Slide 3: Gambar Tombol Buy Now -->
+          {slide.isSlide3 && (
+            <div class="action-layer position-buy">
+              <a href="/store" class="clickable-btn" title="Click Here Buy Now">
+                <Image src={btnBuyImg} alt="Click Here Buy Now" class="custom-btn-img" />
+              </a>
+            </div>
+          )}
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <!-- Tombol Panah Kiri & Kanan (Tanpa Bulatan) -->
+  <button type="button" class="arrow-btn arrow-prev" id="prev-btn" aria-label="Slide Sebelumnya">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M15 19l-7-7 7-7" />
+    </svg>
+  </button>
+  <button type="button" class="arrow-btn arrow-next" id="next-btn" aria-label="Slide Selanjutnya">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9 5l7 7-7 7" />
+    </svg>
+  </button>
+
+  <!-- Titik (Dots) Navigasi Bawah (Floating di dalam slider) -->
+  <div class="slider-dots" id="slider-dots">
+    {slides.map((_, i) => (
+      <button type="button" class={`dot ${i === 0 ? 'active' : ''}`} data-index={i} aria-label={`Ke slide ${i + 1}`}></button>
+    ))}
+  </div>
+</div>
+
+<script>
+  const track = document.getElementById('slider-track') as HTMLElement;
+  const dots = document.querySelectorAll('#slider-dots .dot');
+  const prevBtn = document.getElementById('prev-btn');
+  const nextBtn = document.getElementById('next-btn');
+  const slider = document.getElementById('hero-slider');
+  
+  const totalSlides = 5;
+  let currentSlide = 0;
+  let autoSlideTimer: any = null;
+
+  function goToSlide(index: number) {
+    currentSlide = (index + totalSlides) % totalSlides;
+    if (track) {
+      track.style.transform = `translateX(-${currentSlide * 20}%)`;
+    }
+    dots.forEach((dot, idx) => {
+      dot.classList.toggle('active', idx === currentSlide);
+    });
+  }
+
+  function startAutoPlay() {
+    stopAutoPlay();
+    autoSlideTimer = setInterval(() => {
+      goToSlide(currentSlide + 1);
+    }, 4500); // Bergerak otomatis setiap 4,5 detik
+  }
+
+  function stopAutoPlay() {
+    if (autoSlideTimer) clearInterval(autoSlideTimer);
+  }
+
+  // Event Listener Navigasi Panah
+  prevBtn?.addEventListener('click', () => {
+    goToSlide(currentSlide - 1);
+    startAutoPlay();
+  });
+
+  nextBtn?.addEventListener('click', () => {
+    goToSlide(currentSlide + 1);
+    startAutoPlay();
+  });
+
+  // Event Listener Dots
+  dots.forEach((dot) => {
+    dot.addEventListener('click', (e) => {
+      const idx = parseInt((e.currentTarget as HTMLElement).getAttribute('data-index') || '0', 10);
+      goToSlide(idx);
+      startAutoPlay();
+    });
+  });
+
+  // Pause saat mouse diarahkan ke slider
+  slider?.addEventListener('mouseenter', stopAutoPlay);
+  slider?.addEventListener('mouseleave', startAutoPlay);
+
+  // Jalankan slide otomatis saat pertama dimuat
+  startAutoPlay();
+</script>
+
+<style>
+  /* ==========================================================================
+     1. KONTAINER & LAYOUT SLIDER
+     ========================================================================== */
+  .slider-container {
+    width: 100%;
+    max-width: 1320px;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+    padding-top: 5.5rem;   /* Ruang header melayang */
+    padding-bottom: 0;      /* DIHAPUS: Mencegah space berlebih di bawah */
+    box-sizing: border-box;
+  }
+
+  .slider-track {
+    display: flex;
+    width: 500%; /* 5 Slide x 100% */
+    transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  .slide {
+    width: 20%;
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+
+  .slide-inner {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    line-height: 0; /* Menghilangkan gap spasi inline di bawah tag img */
+  }
+
+  .slide-bg-img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    user-select: none;
+    pointer-events: none;
+  }
+
+  /* Lapisan Tombol Transparan */
+  .action-layer {
+    position: absolute;
+    z-index: 10;
+    display: inline-flex;
+    line-height: normal;
+  }
+
+  .clickable-btn {
+    display: inline-block;
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform 0.2s ease, filter 0.2s ease;
+  }
+
+  .clickable-btn:hover {
+    transform: scale(1.05);
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.25));
+  }
+
+  .custom-btn-img {
+    width: auto;
+    height: auto;
+    display: block;
+  }
+
+  /* ==========================================================================
+     2. PENGATUR POSISI GAMBAR TOMBOL
+     ========================================================================== */
+  .position-daftar {
+    bottom: 38%;
+    right: 23%;
+  }
+
+  .position-daftar .custom-btn-img {
+    max-width: 190px;
+  }
+
+  .position-buy {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .position-buy .custom-btn-img {
+    max-width: 95px;
+  }
+
+  /* ==========================================================================
+     3. TOMBOL PANAH NAVIGASI
+     ========================================================================== */
+  .arrow-btn {
+    position: absolute;
+    top: calc(50% + 2.75rem);
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    color: #ffffff;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    opacity: 0.85;
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.6));
+  }
+
+  .arrow-btn:hover {
+    opacity: 1;
+    transform: translateY(-50%) scale(1.15);
+  }
+
+  .arrow-btn svg {
+    width: 38px;
+    height: 38px;
+  }
+
+  .arrow-prev {
+    left: 1rem;
+  }
+
+  .arrow-next {
+    right: 1rem;
+  }
+
+  /* ==========================================================================
+     4. TITIK (DOTS) NAVIGASI BAWAH (FLOATING DI ATAS GAMBAR)
+     ========================================================================== */
+  .slider-dots {
+    position: absolute;
+    bottom: 12px;           /* Mengambang pas di atas tepi bawah slider */
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;              /* Hapus margin agar tidak menambah tinggi kontainer */
+    z-index: 20;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .dot.active {
+    background-color: #12055f;
+    width: 24px;
+    border-radius: 999px;
+  }
+
+  /* ==========================================================================
+     5. PENYESUAIAN PADA TAMPILAN HP
+     ========================================================================== */
+  @media (max-width: 768px) {
+    .slider-container {
+      padding-top: 4.8rem;
+    }
+
+    .slider-dots {
+      bottom: 8px;
+    }
+
+    .arrow-btn svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    .arrow-prev {
+      left: 0.5rem;
+    }
+
+    .arrow-next {
+      right: 0.5rem;
+    }
+
+    .position-daftar .custom-btn-img {
+      max-width: 110px;
+    }
+
+    .position-buy .custom-btn-img {
+      max-width: 75px;
+    }
+  }
+</style>

@@ -1,0 +1,31 @@
+---
+interface Props {
+    date: Date | string;
+    /** Format tampilan: 'lengkap' (contoh: 21 Oktober 2026) atau 'singkat' (contoh: 21 Okt 2026) */
+    format?: 'lengkap' | 'singkat';
+}
+
+const { date, format = 'lengkap' } = Astro.props;
+
+// Pastikan input selalu berupa objek Date valid
+const parsedDate = typeof date === 'string' ? new Date(date) : date;
+
+const monthFormat = format === 'singkat' ? 'short' : 'long';
+---
+
+<time datetime={parsedDate.toISOString()} class="formatted-date">
+    {
+        parsedDate.toLocaleDateString('id-ID', {
+            day: 'numeric',
+            month: monthFormat,
+            year: 'numeric',
+        })
+    }
+</time>
+
+<style>
+    .formatted-date {
+        color: inherit;
+        font-variant-numeric: tabular-nums;
+    }
+</style>

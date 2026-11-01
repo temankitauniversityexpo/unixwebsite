@@ -1,0 +1,1830 @@
+---
+import { Image } from 'astro:assets';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import Slide from '../components/SlideHero.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+
+// ==========================================
+// 1. IMPORT ASSET GAMBAR
+// ==========================================
+import accImg from '../assets/acc.png';
+import panitiaImg from '../assets/panitia.png';
+import smaImg from '../assets/sma.png';
+
+// Kolase Foto About
+import collage1 from '../assets/Doc1.jpg';
+import collage2 from '../assets/Doc3.jpg';
+import collage3 from '../assets/Doc2.jpg';
+
+// 10 Foto Dokumentasi Berbeda
+// (Pastikan file Doc1.jpg sampai Doc10.jpg ada di folder src/assets/)
+import doc1 from '../assets/Doc1.jpg';
+import doc2 from '../assets/Doc2.jpg';
+import doc3 from '../assets/Doc3.jpg';
+import doc4 from '../assets/Doc4.png';
+import doc5 from '../assets/Doc5.png';
+import doc6 from '../assets/Doc6.png';
+import doc7 from '../assets/Doc7.png';
+import doc8 from '../assets/Doc8.png';
+import doc9 from '../assets/Doc9.png';
+import doc10 from '../assets/Doc10.png';
+
+// ==========================================
+// 2. DATA 6 PILIHAN PETAK CEPAT
+// ==========================================
+const quickBoxes = [
+  { title: 'UNIX Programs', desc: 'Cari tahu rangkaian kegiatannya', icon: '🎯', href: '/programs', locked: false },
+  { title: 'UNIX Store', desc: 'Banyak Makanan dan Marchandise menarik', icon: '🛍️', href: '/store', locked: false },
+  { title: 'UNIX Story', desc: 'Cerita perjalanan menarik dari UNIX', icon: '📖', href: '/about', locked: false },
+  { title: 'Informasi', desc: 'Update informasi dari media sosial UNIX', icon: '📢', href: '/informasi', locked: true },
+  { title: 'Pengumuman', desc: 'Cek hasil kelulusan volunteer UNIX', icon: '📋', href: '/pengumuman', locked: false },
+  { title: 'Takita', desc: 'Tanya Kita tempat sharing dan bertanya', icon: '💬', href: '/takita', locked: true },
+];
+
+// ==========================================
+// 3. DATA APA KATA MEREKA (10 ORANG BERBEDA)
+// ==========================================
+const testimonialsText = [
+  {
+    id: 1,
+    name: 'Fazl Islami Pasha',
+    role: 'Peserta UNIX',
+    campus: 'Universitas Andalas',
+    message: 'UNIX membuka wawasan saya tentang dunia perkuliahan dan membantu saya yakin memilih jurusan yang sesuai minat.',
+  },
+  {
+    id: 2,
+    name: 'Nayla Aliya Syarlita',
+    role: 'Volunteer UNIX',
+    campus: 'Institut Teknologi Bandung',
+    message: 'Pengalaman luar biasa bisa berinteraksi langsung dengan adik-adik SMA dan berbagi tips lolos kampus impian.',
+  },
+  {
+    id: 3,
+    name: 'Alentio Ghany Pahlevi',
+    role: 'Peserta Bedah Kampus',
+    campus: 'Universitas Indonesia',
+    message: 'Bimbingan dan simulasi ujian di UNIX sangat realistis, atmosfer kompetitifnya benar-benar terasa.',
+  },
+  {
+    id: 4,
+    name: 'Jovan Ramadhani',
+    role: 'Volunteer UNIX',
+    campus: 'Universitas Andalas',
+    message: 'Bukan cuma belajar akademik, relasi dan kepanitiaan di TemanKita mempertemukan saya dengan teman-teman hebat se-Sumbar.',
+  },
+  {
+    id: 5,
+    name: 'Musthafa Akram',
+    role: 'Peserta Mentoring',
+    campus: 'Institut Pertanian Bogor',
+    message: 'Sesi mentoring eksklusifnya sangat intensif, tips lolos beasiswa yang dibagikan benar-benar aplikatif.',
+  },
+  {
+    id: 6,
+    name: 'Aisyah Putri Rahmadani',
+    role: 'Peserta UNIX',
+    campus: 'Universitas Gadjah Mada',
+    message: 'Awalnya ragu menentukan target jurusan, tapi setelah sharing di booth kampus UNIX, semua pilihan jadi jauh lebih jelas.',
+  },
+  {
+    id: 7,
+    name: 'Rifqi Pratama',
+    role: 'Volunteer Divisi Acara',
+    campus: 'Universitas Padjadjaran',
+    message: 'Bangga menjadi bagian dari perhelatan bedah kampus terbesar ini. Energi dan antusiasme pesertanya luar biasa.',
+  },
+  {
+    id: 8,
+    name: 'Dinda Maharani',
+    role: 'Peserta Try Out',
+    campus: 'Universitas Diponegoro',
+    message: 'Pembahasan soal Try Out dan bedah materi SNBT-nya sangat komprehensif serta mudah dipahami.',
+  },
+  {
+    id: 9,
+    name: 'Fauzan Fadhlurrahman',
+    role: 'Delegasi Kampus',
+    campus: 'Universitas Brawijaya',
+    message: 'Senang bisa mewakili paguyuban kampus mengenalkan seluk-beluk fakultas dan kehidupan mahasiswa di rantau.',
+  },
+  {
+    id: 10,
+    name: 'Syifa Nurul Izzah',
+    role: 'Peserta Bedah Kampus',
+    campus: 'Universitas Negeri Padang',
+    message: 'Event yang sangat inspiratif untuk siswa SMA yang sedang mencari arah dan motivasi melanjutkan pendidikan.',
+  },
+];
+
+// ==========================================
+// 4. DATA VIDEO TESTIMONI
+// ==========================================
+const videoTestimonials = [
+  { id: '1', name: 'Alentio Ghany Pahlevi', campus: 'Universitas Indonesia' },
+  { id: '2', name: 'Nayla Aliya Syarlita', campus: 'Institut Teknologi Bandung' },
+  { id: '3', name: 'Aisyah Putri Rahmadani', campus: 'Universitas Gadjah Mada' },
+  { id: '4', name: 'Jovan Ramadhani', campus: 'Universitas Andalas' },
+  { id: '5', name: 'Rifqi Pratama', campus: 'Universitas Padjadjaran' },
+  { id: '6', name: 'Musthafa Akram', campus: 'Institut Pertanian Bogor' },
+  { id: '7', name: 'Dinda Maharani', campus: 'Universitas Diponegoro' },
+];
+
+// ==========================================
+// 5. DATA TIMELINE ULAR (12 AGENDA)
+// ==========================================
+const row1 = [
+  { step: 'STEP 01', title: 'Open Recruitment', date: '18 - 21 Okt 2026' },
+  { step: 'STEP 02', title: 'Pilih Jadwal Wawancara', date: '22 Okt 2026' },
+  { step: 'STEP 03', title: 'Wawancara Volunteer', date: '23 - 30 Okt 2026' },
+  { step: 'STEP 04', title: 'Rapat Kelulusan', date: '31 Okt 2026' },
+];
+
+const row2 = [
+  { step: 'STEP 08', title: 'Dare Series & Try Out', date: '1 - 16 Jan 2027' },
+  { step: 'STEP 07', title: 'Penyebaran Surat Izin', date: '9 - 19 Nov 2026' },
+  { step: 'STEP 06', title: 'First Meet', date: '8 Nov 2026' },
+  { step: 'STEP 05', title: 'Pengumuman Kelulusan', date: '1 Nov 2026' },
+];
+
+const row3 = [
+  { step: 'STEP 09', title: 'Roadshow Kampus', date: '4 - 16 Jan 2027' },
+  { step: 'STEP 10', title: 'Hari H Kegiatan', date: '17 Jan 2027' },
+  { step: 'STEP 11', title: 'Mentoring 3x', date: '3 Bulan' },
+  { step: 'STEP 12', title: 'Executive Summary', date: 'Tahap Akhir' },
+];
+
+// ==========================================
+// 6. DOKUMENTASI (10 FOTO BERBEDA)
+// ==========================================
+const docPhotos = [
+  doc1, doc2, doc3, doc4, doc5,
+  doc6, doc7, doc8, doc9, doc10,
+];
+---
+
+<!doctype html>
+<html lang="id">
+  <head>
+    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+  </head>
+  <body>
+    <Header />
+
+    <!-- ==========================================
+         BAGIAN SLIDER HERO
+         ========================================== -->
+    <Slide />
+
+    <!-- ==========================================
+         FLOATING STATS CARD
+         ========================================== -->
+    <div class="stats-floating-wrapper">
+      <div class="site-container">
+        <div class="stats-badge-card">
+          <div class="stats-left-badge">
+            <Image src={accImg} alt="Terpercaya" class="acc-img-badge" />
+            <div class="trust-text">
+              <span class="trust-pill">Sejak 2024</span>
+              <h4 class="trust-title">Bedah Kampus Terbesar di Sumatra Barat</h4>
+            </div>
+          </div>
+
+          <div class="stats-right-metrics">
+            <div class="metric-item">
+              <Image src={panitiaImg} alt="Participant" class="metric-custom-img" />
+              <div class="metric-content">
+                <h5 class="metric-value">450+</h5>
+                <span class="metric-label">Participant</span>
+              </div>
+            </div>
+
+            <div class="metric-divider"></div>
+
+            <div class="metric-item">
+              <Image src={smaImg} alt="Peserta" class="metric-custom-img" />
+              <div class="metric-content">
+                <h5 class="metric-value">1200+</h5>
+                <span class="metric-label">Peserta</span>
+              </div>
+            </div>
+
+            <div class="metric-divider"></div>
+
+            <div class="metric-item">
+              <div class="rating-badge">★ 4.87/5</div>
+              <span class="metric-label">Rating</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <main class="home-page">
+      <!-- ==========================================
+           BAGIAN 1: WELCOME & 6 PETAK
+           ========================================== -->
+      <section class="welcome-section">
+        <div class="site-container">
+          <div class="welcome-header">
+            <h1 class="welcome-title">
+              Welcome <span class="highlight-yellow">SobatKita</span>
+            </h1>
+            <p class="welcome-subtitle">
+              Selamat datang di official website TemanKita University Expo, yuk cari tau tentang kegiatan ini.
+            </p>
+          </div>
+
+          <div class="grid-boxes">
+            {quickBoxes.map((box) => (
+              <a 
+                href={box.locked ? 'javascript:void(0)' : box.href} 
+                class={`quick-box-card ${box.locked ? 'locked-feature-btn' : ''}`}
+                data-feature-title={box.title}
+              >
+                <div class="box-icon">{box.icon}</div>
+                <div class="box-text">
+                  <h3 class="box-title">{box.title}</h3>
+                  <p class="box-desc">{box.desc}</p>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           BAGIAN 2: PENJELASAN (BG #12055f) & KOLASE
+           ========================================== -->
+      <section class="fullwidth-about-section">
+        <div class="site-container about-container">
+          <div class="about-content">
+            <h2 class="about-title">
+              Apa itu <span class="highlight-yellow">TemanKita University Expo?</span>
+            </h2>
+
+            <div class="about-description">
+              <p>
+                <strong>TemanKita University Expo</strong> adalah ajang eksplorasi dan bedah kampus terbesar yang dirancang khusus untuk mendampingi siswa-siswi SMA/SMK sederajat dalam menemukan arah perkuliahan yang tepat.
+              </p>
+              <p>
+                Melalui interaksi langsung bersama delegasi perguruan tinggi negeri maupun swasta ternama, sesi bimbingan beasiswa eksklusif, simulasi ujian intensif, serta mentoring terarah, TemanKita hadir menjadi kawan seperjuanganmu dalam mewujudkan masa depan akademik yang gemilang.
+              </p>
+            </div>
+
+            <div class="about-actions">
+              <a href="/daftar" class="btn btn-yellow">Gabung Sekarang</a>
+              <a 
+                href="https://wa.me/62895704906969?text=Halo%20Admin%20TemanKita,%20saya%20mau%20tanya%20seputar%20University%20Expo" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                class="btn btn-outline-white"
+              >
+                Tanya Admin
+              </a>
+            </div>
+          </div>
+
+          <div class="collage-wrapper">
+            <div class="collage-item collage-1">
+              <Image src={collage1} alt="Dokumentasi 1" class="collage-img" />
+            </div>
+            <div class="collage-item collage-2">
+              <Image src={collage2} alt="Dokumentasi 2" class="collage-img" />
+            </div>
+            <div class="collage-item collage-3">
+              <Image src={collage3} alt="Dokumentasi 3" class="collage-img" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           BAGIAN 3: APA KATA MEREKA (10 BUBBLE DARI 10 ORANG)
+           ========================================== -->
+      <section class="section-testimonials-marquee">
+        <div class="site-container">
+          <div class="section-badge-center">
+            <h2 class="section-heading-single">
+              Apa Kata Mereka?
+            </h2>
+          </div>
+        </div>
+
+        <div class="infinite-scroll-wrapper" id="scroll-testimonials" data-speed="1.2">
+          <div class="infinite-scroll-track">
+            {testimonialsText.map((item) => (
+              <div class="bubble-card">
+                <div class="bubble-header">
+                  <!-- Avatar Anonim SVG -->
+                  <div class="bubble-avatar-anon">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                  </div>
+                  <div class="bubble-identity">
+                    <h4 class="bubble-name">{item.name}</h4>
+                    <p class="bubble-campus">{item.campus}</p>
+                  </div>
+                </div>
+                <p class="bubble-quote">“{item.message}”</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           BAGIAN 4: KENAPA MEMILIH UNIX? (BG #12055f)
+           ========================================== -->
+      <section class="fullwidth-why-section">
+        <div class="site-container">
+          <div class="why-header">
+            <h2 class="why-title">
+              Kenapa Memilih <span class="highlight-yellow">UNIX?</span>
+            </h2>
+            <p class="why-subtitle">
+              Tiga alasan mendasar mengapa TemanKita University Expo menjadi wadah terbaik untuk masa depan pendidikanmu.
+            </p>
+          </div>
+
+          <div class="why-grid">
+            <div class="why-card">
+              <div class="why-card-header">
+                <h3 class="why-card-title">Informasi Kredibel</h3>
+              </div>
+              <div class="why-card-body">
+                <p class="why-card-desc">
+                  Informasi langsung berasal dari penerima beasiswa atau mahasiswa aktif kampusnya secara transparan, akurat, dan terpercaya tanpa perantara.
+                </p>
+              </div>
+            </div>
+
+            <div class="why-card">
+              <div class="why-card-header">
+                <h3 class="why-card-title">Relasi & Pengetahuan Luas</h3>
+              </div>
+              <div class="why-card-body">
+                <p class="why-card-desc">
+                  Tidak hanya mendapatkan wawasan dunia perkuliahan, Anda juga memperluas koneksi antarpelajar dari berbagai SMA/SMK di Sumatra Barat.
+                </p>
+              </div>
+            </div>
+
+            <div class="why-card">
+              <div class="why-card-header">
+                <h3 class="why-card-title">Benefit Luar Biasa</h3>
+              </div>
+              <div class="why-card-body">
+                <p class="why-card-desc">
+                  Banyak benefit nyata yang bisa didapatkan setelah bergabung menjadi Volunteer, Paguyuban kampus, maupun Peserta kegiatan.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           BAGIAN 5: TESTIMONI VIDEO
+           ========================================== -->
+      <section class="section-video-testimonials">
+        <div class="site-container">
+          <div class="section-badge-center">
+            <h2 class="section-heading-single">
+              Testimoni Sobat UNIX
+            </h2>
+            <p class="section-desc-center">
+              Dengarkan langsung cerita dan pengalaman nyata dari mereka yang telah bertumbuh bersama kami.
+            </p>
+          </div>
+        </div>
+
+        <div class="infinite-scroll-wrapper" id="scroll-videos" data-speed="1.0">
+          <div class="infinite-scroll-track">
+            {videoTestimonials.map((vid) => (
+              <div class="video-card">
+                <div 
+                  class="video-thumbnail-box play-video-trigger"
+                  data-name={vid.name}
+                  data-campus={vid.campus}
+                >
+                  <div class="thumbnail-empty">
+                    <span class="empty-icon">🎬</span>
+                    <p class="empty-text">Segera Tayang</p>
+                  </div>
+                </div>
+                <div class="video-info-box">
+                  <h4 class="video-person-name">{vid.name}</h4>
+                  <p class="video-person-campus">{vid.campus}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           BAGIAN 6: TIMELINE TERDEKAT
+           ========================================== -->
+      <section class="fullwidth-timeline-section">
+        <div class="site-container">
+          <div class="timeline-header">
+            <h2 class="timeline-title-white">
+              Timeline Terdekat
+            </h2>
+            <p class="timeline-subtitle-white">
+              Berikut gambaran rangkaian kegiatan yang akan di realisasikan
+            </p>
+          </div>
+
+          <div class="snake-timeline-wrapper">
+            <!-- BARIS 1: Kiri ke Kanan -->
+            <div class="snake-row row-1">
+              <div class="snake-line horizontal-line"></div>
+              {row1.map((item) => (
+                <div class="snake-node">
+                  <div class="node-content text-top">
+                    <span class="node-step">{item.step}</span>
+                    <h4 class="node-title">{item.title}</h4>
+                    <span class="node-date">{item.date}</span>
+                  </div>
+                  <div class="node-dot"></div>
+                </div>
+              ))}
+              <div class="turn-right"></div>
+            </div>
+
+            <!-- BARIS 2: Berbalik Kanan ke Kiri -->
+            <div class="snake-row row-2">
+              <div class="snake-line horizontal-line"></div>
+              {row2.map((item) => (
+                <div class="snake-node">
+                  <div class="node-content text-top">
+                    <span class="node-step">{item.step}</span>
+                    <h4 class="node-title">{item.title}</h4>
+                    <span class="node-date">{item.date}</span>
+                  </div>
+                  <div class="node-dot"></div>
+                </div>
+              ))}
+              <div class="turn-left"></div>
+            </div>
+
+            <!-- BARIS 3: Kiri ke Kanan -->
+            <div class="snake-row row-3">
+              <div class="snake-line horizontal-line"></div>
+              {row3.map((item) => (
+                <div class="snake-node">
+                  <div class="node-content text-top">
+                    <span class="node-step">{item.step}</span>
+                    <h4 class="node-title">{item.title}</h4>
+                    <span class="node-date">{item.date}</span>
+                  </div>
+                  <div class="node-dot"></div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           BAGIAN 7: DOKUMENTASI (10 FOTO BERBEDA)
+           ========================================== -->
+      <section class="section-gallery-marquee">
+        <div class="site-container">
+          <div class="section-badge-center">
+            <h2 class="section-heading-single">
+              Dokumentasi Kegiatan
+            </h2>
+            <p class="section-desc-center">
+              Rekam jejak antusiasme, kebersamaan, dan euforia acara di setiap perjalanannya.
+            </p>
+          </div>
+        </div>
+
+        <div class="infinite-scroll-wrapper" id="scroll-gallery" data-speed="1.1">
+          <div class="infinite-scroll-track">
+            {docPhotos.map((photo, idx) => (
+              <div class="gallery-item-card">
+                <Image src={photo} alt={`Dokumentasi UNIX ${idx + 1}`} class="gallery-img-marquee" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ==========================================
+         MODAL POPUP TESTIMONI
+         ========================================== -->
+    <div class="video-modal-backdrop" id="video-modal" aria-hidden="true">
+      <div class="video-modal-dialog">
+        <button type="button" class="video-modal-close" id="modal-close-btn" aria-label="Tutup Video">&times;</button>
+        <div class="video-modal-body">
+          <div class="video-player-wrapper" id="video-player-container"></div>
+          <div class="video-modal-footer">
+            <h3 class="modal-speaker-name" id="modal-name">Coming Soon</h3>
+            <p class="modal-speaker-campus" id="modal-campus">Universitas</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================
+         MODAL POPUP NOTIFIKASI FITUR BELUM BISA DIAKSES
+         ========================================== -->
+    <div class="alert-modal-backdrop" id="alert-modal" aria-hidden="true">
+      <div class="alert-modal-card">
+        <div class="alert-icon-box">🔒</div>
+        <h3 class="alert-modal-title" id="alert-title">Maaf, Belum Bisa Diakses</h3>
+        <p class="alert-modal-desc" id="alert-desc">
+          Fitur ini sedang dalam tahap pengembangan dan akan segera dibuka untuk Sobat UNIX.
+        </p>
+        <button type="button" class="btn btn-yellow alert-confirm-btn" id="alert-confirm-btn">
+          Mengerti
+        </button>
+      </div>
+    </div>
+
+    <Footer />
+  </body>
+</html>
+
+<script>
+  // ==========================================
+  // LOGIK MODAL VIDEO TESTIMONI
+  // ==========================================
+  const modal = document.getElementById('video-modal');
+  const modalCloseBtn = document.getElementById('modal-close-btn');
+  const videoPlayerContainer = document.getElementById('video-player-container');
+  const modalName = document.getElementById('modal-name');
+  const modalCampus = document.getElementById('modal-campus');
+
+  const triggers = document.querySelectorAll('.play-video-trigger');
+
+  triggers.forEach((trigger) => {
+    trigger.addEventListener('click', () => {
+      const name = trigger.getAttribute('data-name') || 'Coming Soon';
+      const campus = trigger.getAttribute('data-campus') || '';
+
+      if (modalName) modalName.textContent = name;
+      if (modalCampus) modalCampus.textContent = campus;
+
+      if (videoPlayerContainer) {
+        videoPlayerContainer.innerHTML = `
+          <div class="modal-no-video">
+            <span style="font-size: 3.5rem;">🎬</span>
+            <h3 style="margin: 1rem 0 0.3rem 0; color: #ffffff; font-size: 1.3rem;">Segera Tayang</h3>
+            <p style="margin: 0; color: #94a3b8; font-size: 0.95rem;">Video testimoni dokumentasi ini sedang dalam proses kurasi & editing.</p>
+          </div>
+        `;
+      }
+
+      modal?.classList.add('active');
+    });
+  });
+
+  function closeModal() {
+    modal?.classList.remove('active');
+    if (videoPlayerContainer) videoPlayerContainer.innerHTML = '';
+  }
+
+  modalCloseBtn?.addEventListener('click', closeModal);
+  modal?.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
+  });
+
+  // ==========================================
+  // LOGIK POPUP FITUR TERKUNCI (INFORMASI & TAKITA)
+  // ==========================================
+  const alertModal = document.getElementById('alert-modal');
+  const alertConfirmBtn = document.getElementById('alert-confirm-btn');
+  const alertTitle = document.getElementById('alert-title');
+  const lockedButtons = document.querySelectorAll('.locked-feature-btn');
+
+  lockedButtons.forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const feature = btn.getAttribute('data-feature-title') || 'Menu';
+      if (alertTitle) {
+        alertTitle.textContent = `${feature}: Belum Bisa Diakses`;
+      }
+      alertModal?.classList.add('active');
+    });
+  });
+
+  const closeAlertModal = () => {
+    alertModal?.classList.remove('active');
+  };
+
+  alertConfirmBtn?.addEventListener('click', closeAlertModal);
+  alertModal?.addEventListener('click', (e) => {
+    if (e.target === alertModal) closeAlertModal();
+  });
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      if (modal?.classList.contains('active')) closeModal();
+      if (alertModal?.classList.contains('active')) closeAlertModal();
+    }
+  });
+
+  // ==========================================
+  // HYBRID ENGINE: INFINITE SCROLL & TOUCH/DRAG
+  // ==========================================
+  const setupInfiniteSwipeTrack = (wrapperId: string) => {
+    const wrapper = document.getElementById(wrapperId);
+    if (!wrapper) return;
+
+    const track = wrapper.querySelector('.infinite-scroll-track') as HTMLElement;
+    if (!track) return;
+
+    // Kloning isi track untuk looping mulus
+    const initialCards = Array.from(track.children);
+    initialCards.forEach((card) => {
+      track.appendChild(card.cloneNode(true));
+    });
+
+    const speed = parseFloat(wrapper.dataset.speed || '1.0');
+    let offset = 0;
+    let isDown = false;
+    let startX = 0;
+    let lastX = 0;
+    let velocity = 0;
+
+    const update = () => {
+      const halfWidth = track.scrollWidth / 2;
+
+      if (!isDown) {
+        velocity *= 0.95;
+        offset -= speed + velocity;
+      }
+
+      if (offset <= -halfWidth) {
+        offset += halfWidth;
+      } else if (offset > 0) {
+        offset -= halfWidth;
+      }
+
+      track.style.transform = `translate3d(${offset}px, 0, 0)`;
+      requestAnimationFrame(update);
+    };
+
+    const onStart = (clientX: number) => {
+      isDown = true;
+      startX = clientX;
+      lastX = clientX;
+      velocity = 0;
+      wrapper.classList.add('is-dragging');
+    };
+
+    const onMove = (clientX: number) => {
+      if (!isDown) return;
+      const delta = clientX - lastX;
+      lastX = clientX;
+      offset += delta;
+      velocity = delta * 0.8;
+    };
+
+    const onEnd = () => {
+      if (!isDown) return;
+      isDown = false;
+      wrapper.classList.remove('is-dragging');
+    };
+
+    wrapper.addEventListener('mousedown', (e) => onStart(e.clientX));
+    window.addEventListener('mousemove', (e) => onMove(e.clientX));
+    window.addEventListener('mouseup', onEnd);
+
+    wrapper.addEventListener('touchstart', (e) => onStart(e.touches[0].clientX), { passive: true });
+    window.addEventListener('touchmove', (e) => {
+      if (isDown) onMove(e.touches[0].clientX);
+    }, { passive: true });
+    window.addEventListener('touchend', onEnd);
+
+    requestAnimationFrame(update);
+  };
+
+  setupInfiniteSwipeTrack('scroll-testimonials');
+  setupInfiniteSwipeTrack('scroll-videos');
+  setupInfiniteSwipeTrack('scroll-gallery');
+</script>
+
+<style>
+  /* ===================================================
+     [CSS 1] PENGATURAN DASAR & CONTAINER
+     =================================================== */
+  .site-container {
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding-left: clamp(1.25rem, 4vw, 3.5rem);
+    padding-right: clamp(1.25rem, 4vw, 3.5rem);
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: #f8fafc;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    font-family: inherit;
+  }
+
+  .home-page {
+    width: 100%;
+    overflow-x: hidden;
+    flex: 1;
+  }
+
+  .highlight-yellow {
+    color: #facc15;
+  }
+
+  .section-badge-center {
+    text-align: center;
+    max-width: 720px;
+    margin: 0 auto clamp(1.8rem, 3vw, 2.5rem) auto;
+  }
+
+  .section-heading-single {
+    font-size: clamp(2rem, 3vw, 2.75rem);
+    font-weight: 800;
+    color: #12055f;
+    line-height: 1.2;
+    margin: 0 0 0.5rem 0;
+  }
+
+  .section-desc-center {
+    font-size: clamp(0.95rem, 1.1vw, 1.05rem);
+    color: #64748b;
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  /* ===================================================
+     [CSS 2] FLOATING STATS CARD
+     =================================================== */
+  .stats-floating-wrapper {
+    position: relative;
+    z-index: 30;
+    margin-top: -30px;
+    margin-bottom: 0px;
+  }
+
+  .stats-badge-card {
+    background: #ffffff;
+    border-radius: 9999px;
+    box-shadow: 0 10px 30px -4px rgba(0, 0, 0, 0.08), 0 4px 12px -2px rgba(0, 0, 0, 0.04);
+    border: 1px solid #f1f5f9;
+    padding: 0.8rem clamp(1.5rem, 3.5vw, 3rem);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+
+  .stats-left-badge {
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+    flex: 1.2;
+  }
+
+  .acc-img-badge {
+    width: 52px;
+    height: 52px;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
+
+  .trust-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .trust-pill {
+    background-color: #fab005;
+    color: #ffffff;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.15rem 0.55rem;
+    border-radius: 999px;
+    margin-bottom: 0.3rem;
+  }
+
+  .trust-title {
+    font-size: clamp(0.95rem, 1.15vw, 1.15rem);
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0;
+    line-height: 1.3;
+  }
+
+  .stats-right-metrics {
+    display: flex;
+    align-items: center;
+    gap: clamp(1rem, 2.5vw, 2.2rem);
+  }
+
+  .metric-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .metric-custom-img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
+
+  .metric-content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .metric-value {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0;
+    line-height: 1.1;
+  }
+
+  .metric-label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #64748b;
+  }
+
+  .metric-divider {
+    width: 1px;
+    height: 38px;
+    background-color: #e2e8f0;
+  }
+
+  .rating-badge {
+    background-color: #fef3c7;
+    color: #d97706;
+    font-weight: 800;
+    font-size: 0.95rem;
+    padding: 0.25rem 0.65rem;
+    border-radius: 8px;
+  }
+
+  /* ===================================================
+     [CSS 3] WELCOME & 6 PETAK
+     =================================================== */
+  .welcome-section {
+    padding-top: 0px;
+    padding-bottom: clamp(2.5rem, 4vw, 3.5rem);
+  }
+
+  .welcome-header {
+    text-align: center;
+    max-width: 750px;
+    margin: 0 auto clamp(1.2rem, 2vw, 1.8rem) auto;
+  }
+
+  .welcome-title {
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    font-weight: 800;
+    color: #12055f;
+    line-height: 1.15;
+    margin-top: 0;
+    margin-bottom: 0.4rem;
+  }
+
+  .welcome-subtitle {
+    font-size: clamp(0.92rem, 1.05vw, 1rem);
+    color: #64748b;
+    line-height: 1.45;
+    margin: 0;
+  }
+
+  .grid-boxes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(1rem, 1.8vw, 1.5rem);
+  }
+
+  .quick-box-card {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: clamp(1.1rem, 1.5vw, 1.4rem);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    text-decoration: none;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04);
+    transition: all 0.25s ease;
+  }
+
+  .quick-box-card:hover {
+    transform: translateY(-3px);
+    border-color: #12055f;
+    box-shadow: 0 12px 20px -4px rgba(18, 5, 95, 0.15);
+  }
+
+  .box-icon {
+    font-size: 1.75rem;
+    width: 48px;
+    height: 48px;
+    background-color: rgba(18, 5, 95, 0.06);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .box-text {
+    flex: 1;
+  }
+
+  .box-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #12055f;
+    margin: 0 0 0.25rem 0;
+  }
+
+  .box-desc {
+    font-size: 0.82rem;
+    color: #64748b;
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  /* ===================================================
+     [CSS 4] SECTION PENJELASAN (BG #12055f)
+     =================================================== */
+  .fullwidth-about-section {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    background-color: #12055f;
+    color: #ffffff;
+    padding: clamp(3rem, 5vw, 4.5rem) 0;
+    box-sizing: border-box;
+  }
+
+  .about-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: clamp(2rem, 4vw, 4rem);
+  }
+
+  .about-content {
+    flex: 1.15;
+  }
+
+  .about-title {
+    font-size: clamp(1.8rem, 2.8vw, 2.5rem);
+    font-weight: 800;
+    line-height: 1.25;
+    margin: 0 0 1.2rem 0;
+    color: #ffffff;
+  }
+
+  .about-description {
+    font-size: clamp(0.92rem, 1vw, 1.02rem);
+    line-height: 1.7;
+    color: #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    margin-bottom: 2rem;
+    text-align: justify;
+  }
+
+  .about-description p {
+    margin: 0;
+  }
+
+  .about-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.6rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn-yellow {
+    background-color: #f59e0b;
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);
+  }
+
+  .btn-yellow:hover {
+    background-color: #d97706;
+  }
+
+  .btn-outline-white {
+    background-color: transparent;
+    color: #ffffff;
+    border: 2px solid rgba(255, 255, 255, 0.75);
+  }
+
+  .btn-outline-white:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-color: #ffffff;
+  }
+
+  .collage-wrapper {
+    flex: 0.95;
+    position: relative;
+    height: 360px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .collage-item {
+    position: absolute;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+    border: 3px solid #ffffff;
+  }
+
+  .collage-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.35s ease;
+  }
+
+  .collage-1 {
+    width: 210px;
+    height: 250px;
+    top: 15px;
+    left: 20px;
+    transform: rotate(-6deg);
+    z-index: 1;
+  }
+
+  .collage-2 {
+    width: 220px;
+    height: 260px;
+    bottom: 15px;
+    right: 20px;
+    transform: rotate(6deg);
+    z-index: 2;
+  }
+
+  .collage-3 {
+    width: 190px;
+    height: 220px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-1deg);
+    z-index: 3;
+    border-color: #facc15;
+  }
+
+  .collage-3:hover .collage-img {
+    transform: scale(1.12);
+  }
+
+  /* ===================================================
+     [CSS 5] INFINITE SWIPE WRAPPER
+     =================================================== */
+  .infinite-scroll-wrapper {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    cursor: grab;
+    user-select: none;
+    touch-action: pan-y;
+  }
+
+  .infinite-scroll-wrapper.is-dragging {
+    cursor: grabbing;
+  }
+
+  .infinite-scroll-track {
+    display: flex;
+    gap: 1.5rem;
+    width: max-content;
+    will-change: transform;
+  }
+
+  .section-testimonials-marquee {
+    padding: clamp(3rem, 5vw, 4.5rem) 0;
+  }
+
+  .bubble-card {
+    width: 320px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 1.3rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+
+  .bubble-header {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    margin-bottom: 0.85rem;
+  }
+
+  .bubble-avatar-anon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: #e2e8f0;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #12055f;
+    flex-shrink: 0;
+  }
+
+  .bubble-avatar-anon svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  .bubble-identity {
+    flex: 1;
+  }
+
+  .bubble-name {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0;
+    line-height: 1.25;
+  }
+
+  .bubble-campus {
+    font-size: 0.8rem;
+    color: #12055f;
+    font-weight: 600;
+    margin: 0.15rem 0 0 0;
+  }
+
+  .bubble-quote {
+    font-size: 0.88rem;
+    color: #475569;
+    line-height: 1.55;
+    margin: 0;
+    font-style: italic;
+  }
+
+  /* ===================================================
+     [CSS 6] KENAPA MEMILIH UNIX? (BG #12055f)
+     =================================================== */
+  .fullwidth-why-section {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    background-color: #12055f;
+    color: #ffffff;
+    padding: clamp(3.5rem, 6vw, 5.5rem) 0;
+    box-sizing: border-box;
+  }
+
+  .why-header {
+    text-align: center;
+    max-width: 760px;
+    margin: 0 auto clamp(2.5rem, 4vw, 3.5rem) auto;
+  }
+
+  .why-title {
+    font-size: clamp(2rem, 3.2vw, 2.85rem);
+    font-weight: 800;
+    margin: 0 0 0.8rem 0;
+    color: #ffffff;
+  }
+
+  .why-subtitle {
+    font-size: clamp(0.95rem, 1.1vw, 1.05rem);
+    color: #cbd5e1;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .why-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(1.2rem, 2vw, 2rem);
+  }
+
+  .why-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 18px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;
+  }
+
+  .why-card:hover {
+    background: rgba(255, 255, 255, 0.09);
+    transform: translateY(-4px);
+    border-color: #facc15;
+  }
+
+  .why-card-header {
+    background: rgba(255, 255, 255, 0.08);
+    padding: 1.1rem 1.4rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .why-card-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #facc15;
+    margin: 0;
+    line-height: 1.3;
+  }
+
+  .why-card-body {
+    padding: 1.4rem;
+    flex: 1;
+  }
+
+  .why-card-desc {
+    font-size: 0.92rem;
+    color: #cbd5e1;
+    line-height: 1.7;
+    margin: 0;
+    text-align: justify;
+  }
+
+  /* ===================================================
+     [CSS 7] TESTIMONI VIDEO
+     =================================================== */
+  .section-video-testimonials {
+    padding: clamp(3rem, 5vw, 4.5rem) 0;
+  }
+
+  .video-card {
+    width: 290px;
+    background: #ffffff;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.04);
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .video-thumbnail-box {
+    position: relative;
+    width: 100%;
+    height: 175px;
+    background-color: #0f172a;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .thumbnail-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8;
+  }
+
+  .empty-icon {
+    font-size: 2.2rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .empty-text {
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin: 0;
+    color: #cbd5e1;
+  }
+
+  .video-info-box {
+    padding: 1rem 1.1rem;
+    background: #ffffff;
+  }
+
+  .video-person-name {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0 0 0.2rem 0;
+  }
+
+  .video-person-campus {
+    font-size: 0.83rem;
+    color: #12055f;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  /* ===================================================
+     [CSS 8] TIMELINE SKEMA ULAR
+     =================================================== */
+  .fullwidth-timeline-section {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    background-color: #12055f;
+    color: #ffffff;
+    padding: clamp(3.5rem, 6vw, 5.5rem) 0;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  .timeline-header {
+    text-align: center;
+    max-width: 760px;
+    margin: 0 auto clamp(2.5rem, 4vw, 3.5rem) auto;
+  }
+
+  .timeline-title-white {
+    font-size: clamp(2rem, 3.2vw, 2.85rem);
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0 0 0.5rem 0;
+  }
+
+  .timeline-subtitle-white {
+    font-size: clamp(0.95rem, 1.1vw, 1.05rem);
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0;
+  }
+
+  .snake-timeline-wrapper {
+    position: relative;
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 7.5rem;
+    padding: 2rem 3rem;
+    box-sizing: border-box;
+  }
+
+  .snake-row {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .horizontal-line {
+    position: absolute;
+    bottom: 4.7px;
+    left: 51.5px;
+    width: 89.7%;
+    height: 4px;
+    background-color: rgba(255, 255, 255, 0.4);
+    z-index: 1;
+  }
+
+  .snake-node {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 180px;
+  }
+
+  .node-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 1.25rem;
+  }
+
+  .node-step {
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #ffffff;
+    border-bottom: 2px solid #ffffff;
+    padding-bottom: 2px;
+    margin-bottom: 0.35rem;
+  }
+
+  .node-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 0.3rem 0;
+    line-height: 1.3;
+  }
+
+  .node-date {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.75);
+  }
+
+  .node-dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 4px #12055f;
+    position: relative;
+    z-index: 4;
+  }
+
+  .turn-right {
+    position: absolute;
+    right: -3.05rem;
+    bottom: -229.5px;
+    width: 6rem;
+    height: calc(100% + 7.2rem);
+    border: 5px solid rgba(255, 255, 255, 0.4);
+    border-left: none;
+    border-top-right-radius: 6rem;
+    border-bottom-right-radius: 6rem;
+    z-index: 1;
+  }
+
+  .turn-left {
+    position: absolute;
+    left: -3.05rem;
+    bottom: -229.5px;
+    width: 6rem;
+    height: calc(100% + 7.15rem);
+    border: 5px solid rgba(255, 255, 255, 0.4);
+    border-right: none;
+    border-top-left-radius: 6rem;
+    border-bottom-left-radius: 6rem;
+    z-index: 1;
+  }
+
+  /* ===================================================
+     [CSS 9] DOKUMENTASI MARQUEE
+     =================================================== */
+  .section-gallery-marquee {
+    padding: clamp(3rem, 5vw, 4.5rem) 0;
+  }
+
+  .gallery-item-card {
+    width: 280px;
+    height: 190px;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    flex-shrink: 0;
+    border: 2px solid #ffffff;
+  }
+
+  .gallery-img-marquee {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+  }
+
+  .gallery-item-card:hover .gallery-img-marquee {
+    transform: scale(1.08);
+  }
+
+  /* ===================================================
+     [CSS 10] MODAL POPUP VIDEO
+     =================================================== */
+  .video-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(5px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    padding: 1.5rem;
+    box-sizing: border-box;
+  }
+
+  .video-modal-backdrop.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .video-modal-dialog {
+    background: #0f172a;
+    width: 100%;
+    max-width: 640px;
+    border-radius: 18px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  .video-modal-close {
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    background: rgba(255, 255, 255, 0.15);
+    border: none;
+    color: #ffffff;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: background 0.2s ease;
+  }
+
+  .video-modal-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  .video-player-wrapper {
+    width: 100%;
+    height: 320px;
+    background: #000000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-no-video {
+    text-align: center;
+    padding: 2rem;
+  }
+
+  .video-modal-footer {
+    padding: 1.2rem 1.5rem;
+    background: #1e293b;
+  }
+
+  .modal-speaker-name {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 0.25rem 0;
+  }
+
+  .modal-speaker-campus {
+    font-size: 0.9rem;
+    color: #facc15;
+    margin: 0;
+    font-weight: 600;
+  }
+
+  /* ===================================================
+     [CSS 11] MODAL POPUP NOTIFIKASI
+     =================================================== */
+  .alert-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(4px);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+    padding: 1.5rem;
+    box-sizing: border-box;
+  }
+
+  .alert-modal-backdrop.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .alert-modal-card {
+    background: #ffffff;
+    width: 100%;
+    max-width: 420px;
+    border-radius: 20px;
+    padding: 2rem 1.8rem;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    transform: scale(0.9);
+    transition: transform 0.25s ease;
+  }
+
+  .alert-modal-backdrop.active .alert-modal-card {
+    transform: scale(1);
+  }
+
+  .alert-icon-box {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #fef3c7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    margin: 0 auto 1.2rem auto;
+  }
+
+  .alert-modal-title {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #12055f;
+    margin: 0 0 0.5rem 0;
+  }
+
+  .alert-modal-desc {
+    font-size: 0.95rem;
+    color: #64748b;
+    line-height: 1.5;
+    margin: 0 0 1.5rem 0;
+  }
+
+  .alert-confirm-btn {
+    width: 100%;
+    padding: 0.8rem;
+    font-size: 1rem;
+  }
+
+  /* ===================================================
+     [CSS 12] RESPONSIF BREAKPOINTS
+     =================================================== */
+  @media (max-width: 1024px) {
+    .stats-badge-card {
+      border-radius: 20px;
+      flex-direction: column;
+      gap: 1.25rem;
+      padding: 1.25rem;
+      text-align: center;
+    }
+
+    .stats-left-badge {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .trust-text {
+      align-items: center;
+    }
+
+    .grid-boxes {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .about-container {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .about-description {
+      text-align: justify;
+    }
+
+    .about-actions {
+      justify-content: center;
+    }
+
+    .collage-wrapper {
+      width: 100%;
+      max-width: 440px;
+      height: 320px;
+      margin-top: 1rem;
+    }
+
+    .why-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .snake-timeline-wrapper {
+      gap: 2rem;
+      padding: 0 1rem;
+    }
+
+    .snake-row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2rem;
+    }
+
+    .row-2 {
+      flex-direction: column-reverse;
+    }
+
+    .turn-right,
+    .turn-left,
+    .horizontal-line {
+      display: none;
+    }
+
+    .snake-node {
+      flex-direction: row;
+      align-items: center;
+      width: 100%;
+      gap: 1.25rem;
+    }
+
+    .node-content {
+      align-items: flex-start;
+      text-align: left;
+      margin-bottom: 0;
+      order: 2;
+    }
+
+    .node-dot {
+      order: 1;
+      flex-shrink: 0;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .stats-badge-card {
+      border-radius: 16px;
+    }
+
+    .stats-right-metrics {
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.25rem;
+    }
+
+    .metric-divider {
+      display: none;
+    }
+
+    .grid-boxes {
+      grid-template-columns: 1fr;
+    }
+
+    .about-actions {
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .btn {
+      width: 100%;
+    }
+
+    .collage-wrapper {
+      height: 270px;
+    }
+
+    .collage-1 {
+      width: 145px;
+      height: 175px;
+      left: 10px;
+    }
+
+    .collage-2 {
+      width: 155px;
+      height: 185px;
+      right: 10px;
+    }
+
+    .collage-3 {
+      width: 130px;
+      height: 150px;
+    }
+  }
+</style>

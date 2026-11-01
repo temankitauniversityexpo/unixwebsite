@@ -1,0 +1,2431 @@
+---
+import { Image } from 'astro:assets';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import Slide from '../components/SlideHero.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+
+import qrisImg from '../assets/qrisunix.png';
+import qrisDanusanImg from '../assets/qrisdanusan.png';
+import qrisDanusan2Img from '../assets/qrisdanusan2.png';
+import owixMascot from '../assets/owix4.png';
+
+const initialProducts = [
+  {
+    id: 't-eb-vip',
+    name: 'Tiket Early Bird - VIP',
+    category: 'Tiket UNIX',
+    desc: 'Akses VIP barisan depan, Goodie Bag eksklusif, & Sertifikat',
+    price: 55000,
+    ticketType: 'early-bird',
+    ticketTier: 'VIP',
+    stock: 50,
+  },
+  {
+    id: 't-eb-prem',
+    name: 'Tiket Early Bird - Premium',
+    category: 'Tiket UNIX',
+    desc: 'Akses reguler seluruh rangkaian expo & e-sertifikat',
+    price: 45000,
+    ticketType: 'early-bird',
+    ticketTier: 'Premium',
+    stock: 100,
+  },
+  {
+    id: 't-ds-vip',
+    name: 'Tiket Daily Sale - VIP',
+    category: 'Tiket UNIX',
+    desc: 'Akses VIP barisan depan, Goodie Bag eksklusif, & Sertifikat',
+    price: 70000,
+    ticketType: 'daily-sale',
+    ticketTier: 'VIP',
+    stock: 50,
+  },
+  {
+    id: 't-ds-prem',
+    name: 'Tiket Daily Sale - Premium',
+    category: 'Tiket UNIX',
+    desc: 'Akses reguler seluruh rangkaian expo & e-sertifikat',
+    price: 60000,
+    ticketType: 'daily-sale',
+    ticketTier: 'Premium',
+    stock: 100,
+  },
+  {
+    id: 'm-gabin',
+    name: 'Gabin Es Krim',
+    category: 'Makanan & Snack',
+    desc: 'Kombinasi biskuit gabin gurih & renyah dengan isian es krim manis',
+    price: 12000,
+    stock: 30,
+  },
+  {
+    id: 'm-sand-daging',
+    name: 'Sandwich Daging',
+    category: 'Makanan & Snack',
+    desc: 'Roti lapis tebal dengan isian daging sapi olahan premium & selada',
+    price: 12000,
+    stock: 25,
+  },
+  {
+    id: 'm-sand-sosis',
+    name: 'Sandwich Sosis',
+    category: 'Makanan & Snack',
+    desc: 'Roti lapis empuk dipadu sosis bakar lezat dan saus spesial',
+    price: 10000,
+    stock: 25,
+  },
+  {
+    id: 'm-kebab-daging',
+    name: 'Kebab Daging',
+    category: 'Makanan & Snack',
+    desc: 'Kulit tortilla lembut dengan gulungan daging sapi gurih dan saus mayo',
+    price: 12000,
+    stock: 30,
+  },
+  {
+    id: 'm-kebab-beef',
+    name: 'Kebab Slice Beef',
+    category: 'Makanan & Snack',
+    desc: 'Kebab istimewa dengan irisan slice beef berlimpah dan bumbu rempah',
+    price: 10000,
+    stock: 20,
+  },
+  {
+    id: 'd-milk-ori',
+    name: 'Susu Murni by Milkbro - Original',
+    category: 'Minuman',
+    desc: '100% Susu sapi murni segar tanpa pemanis buatan rasa original',
+    price: 10000,
+    stock: 40,
+  },
+  {
+    id: 'd-milk-straw',
+    name: 'Susu Murni by Milkbro - Strawberry',
+    category: 'Minuman',
+    desc: 'Susu murni segar berpadu sari buah strawberry manis menyegarkan',
+    price: 10000,
+    stock: 30,
+  },
+  {
+    id: 'd-milk-melon',
+    name: 'Susu Murni by Milkbro - Melon',
+    category: 'Minuman',
+    desc: 'Susu murni segar aroma buah melon harum dan creamy',
+    price: 10000,
+    stock: 30,
+  },
+  {
+    id: 'd-milk-choc',
+    name: 'Susu Murni by Milkbro - Coklat',
+    category: 'Minuman',
+    desc: 'Susu murni rasa coklat pekat yang legit dan nikmat',
+    price: 10000,
+    stock: 40,
+  },
+  {
+    id: 'd-milk-vanilla',
+    name: 'Susu Murni by Milkbro - Vanilla',
+    category: 'Minuman',
+    desc: 'Susu murni rasa vanilla klasik yang lembut dan lezat',
+    price: 10000,
+    stock: 30,
+  },
+  {
+    id: 'd-milk-mangga',
+    name: 'Susu Murni by Milkbro - Mangga',
+    category: 'Minuman',
+    desc: 'Susu murni sari mangga tropis segar cocok diminum dingin',
+    price: 10000,
+    stock: 30,
+  },
+  {
+    id: 'pa-canva-life',
+    name: 'Canva Pro Lifetime (Education)',
+    category: 'Premium Akun',
+    desc: 'Akses penuh fitur Canva Pro Lifetime via undangan team/education',
+    price: 20000,
+    stock: 50,
+  },
+  {
+    id: 'pa-canva-1m',
+    name: 'Canva Pro 1 Bulan',
+    category: 'Premium Akun',
+    desc: 'Langganan Canva Pro aktif 30 hari penuh bergaransi',
+    price: 8000,
+    stock: 50,
+  },
+  {
+    id: 'pa-capcut-pvt',
+    name: 'CapCut Pro 1 Bulan - Private',
+    category: 'Premium Akun',
+    desc: 'Akun private CapCut Pro 30 hari tanpa batasan login bersama',
+    price: 38000,
+    stock: 30,
+  },
+  {
+    id: 'pa-capcut-shr',
+    name: 'CapCut Pro 1 Bulan - Sharing',
+    category: 'Premium Akun',
+    desc: 'Akun sharing CapCut Pro 30 hari hemat dan fungsional',
+    price: 25000,
+    stock: 30,
+  },
+];
+
+const categories = ['Semua Produk', 'Tiket UNIX', 'Makanan & Snack', 'Minuman', 'Premium Akun'];
+---
+
+<!doctype html>
+<html lang="id">
+  <head>
+    <BaseHead 
+      title={`UNIX Store - ${SITE_TITLE}`} 
+      description="Official Store TemanKita University Expo. Dapatkan tiket expo, snack lezat, minuman, hingga akun premium." 
+    />
+  </head>
+  <body>
+    <Header />
+    <Slide />
+
+    <main class="store-page">
+      <section class="squad-pass-section">
+        <div class="site-container">
+          <div class="squad-pass-header text-center">
+            <span class="badge-pill-yellow">PENAWARAN SPESIAL TIKET</span>
+            <h2 class="squad-title">Promo Diskon Squad Pass</h2>
+            <p class="squad-sub">Hemat pembelian tiket bareng teman-teman sekolahmu! (Promo dihitung otomatis saat checkout)</p>
+          </div>
+
+          <div class="squad-cards-grid">
+            <div class="squad-card card-navy">
+              <span class="squad-badge badge-on-navy">Duo Ambisius</span>
+              <h3 class="squad-deal text-white">Diskon 5%</h3>
+              <p class="squad-desc text-white">Beli minimal <strong>2 Tiket VIP</strong> langsung dapat potongan harga 5% (1x per transaksi).</p>
+            </div>
+
+            <div class="squad-card card-yellow">
+              <span class="squad-badge badge-on-yellow">Trio Party</span>
+              <h3 class="squad-deal text-black">Diskon 10%</h3>
+              <p class="squad-desc text-black">Beli minimal <strong>3 Tiket Premium</strong> otomatis dapat potongan 10% (1x per transaksi).</p>
+            </div>
+
+            <div class="squad-card card-navy">
+              <span class="squad-badge badge-on-navy">Full Team</span>
+              <h3 class="squad-deal text-white">5 Gratis 1</h3>
+              <p class="squad-desc text-white">Beli minimal <strong>5 Tiket Premium</strong> gratis <strong>1 Tiket Premium</strong> ekstra.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="store-nav-section">
+        <div class="site-container">
+          <div class="search-category-wrap">
+            <div class="search-input-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-svg">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input 
+                type="text" 
+                id="store-search" 
+                placeholder="Cari tiket, snack, minuman, atau akun premium..." 
+                class="search-text-field"
+              />
+            </div>
+
+            <div class="category-pills-row">
+              {categories.map((cat, idx) => (
+                <button 
+                  type="button" 
+                  class={`cat-pill-btn ${idx === 0 ? 'active' : ''}`}
+                  data-category={cat}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="store-catalog-section">
+        <div class="site-container">
+          <div class="catalog-grid" id="catalog-grid">
+            {initialProducts.map((p) => (
+              <div 
+                class="product-card" 
+                id={`card-${p.id}`}
+                data-id={p.id}
+                data-name={p.name.toLowerCase()}
+                data-category={p.category}
+                data-price={p.price}
+                data-ticket-type={p.ticketType || ''}
+                data-ticket-tier={p.ticketTier || ''}
+              >
+                <div class="product-thumb-container">
+                  <div class="product-placeholder-box">
+                    <span class="placeholder-icon">📦</span>
+                    <span class="placeholder-label">Gambar Menyusul</span>
+                  </div>
+                  <div class="sold-out-overlay hidden" id={`sold-overlay-${p.id}`}>
+                    <span class="sold-out-badge">Barang Habis</span>
+                  </div>
+                </div>
+
+                <div class="product-info-box">
+                  <span class="product-category-tag">{p.category}</span>
+                  <h3 class="product-title-text">{p.name}</h3>
+                  <p class="product-desc-text">{p.desc}</p>
+
+                  <div class="product-price-wrapper" id={`price-wrap-${p.id}`}>
+                    <span class="product-price-val">Rp {p.price.toLocaleString('id-ID')}</span>
+                  </div>
+
+                  <div class="product-btn-area">
+                    <button 
+                      type="button" 
+                      class="btn-add-item initial-add-btn" 
+                      id={`btn-add-${p.id}`}
+                      data-id={p.id}
+                    >
+                      + Tambah
+                    </button>
+
+                    <div class="counter-stepper-box hidden" id={`counter-${p.id}`}>
+                      <button type="button" class="stepper-btn minus-btn" data-id={p.id}>−</button>
+                      <span class="stepper-value" id={`qty-${p.id}`}>1</span>
+                      <button type="button" class="stepper-btn plus-btn" data-id={p.id}>+</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <div class="cart-floating-bar hidden" id="cart-floating-bar">
+        <div class="cart-floating-container">
+          <div class="cart-left-info">
+            <div class="cart-icon-circle">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="9" cy="21" r="1"></circle>
+                <circle cx="20" cy="21" r="1"></circle>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+              </svg>
+              <span class="cart-count-pill" id="cart-badge">0</span>
+            </div>
+            <div class="cart-pricing-details">
+              <span class="cart-type-label" id="cart-type-text">Keranjang Belanja</span>
+              <div class="cart-prices-stack">
+                <span class="cart-total-amount" id="cart-total-text">Rp 0</span>
+              </div>
+            </div>
+          </div>
+
+          <button type="button" class="btn-order-action" id="btn-trigger-order">
+            Order Sekarang →
+          </button>
+        </div>
+      </div>
+
+      <!-- Pop Up Alert Konflik Kategori/Tiket -->
+      <div class="modal-backdrop-clean hidden" id="conflict-modal">
+        <div class="modal-dialog-card modal-sm">
+          <div class="modal-head">
+            <h3 class="modal-head-title">Perhatian Pemesanan</h3>
+            <button type="button" class="modal-close-icon" id="btn-close-conflict">&times;</button>
+          </div>
+          <div class="modal-body-content">
+            <p id="conflict-modal-message" class="conflict-text"></p>
+          </div>
+          <div class="modal-foot">
+            <button type="button" class="btn-modal-proceed" id="btn-ok-conflict">Mengerti</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pop Up Konfirmasi Pemesanan & Form Data Diri -->
+      <div class="modal-backdrop-clean hidden" id="order-confirm-modal">
+        <div class="modal-dialog-card">
+          <div class="modal-head">
+            <h3 class="modal-head-title">Konfirmasi & Checkout</h3>
+            <button type="button" class="modal-close-icon" id="btn-close-modal">&times;</button>
+          </div>
+
+          <div class="modal-body-content">
+            <div class="order-items-list" id="modal-items-list"></div>
+
+            <div class="subtotal-row">
+              <span>Subtotal:</span>
+              <span id="modal-subtotal-val">Rp 0</span>
+            </div>
+            
+            <div class="order-discount-notice hidden" id="modal-discount-box">
+              <span class="discount-notice-title" id="discount-title"></span>
+              <span class="discount-notice-amount" id="discount-amount"></span>
+            </div>
+
+            <div class="order-grand-total-row">
+              <span>Total Tagihan:</span>
+              <strong id="modal-grand-total">Rp 0</strong>
+            </div>
+
+            <!-- Form Data Diri Pemesan -->
+            <div class="checkout-form-container">
+              <h4 class="form-section-title">Data Diri Pemesan</h4>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="cust-name">Nama Lengkap *</label>
+                  <input type="text" id="cust-name" class="form-input" placeholder="Contoh: Fazl Islami Pasha" required />
+                </div>
+                <div class="form-group">
+                  <label for="cust-email">Gmail / Email *</label>
+                  <input type="email" id="cust-email" class="form-input" placeholder="alamat@gmail.com" required />
+                </div>
+                <div class="form-group">
+                  <label for="cust-wa">Nomor WhatsApp *</label>
+                  <input type="tel" id="cust-wa" class="form-input" placeholder="08xxxxxxxxxx" required />
+                </div>
+                <div class="form-group">
+                  <label for="cust-address">Alamat Lengkap *</label>
+                  <input type="text" id="cust-address" class="form-input" placeholder="Jalan, No. Rumah, Kota" required />
+                </div>
+                <div class="form-group full-col hidden" id="payment-method-group">
+                  <label for="cust-payment-method">Metode Pembayaran</label>
+                  <select id="cust-payment-method" class="form-input">
+                    <option value="transfer">Transfer QRIS (Melampirkan Bukti)</option>
+                    <option value="cash">Membayar Cash (Saat bertemu)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bagian QRIS Dinamis -->
+            <div class="ticket-qris-container hidden" id="modal-qris-unix">
+              <span class="qris-caption-title">Scan QRIS Resmi Tiket UNIX:</span>
+              <div class="qris-image-frame">
+                <Image src={qrisImg} alt="QRIS Pembayaran Tiket UNIX" class="qris-img-item" />
+              </div>
+              <p class="qris-guide-note">Selesaikan pembayaran QRIS dan simpan bukti transfer untuk dilampirkan ke Google Form registrasi.</p>
+            </div>
+
+            <div class="ticket-qris-container hidden" id="modal-qris-danusan">
+              <span class="qris-caption-title">Scan QRIS Danusan (Makanan & Minuman):</span>
+              <div class="qris-image-frame">
+                <Image src={qrisDanusanImg} alt="QRIS Danusan UNIX" class="qris-img-item" />
+              </div>
+              <p class="qris-guide-note">Scan untuk pembayaran non-tunai. Kirimkan tangkapan layar bukti transfer ke WhatsApp admin.</p>
+            </div>
+
+            <div class="ticket-qris-container hidden" id="modal-qris-danusan2">
+              <span class="qris-caption-title">Scan QRIS Premium Akun:</span>
+              <div class="qris-image-frame">
+                <Image src={qrisDanusan2Img} alt="QRIS Premium Akun UNIX" class="qris-img-item" />
+              </div>
+              <p class="qris-guide-note">Scan QRIS khusus produk Premium Akun dan kirim bukti transfer ke WhatsApp admin.</p>
+            </div>
+
+            <p class="modal-warning-text" id="modal-routing-info"></p>
+          </div>
+
+          <div class="modal-foot">
+            <button type="button" class="btn-modal-cancel" id="btn-cancel-order">Kembali</button>
+            <button type="button" class="btn-modal-proceed" id="btn-proceed-order">Lanjutkan Pemesanan</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pop Up Notifikasi 1x24 Jam -->
+      <div class="modal-backdrop-clean hidden" id="success-notice-modal">
+        <div class="modal-dialog-card modal-sm text-center">
+          <div class="modal-head">
+            <h3 class="modal-head-title">Pesanan Diteruskan</h3>
+            <button type="button" class="modal-close-icon" id="btn-close-success">&times;</button>
+          </div>
+          <div class="modal-body-content">
+            <div class="success-icon-wrap">⏳</div>
+            <h4 class="success-title">Terima Kasih!</h4>
+            <p class="success-desc">
+              Pesanan Anda telah diteruskan. Mohon ditunggu konfirmasi dan proses dari admin dalam waktu <strong>1x24 jam</strong>.
+            </p>
+          </div>
+          <div class="modal-foot center-foot">
+            <button type="button" class="btn-modal-proceed" id="btn-ok-success">Tutup</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dasbor Manajemen Admin UNIX 27 -->
+      <section class="admin-access-section fullwidth-section bg-navy hidden" id="admin-access-section">
+        <div class="site-container">
+          <div class="admin-header text-center">
+            <span class="admin-role-badge">Akun: Admin UNIX 27</span>
+            <h2 class="admin-main-title">Dasbor Manajemen UNIX 2027</h2>
+            <p class="admin-sub-title">Kelola stok tiket, sponsorship, dan penambahan produk baru secara real-time.</p>
+          </div>
+
+          <div class="admin-dashboard-panel">
+            <div class="admin-tabs-row">
+              <button type="button" class="admin-tab-btn active" id="tab-btn-ticketing">Manajemen Tiket</button>
+              <button type="button" class="admin-tab-btn" id="tab-btn-sponsorship">Makanan, Minuman & Akun</button>
+              <button type="button" class="admin-tab-btn" id="tab-btn-addproduct">+ Tambah Produk Baru</button>
+            </div>
+
+            <!-- Tab 1: Tiket -->
+            <div class="admin-tab-content" id="panel-ticketing">
+              <h4 class="admin-content-heading">Ketersediaan Stok Tiket UNIX</h4>
+              <div class="admin-stock-table-wrap">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Nama Tiket</th>
+                      <th>Harga</th>
+                      <th>Jumlah Stok</th>
+                      <th>Status</th>
+                      <th>Tindakan Stok</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tbody-ticketing"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Tab 2: Sponsorship & Akun -->
+            <div class="admin-tab-content hidden" id="panel-sponsorship">
+              <h4 class="admin-content-heading">Ketersediaan Stok Makanan, Minuman & Premium Akun</h4>
+              <div class="admin-stock-table-wrap">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Nama Produk</th>
+                      <th>Kategori</th>
+                      <th>Harga</th>
+                      <th>Jumlah Stok</th>
+                      <th>Status</th>
+                      <th>Tindakan Stok</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tbody-sponsorship"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Tab 3: Tambah Produk Baru -->
+            <div class="admin-tab-content hidden" id="panel-addproduct">
+              <h4 class="admin-content-heading">Tambah Produk Baru ke Katalog</h4>
+              <form id="admin-add-product-form" class="admin-form-box">
+                <div class="admin-form-grid">
+                  <div class="form-group">
+                    <label>Jenis / Kategori Produk *</label>
+                    <select id="new-prod-cat" class="form-input" required>
+                      <option value="Makanan & Snack">Makanan & Snack</option>
+                      <option value="Minuman">Minuman</option>
+                      <option value="Premium Akun">Premium Akun</option>
+                      <option value="Tiket UNIX">Tiket UNIX</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Nama Produk *</label>
+                    <input type="text" id="new-prod-name" class="form-input" placeholder="Contoh: Kebab Jumbo Special" required />
+                  </div>
+                  <div class="form-group">
+                    <label>Harga (Rp) *</label>
+                    <input type="number" id="new-prod-price" min="0" class="form-input" placeholder="15000" required />
+                  </div>
+                  <div class="form-group">
+                    <label>Jumlah Stok Awal *</label>
+                    <input type="number" id="new-prod-stock" min="0" class="form-input" placeholder="25" required />
+                  </div>
+                  <div class="form-group full-col">
+                    <label>Deskripsi Singkat *</label>
+                    <textarea id="new-prod-desc" class="form-input" rows="2" placeholder="Deskripsi ringkas produk..." required></textarea>
+                  </div>
+                  <div class="form-group full-col">
+                    <label>Unggah Foto Produk (Disimpan di Storage Lokal Website) *</label>
+                    <input type="file" id="new-prod-img" class="form-input" accept="image/*" />
+                    <small class="help-text">Foto akan dikonversi dan disimpan ke dalam penyimpanan data browser.</small>
+                  </div>
+                </div>
+                <button type="submit" class="btn-submit-product">Simpan Produk ke Katalog</button>
+              </form>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <div class="mascot-interactive-widget" id="mascot-widget">
+        <div class="mascot-bubble-talk" id="mascot-bubble">
+          <span class="mascot-bubble-title">Hai SobatKita! 👋</span>
+          <p class="mascot-bubble-desc">Yuk manfaatkan promo <strong>Squad Pass</strong> bareng bestiemu sebelum kehabisan!</p>
+          <button type="button" class="mascot-bubble-close" id="btn-close-bubble">&times;</button>
+        </div>
+        <div class="mascot-owix-btn" id="btn-toggle-mascot" title="Klik Owix!">
+          <Image src={owixMascot} alt="Maskot Owix UNIX" class="owix-avatar-img" />
+        </div>
+      </div>
+    </main>
+
+    <Footer />
+  </body>
+</html>
+
+<script>
+  interface Product {
+    id: string;
+    name: string;
+    category: string;
+    price: number;
+    ticketType?: string;
+    ticketTier?: string;
+    stock: number;
+    desc?: string;
+    image?: string;
+  }
+
+  const defaultProducts: Product[] = [
+    { id: 't-eb-vip', name: 'Tiket Early Bird - VIP', category: 'Tiket UNIX', price: 55000, ticketType: 'early-bird', ticketTier: 'VIP', stock: 50, desc: 'Akses VIP barisan depan, Goodie Bag eksklusif, & Sertifikat' },
+    { id: 't-eb-prem', name: 'Tiket Early Bird - Premium', category: 'Tiket UNIX', price: 45000, ticketType: 'early-bird', ticketTier: 'Premium', stock: 100, desc: 'Akses reguler seluruh rangkaian expo & e-sertifikat' },
+    { id: 't-ds-vip', name: 'Tiket Daily Sale - VIP', category: 'Tiket UNIX', price: 70000, ticketType: 'daily-sale', ticketTier: 'VIP', stock: 50, desc: 'Akses VIP barisan depan, Goodie Bag eksklusif, & Sertifikat' },
+    { id: 't-ds-prem', name: 'Tiket Daily Sale - Premium', category: 'Tiket UNIX', price: 60000, ticketType: 'daily-sale', ticketTier: 'Premium', stock: 100, desc: 'Akses reguler seluruh rangkaian expo & e-sertifikat' },
+    { id: 'm-gabin', name: 'Gabin Es Krim', category: 'Makanan & Snack', price: 12000, stock: 30, desc: 'Kombinasi biskuit gabin gurih & renyah dengan isian es krim manis' },
+    { id: 'm-sand-daging', name: 'Sandwich Daging', category: 'Makanan & Snack', price: 12000, stock: 25, desc: 'Roti lapis tebal dengan isian daging sapi olahan premium & selada' },
+    { id: 'm-sand-sosis', name: 'Sandwich Sosis', category: 'Makanan & Snack', price: 10000, stock: 25, desc: 'Roti lapis empuk dipadu sosis bakar lezat dan saus spesial' },
+    { id: 'm-kebab-daging', name: 'Kebab Daging', category: 'Makanan & Snack', price: 12000, stock: 30, desc: 'Kulit tortilla lembut dengan gulungan daging sapi gurih dan saus mayo' },
+    { id: 'm-kebab-beef', name: 'Kebab Slice Beef', category: 'Makanan & Snack', price: 10000, stock: 20, desc: 'Kebab istimewa dengan irisan slice beef berlimpah dan bumbu rempah' },
+    { id: 'd-milk-ori', name: 'Susu Murni by Milkbro - Original', category: 'Minuman', price: 10000, stock: 40, desc: '100% Susu sapi murni segar tanpa pemanis buatan rasa original' },
+    { id: 'd-milk-straw', name: 'Susu Murni by Milkbro - Strawberry', category: 'Minuman', price: 10000, stock: 30, desc: 'Susu murni segar berpadu sari buah strawberry manis menyegarkan' },
+    { id: 'd-milk-melon', name: 'Susu Murni by Milkbro - Melon', category: 'Minuman', price: 10000, stock: 30, desc: 'Susu murni segar aroma buah melon harum dan creamy' },
+    { id: 'd-milk-choc', name: 'Susu Murni by Milkbro - Coklat', category: 'Minuman', price: 10000, stock: 40, desc: 'Susu murni rasa coklat pekat yang legit dan nikmat' },
+    { id: 'd-milk-vanilla', name: 'Susu Murni by Milkbro - Vanilla', category: 'Minuman', price: 10000, stock: 30, desc: 'Susu murni rasa vanilla klasik yang lembut dan lezat' },
+    { id: 'd-milk-mangga', name: 'Susu Murni by Milkbro - Mangga', category: 'Minuman', price: 10000, stock: 30, desc: 'Susu murni sari mangga tropis segar cocok diminum dingin' },
+    { id: 'pa-canva-life', name: 'Canva Pro Lifetime (Education)', category: 'Premium Akun', price: 20000, stock: 50, desc: 'Akses penuh fitur Canva Pro Lifetime via undangan team/education' },
+    { id: 'pa-canva-1m', name: 'Canva Pro 1 Bulan', category: 'Premium Akun', price: 8000, stock: 50, desc: 'Langganan Canva Pro aktif 30 hari penuh bergaransi' },
+    { id: 'pa-capcut-pvt', name: 'CapCut Pro 1 Bulan - Private', category: 'Premium Akun', price: 38000, stock: 30, desc: 'Akun private CapCut Pro 30 hari tanpa batasan login bersama' },
+    { id: 'pa-capcut-shr', name: 'CapCut Pro 1 Bulan - Sharing', category: 'Premium Akun', price: 25000, stock: 30, desc: 'Akun sharing CapCut Pro 30 hari hemat dan fungsional' },
+  ];
+
+  let productsState: Record<string, Product> = {};
+
+  const savedProducts = localStorage.getItem('unix_store_products_v3');
+  if (savedProducts) {
+    try {
+      productsState = JSON.parse(savedProducts);
+    } catch {
+      defaultProducts.forEach((p) => (productsState[p.id] = p));
+    }
+  } else {
+    defaultProducts.forEach((p) => (productsState[p.id] = p));
+  }
+
+  interface CartEntry {
+    product: Product;
+    qty: number;
+  }
+  let currentCart: Record<string, CartEntry> = {};
+
+  const getLoggedInUser = () => {
+    return localStorage.getItem('unix_logged_in_user') || sessionStorage.getItem('unix_logged_in_user');
+  };
+
+  const showConflictModal = (msg: string) => {
+    const modal = document.getElementById('conflict-modal');
+    const msgEl = document.getElementById('conflict-modal-message');
+    if (msgEl) msgEl.innerText = msg;
+    modal?.classList.remove('hidden');
+  };
+
+  const hideConflictModal = () => {
+    document.getElementById('conflict-modal')?.classList.add('hidden');
+  };
+
+  document.getElementById('btn-close-conflict')?.addEventListener('click', hideConflictModal);
+  document.getElementById('btn-ok-conflict')?.addEventListener('click', hideConflictModal);
+
+  const getProductGroup = (p: Product) => {
+    if (p.category === 'Tiket UNIX') {
+      return p.ticketType === 'early-bird' ? 'ticket-early' : 'ticket-daily';
+    }
+    if (p.category === 'Premium Akun') return 'akun';
+    return 'danusan'; // Makanan & Minuman
+  };
+
+  const getGroupLabel = (group: string) => {
+    switch (group) {
+      case 'ticket-early': return 'Tiket Early Bird';
+      case 'ticket-daily': return 'Tiket Daily Sale';
+      case 'akun': return 'Premium Akun';
+      default: return 'Makanan & Minuman';
+    }
+  };
+
+  const renderCatalogGrid = () => {
+    const grid = document.getElementById('catalog-grid');
+    if (!grid) return;
+
+    grid.innerHTML = Object.values(productsState).map((p) => `
+      <div 
+        class="product-card" 
+        id="card-${p.id}"
+        data-id="${p.id}"
+        data-name="${p.name.toLowerCase()}"
+        data-category="${p.category}"
+        data-price="${p.price}"
+        data-ticket-type="${p.ticketType || ''}"
+        data-ticket-tier="${p.ticketTier || ''}"
+      >
+        <div class="product-thumb-container">
+          ${p.image ? `<img src="${p.image}" alt="${p.name}" class="product-real-img" />` : `
+            <div class="product-placeholder-box">
+              <span class="placeholder-icon">📦</span>
+              <span class="placeholder-label">Gambar Menyusul</span>
+            </div>
+          `}
+          <div class="sold-out-overlay ${p.stock <= 0 ? '' : 'hidden'}" id="sold-overlay-${p.id}">
+            <span class="sold-out-badge">Barang Habis</span>
+          </div>
+        </div>
+
+        <div class="product-info-box">
+          <span class="product-category-tag">${p.category}</span>
+          <h3 class="product-title-text">${p.name}</h3>
+          <p class="product-desc-text">${p.desc || ''}</p>
+
+          <div class="product-price-wrapper ${p.stock <= 0 ? 'hidden' : ''}" id="price-wrap-${p.id}">
+            <span class="product-price-val">Rp ${p.price.toLocaleString('id-ID')}</span>
+          </div>
+
+          <div class="product-btn-area">
+            <button 
+              type="button" 
+              class="btn-add-item initial-add-btn ${currentCart[p.id] ? 'hidden' : ''} ${p.stock <= 0 ? 'disabled-btn' : ''}" 
+              id="btn-add-${p.id}"
+              data-id="${p.id}"
+              ${p.stock <= 0 ? 'disabled' : ''}
+            >
+              ${p.stock <= 0 ? 'Habis' : '+ Tambah'}
+            </button>
+
+            <div class="counter-stepper-box ${currentCart[p.id] ? '' : 'hidden'}" id="counter-${p.id}">
+              <button type="button" class="stepper-btn minus-btn" data-id="${p.id}">−</button>
+              <span class="stepper-value" id="qty-${p.id}">${currentCart[p.id]?.qty || 1}</span>
+              <button type="button" class="stepper-btn plus-btn" data-id="${p.id}">+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+    attachCardEventListeners();
+  };
+
+  const calculateCartDetails = () => {
+    let subtotal = 0;
+    let totalQty = 0;
+    let discount = 0;
+    let promoLabel = '';
+
+    const items = Object.values(currentCart);
+    items.forEach((item) => {
+      subtotal += item.product.price * item.qty;
+      totalQty += item.qty;
+    });
+
+    const isTicket = items.length > 0 && items[0].product.category === 'Tiket UNIX';
+
+    if (isTicket) {
+      let vipCount = 0;
+      let premCount = 0;
+      let premUnitPrice = 0;
+
+      items.forEach((it) => {
+        if (it.product.ticketTier === 'VIP') vipCount += it.qty;
+        if (it.product.ticketTier === 'Premium') {
+          premCount += it.qty;
+          premUnitPrice = it.product.price;
+        }
+      });
+
+      // Squad Pass: Premium
+      if (premCount >= 5) {
+        discount = premUnitPrice * 1;
+        promoLabel = 'Promo Full Team (Gratis 1 Tiket Premium)';
+      } else if (premCount >= 3) {
+        discount = (premUnitPrice * 3) * 0.1;
+        promoLabel = 'Promo Trio Party (Diskon 10% untuk 3 Tiket Premium)';
+      }
+
+      // Squad Pass: VIP
+      if (vipCount >= 2) {
+        let vipUnitPrice = 0;
+        const vipItem = items.find((it) => it.product.ticketTier === 'VIP');
+        if (vipItem) vipUnitPrice = vipItem.product.price;
+        const vipDiscount = (vipUnitPrice * 2) * 0.05;
+        discount += vipDiscount;
+        promoLabel += (promoLabel ? ' + ' : '') + 'Promo Duo Ambisius (Diskon 5% untuk 2 Tiket VIP)';
+      }
+    }
+
+    const grandTotal = Math.max(0, subtotal - discount);
+
+    return { subtotal, discount, grandTotal, totalQty, promoLabel, isTicket };
+  };
+
+  const updateCartBar = () => {
+    const cartBar = document.getElementById('cart-floating-bar');
+    const badge = document.getElementById('cart-badge');
+    const typeText = document.getElementById('cart-type-text');
+    const totalText = document.getElementById('cart-total-text');
+
+    const { totalQty, subtotal, isTicket } = calculateCartDetails();
+
+    if (totalQty === 0) {
+      cartBar?.classList.add('hidden');
+    } else {
+      cartBar?.classList.remove('hidden');
+      if (badge) badge.textContent = totalQty.toString();
+
+      const items = Object.values(currentCart);
+      const activeGroup = items.length > 0 ? getGroupLabel(getProductGroup(items[0].product)) : '';
+      if (typeText) typeText.textContent = `Pesanan: ${activeGroup}`;
+      // Di keranjang floating: HANYA tampil subtotal murni tanpa potongan
+      if (totalText) totalText.textContent = `Rp ${subtotal.toLocaleString('id-ID')}`;
+    }
+  };
+
+  const handleAddToCart = (id: string) => {
+    const p = productsState[id];
+    if (!p || p.stock <= 0) return;
+
+    const currentItems = Object.values(currentCart);
+    if (currentItems.length > 0) {
+      const activeGroup = getProductGroup(currentItems[0].product);
+      const incomingGroup = getProductGroup(p);
+
+      if (activeGroup !== incomingGroup) {
+        let msg = 'Maaf, produk tidak dapat dicampur dalam satu transaksi!\n\n';
+        if (activeGroup.startsWith('ticket') && incomingGroup.startsWith('ticket')) {
+          msg += '• Tiket Early Bird dan Daily Sale memiliki formulir registrasi yang berbeda sehingga tidak bisa digabungkan.\n';
+        } else if (activeGroup.startsWith('ticket') || incomingGroup.startsWith('ticket')) {
+          msg += '• Tiket Expo tidak dapat digabung dengan pemesanan Makanan/Minuman ataupun Akun Premium.\n';
+        } else {
+          msg += `• Pesanan saat ini adalah kategori "${getGroupLabel(activeGroup)}". Anda memilih produk "${getGroupLabel(incomingGroup)}".\n`;
+        }
+        msg += '\nSilakan selesaikan atau kosongkan keranjang terlebih dahulu.';
+        showConflictModal(msg);
+        return;
+      }
+    }
+
+    currentCart[id] = { product: p, qty: 1 };
+
+    const btnAdd = document.getElementById(`btn-add-${id}`);
+    const counterBox = document.getElementById(`counter-${id}`);
+    const qtyVal = document.getElementById(`qty-${id}`);
+
+    btnAdd?.classList.add('hidden');
+    counterBox?.classList.remove('hidden');
+    if (qtyVal) qtyVal.textContent = '1';
+
+    updateCartBar();
+  };
+
+  const attachCardEventListeners = () => {
+    document.querySelectorAll('.initial-add-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-id');
+        if (id) handleAddToCart(id);
+      });
+    });
+
+    document.querySelectorAll('.plus-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-id');
+        if (id && currentCart[id]) {
+          if (currentCart[id].qty >= currentCart[id].product.stock) {
+            alert('Batas kuota stok barang telah tercapai.');
+            return;
+          }
+          currentCart[id].qty += 1;
+          const qtyVal = document.getElementById(`qty-${id}`);
+          if (qtyVal) qtyVal.textContent = currentCart[id].qty.toString();
+          updateCartBar();
+        }
+      });
+    });
+
+    document.querySelectorAll('.minus-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-id');
+        if (id && currentCart[id]) {
+          currentCart[id].qty -= 1;
+          if (currentCart[id].qty <= 0) {
+            delete currentCart[id];
+            const btnAdd = document.getElementById(`btn-add-${id}`);
+            const counterBox = document.getElementById(`counter-${id}`);
+            counterBox?.classList.add('hidden');
+            btnAdd?.classList.remove('hidden');
+          } else {
+            const qtyVal = document.getElementById(`qty-${id}`);
+            if (qtyVal) qtyVal.textContent = currentCart[id].qty.toString();
+          }
+          updateCartBar();
+        }
+      });
+    });
+  };
+
+  const getTimeGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour >= 4 && hour < 11) return 'pagi';
+    if (hour >= 11 && hour < 15) return 'siang';
+    if (hour >= 15 && hour < 18) return 'sore';
+    return 'malam';
+  };
+
+  const btnTriggerOrder = document.getElementById('btn-trigger-order');
+  const confirmModal = document.getElementById('order-confirm-modal');
+  const btnCloseModal = document.getElementById('btn-close-modal');
+  const btnCancelOrder = document.getElementById('btn-cancel-order');
+  const btnProceedOrder = document.getElementById('btn-proceed-order');
+
+  const modalItemsList = document.getElementById('modal-items-list');
+  const modalSubtotalVal = document.getElementById('modal-subtotal-val');
+  const modalDiscountBox = document.getElementById('modal-discount-box');
+  const discountTitle = document.getElementById('discount-title');
+  const discountAmount = document.getElementById('discount-amount');
+  const modalGrandTotal = document.getElementById('modal-grand-total');
+
+  const modalQrisUnix = document.getElementById('modal-qris-unix');
+  const modalQrisDanusan = document.getElementById('modal-qris-danusan');
+  const modalQrisDanusan2 = document.getElementById('modal-qris-danusan2');
+  const paymentMethodGroup = document.getElementById('payment-method-group');
+  const modalRoutingInfo = document.getElementById('modal-routing-info');
+
+  btnTriggerOrder?.addEventListener('click', () => {
+    const { totalQty, subtotal, discount, grandTotal, promoLabel, isTicket } = calculateCartDetails();
+    if (totalQty === 0) return;
+
+    if (isTicket) {
+      const loggedUser = getLoggedInUser();
+      if (!loggedUser) {
+        const confirmLogin = confirm(
+          'Pemberitahuan: Pembelian Tiket UNIX mewajibkan akun terverifikasi.\n\n' +
+          'Anda belum masuk ke akun. Tekan OK untuk menuju halaman Login.'
+        );
+        if (confirmLogin) {
+          window.location.href = '/login';
+        }
+        return;
+      }
+    }
+
+    if (modalItemsList) {
+      modalItemsList.innerHTML = Object.values(currentCart)
+        .map(
+          (entry) => `
+          <div class="confirm-item-row">
+            <span class="confirm-item-name"><strong>${entry.qty}x</strong> ${entry.product.name}</span>
+            <span class="confirm-item-price">Rp ${(entry.product.price * entry.qty).toLocaleString('id-ID')}</span>
+          </div>
+        `
+        )
+        .join('');
+    }
+
+    if (modalSubtotalVal) modalSubtotalVal.textContent = `Rp ${subtotal.toLocaleString('id-ID')}`;
+
+    // Diskon dan total akhir baru muncul di pop up checkout
+    if (discount > 0) {
+      modalDiscountBox?.classList.remove('hidden');
+      if (discountTitle) discountTitle.textContent = promoLabel;
+      if (discountAmount) discountAmount.textContent = `- Rp ${discount.toLocaleString('id-ID')}`;
+    } else {
+      modalDiscountBox?.classList.add('hidden');
+    }
+
+    if (modalGrandTotal) modalGrandTotal.textContent = `Rp ${grandTotal.toLocaleString('id-ID')}`;
+
+    // Penentuan QRIS berdasarkan kategori
+    modalQrisUnix?.classList.add('hidden');
+    modalQrisDanusan?.classList.add('hidden');
+    modalQrisDanusan2?.classList.add('hidden');
+
+    const items = Object.values(currentCart);
+    const firstCat = items[0].product.category;
+
+    if (firstCat === 'Tiket UNIX') {
+      modalQrisUnix?.classList.remove('hidden');
+      paymentMethodGroup?.classList.add('hidden');
+      if (modalRoutingInfo) {
+        modalRoutingInfo.textContent = 'Setelah transfer, tekan tombol Lanjutkan untuk mengisi formulir registrasi & unggah bukti transfer.';
+      }
+    } else if (firstCat === 'Premium Akun') {
+      modalQrisDanusan2?.classList.remove('hidden');
+      paymentMethodGroup?.classList.remove('hidden');
+      if (modalRoutingInfo) {
+        modalRoutingInfo.textContent = 'Pemesanan akan diteruskan langsung ke WhatsApp Admin (0895-7049-06969) beserta data diri dan format konfirmasi.';
+      }
+    } else {
+      // Makanan & Minuman
+      modalQrisDanusan?.classList.remove('hidden');
+      paymentMethodGroup?.classList.remove('hidden');
+      if (modalRoutingInfo) {
+        modalRoutingInfo.textContent = 'Pemesanan akan diteruskan langsung ke WhatsApp Admin (0895-7049-06969) beserta data diri dan rincian pesanan.';
+      }
+    }
+
+    confirmModal?.classList.remove('hidden');
+  });
+
+  const hideModal = () => confirmModal?.classList.add('hidden');
+  btnCloseModal?.addEventListener('click', hideModal);
+  btnCancelOrder?.addEventListener('click', hideModal);
+
+  const successModal = document.getElementById('success-notice-modal');
+  const btnCloseSuccess = document.getElementById('btn-close-success');
+  const btnOkSuccess = document.getElementById('btn-ok-success');
+
+  const hideSuccessModal = () => successModal?.classList.add('hidden');
+  btnCloseSuccess?.addEventListener('click', hideSuccessModal);
+  btnOkSuccess?.addEventListener('click', hideSuccessModal);
+
+  btnProceedOrder?.addEventListener('click', () => {
+    const name = (document.getElementById('cust-name') as HTMLInputElement).value.trim();
+    const email = (document.getElementById('cust-email') as HTMLInputElement).value.trim();
+    const wa = (document.getElementById('cust-wa') as HTMLInputElement).value.trim();
+    const address = (document.getElementById('cust-address') as HTMLInputElement).value.trim();
+
+    if (!name || !email || !wa || !address) {
+      alert('Harap lengkapi semua Data Diri Pemesan (Nama, Gmail, No. WhatsApp, dan Alamat) sebelum melanjutkan!');
+      return;
+    }
+
+    const { grandTotal, subtotal, discount, promoLabel, isTicket } = calculateCartDetails();
+    const items = Object.values(currentCart);
+    if (items.length === 0) return;
+
+    hideModal();
+
+    if (isTicket) {
+      const hasEarlyBird = items.some((it) => it.product.ticketType === 'early-bird');
+      const earlyBirdUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSeWpHwBAtkFn-ZlIclrqSXdLPJz73slH-ymAVGSqGINCwf_fg/viewform?pli=1';
+      const dailySaleUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSfR5ddGouxSCUz177GBIdCp7VKnfz6wBwkkwLnc2gI7P5d4TQ/viewform?pli=1';
+      
+      window.open(hasEarlyBird ? earlyBirdUrl : dailySaleUrl, '_blank');
+    } else {
+      const paymentMethod = (document.getElementById('cust-payment-method') as HTMLSelectElement).value;
+      const paymentStatement = paymentMethod === 'transfer' 
+        ? 'dan ini bukti transfer saya.' 
+        : 'saya akan membayar cash.';
+
+      const greetingTime = getTimeGreeting();
+      let text = `Selamat ${greetingTime} min, saya ingin konfirmasi pembelian.%0A%0A`;
+      text += `*Data Diri Pembeli:*%0A`;
+      text += `• Nama: ${name}%0A`;
+      text += `• Gmail: ${email}%0A`;
+      text += `• WhatsApp: ${wa}%0A`;
+      text += `• Alamat: ${address}%0A%0A`;
+      text += `*Rincian Pesanan (Bill):*%0A`;
+
+      items.forEach((it, idx) => {
+        text += `${idx + 1}. ${it.product.name} (${it.qty}x) = Rp ${(it.product.price * it.qty).toLocaleString('id-ID')}%0A`;
+      });
+
+      if (discount > 0) {
+        text += `• Subtotal: Rp ${subtotal.toLocaleString('id-ID')}%0A`;
+        text += `• Diskon: - Rp ${discount.toLocaleString('id-ID')} (${promoLabel})%0A`;
+      }
+      text += `*Total Pembayaran: Rp ${grandTotal.toLocaleString('id-ID')}*%0A%0A`;
+      text += `${paymentStatement}%0AMohon konfirmasi pesanannya. Terima kasih!`;
+
+      window.open(`https://wa.me/62895704906969?text=${text}`, '_blank');
+    }
+
+    // Reset keranjang setelah proses
+    currentCart = {};
+    updateCartBar();
+    renderCatalogGrid();
+
+    // Tampilkan notifikasi ditunggu 1x24 jam dengan tombol silang
+    successModal?.classList.remove('hidden');
+  });
+
+  // Filter Kategori
+  const catButtons = document.querySelectorAll('.cat-pill-btn');
+  catButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      catButtons.forEach((b) => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const selectedCat = btn.getAttribute('data-category');
+      document.querySelectorAll('.product-card').forEach((card) => {
+        const c = card.getAttribute('data-category');
+        if (selectedCat === 'Semua Produk' || c === selectedCat) {
+          (card as HTMLElement).style.display = 'flex';
+        } else {
+          (card as HTMLElement).style.display = 'none';
+        }
+      });
+    });
+  });
+
+  // Fitur Pencarian
+  const searchInput = document.getElementById('store-search') as HTMLInputElement;
+  searchInput?.addEventListener('input', (e) => {
+    const val = (e.target as HTMLInputElement).value.toLowerCase();
+    document.querySelectorAll('.product-card').forEach((card) => {
+      const name = card.getAttribute('data-name') || '';
+      if (name.includes(val)) {
+        (card as HTMLElement).style.display = 'flex';
+      } else {
+        (card as HTMLElement).style.display = 'none';
+      }
+    });
+  });
+
+  // Hak Akses Admin UNIX 27
+  const adminSection = document.getElementById('admin-access-section');
+  const tabTicketing = document.getElementById('tab-btn-ticketing');
+  const tabSponsorship = document.getElementById('tab-btn-sponsorship');
+  const tabAddProduct = document.getElementById('tab-btn-addproduct');
+  const panelTicketing = document.getElementById('panel-ticketing');
+  const panelSponsorship = document.getElementById('panel-sponsorship');
+  const panelAddProduct = document.getElementById('panel-addproduct');
+  const tbodyTicketing = document.getElementById('tbody-ticketing');
+  const tbodySponsorship = document.getElementById('tbody-sponsorship');
+
+  const checkAdminAuthorization = () => {
+    const user = getLoggedInUser();
+
+    // Admin UNIX 27 memegang kontrol penuh atas seluruh dasbor
+    if (user === 'admin_UNIX_27' || user === 'admin_Ticketing' || user === 'admin_Sponsorship') {
+      adminSection?.classList.remove('hidden');
+      renderAdminTables();
+    } else {
+      adminSection?.classList.add('hidden');
+    }
+  };
+
+  tabTicketing?.addEventListener('click', () => {
+    tabTicketing.classList.add('active');
+    tabSponsorship?.classList.remove('active');
+    tabAddProduct?.classList.remove('active');
+    panelTicketing?.classList.remove('hidden');
+    panelSponsorship?.classList.add('hidden');
+    panelAddProduct?.classList.add('hidden');
+  });
+
+  tabSponsorship?.addEventListener('click', () => {
+    tabSponsorship.classList.add('active');
+    tabTicketing?.classList.remove('active');
+    tabAddProduct?.classList.remove('active');
+    panelSponsorship?.classList.remove('hidden');
+    panelTicketing?.classList.add('hidden');
+    panelAddProduct?.classList.add('hidden');
+  });
+
+  tabAddProduct?.addEventListener('click', () => {
+    tabAddProduct.classList.add('active');
+    tabTicketing?.classList.remove('active');
+    tabSponsorship?.classList.remove('active');
+    panelAddProduct?.classList.remove('hidden');
+    panelTicketing?.classList.add('hidden');
+    panelSponsorship?.classList.add('hidden');
+  });
+
+  const renderAdminTables = () => {
+    const items = Object.values(productsState);
+
+    if (tbodyTicketing) {
+      tbodyTicketing.innerHTML = items
+        .filter((p) => p.category === 'Tiket UNIX')
+        .map(
+          (p) => `
+          <tr>
+            <td><strong>${p.name}</strong></td>
+            <td>Rp ${p.price.toLocaleString('id-ID')}</td>
+            <td>
+              <input 
+                type="number" 
+                min="0" 
+                value="${p.stock}" 
+                class="admin-stock-input" 
+                id="stock-input-${p.id}"
+                onchange="window.saveCustomStock('${p.id}')"
+              />
+            </td>
+            <td>
+              <span class="stock-status-tag ${p.stock > 0 ? 'in-stock' : 'out-of-stock'}">
+                ${p.stock > 0 ? 'Tersedia' : 'Habis'}
+              </span>
+            </td>
+            <td>
+              <div class="admin-stock-actions">
+                <button type="button" class="btn-stock-toggle" onclick="window.toggleProductStock('${p.id}')">
+                  ${p.stock > 0 ? 'Set Jadi Habis (0)' : 'Set Tersedia (50)'}
+                </button>
+              </div>
+            </td>
+          </tr>
+        `
+        )
+        .join('');
+    }
+
+    if (tbodySponsorship) {
+      tbodySponsorship.innerHTML = items
+        .filter((p) => p.category !== 'Tiket UNIX')
+        .map(
+          (p) => `
+          <tr>
+            <td><strong>${p.name}</strong></td>
+            <td>${p.category}</td>
+            <td>Rp ${p.price.toLocaleString('id-ID')}</td>
+            <td>
+              <input 
+                type="number" 
+                min="0" 
+                value="${p.stock}" 
+                class="admin-stock-input" 
+                id="stock-input-${p.id}"
+                onchange="window.saveCustomStock('${p.id}')"
+              />
+            </td>
+            <td>
+              <span class="stock-status-tag ${p.stock > 0 ? 'in-stock' : 'out-of-stock'}">
+                ${p.stock > 0 ? 'Tersedia' : 'Habis'}
+              </span>
+            </td>
+            <td>
+              <div class="admin-stock-actions">
+                <button type="button" class="btn-stock-toggle" onclick="window.toggleProductStock('${p.id}')">
+                  ${p.stock > 0 ? 'Set Jadi Habis (0)' : 'Set Tersedia (30)'}
+                </button>
+              </div>
+            </td>
+          </tr>
+        `
+        )
+        .join('');
+    }
+  };
+
+  (window as any).saveCustomStock = (id: string) => {
+    const input = document.getElementById(`stock-input-${id}`) as HTMLInputElement;
+    if (input && productsState[id]) {
+      const val = Math.max(0, parseInt(input.value) || 0);
+      productsState[id].stock = val;
+      localStorage.setItem('unix_store_products_v3', JSON.stringify(productsState));
+      renderCatalogGrid();
+      renderAdminTables();
+    }
+  };
+
+  (window as any).toggleProductStock = (id: string) => {
+    if (productsState[id]) {
+      productsState[id].stock = productsState[id].stock > 0 ? 0 : 50;
+      localStorage.setItem('unix_store_products_v3', JSON.stringify(productsState));
+      renderCatalogGrid();
+      renderAdminTables();
+    }
+  };
+
+  // Handler Tambah Produk Baru oleh Admin UNIX 27
+  const addProductForm = document.getElementById('admin-add-product-form');
+  addProductForm?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const cat = (document.getElementById('new-prod-cat') as HTMLSelectElement).value;
+    const name = (document.getElementById('new-prod-name') as HTMLInputElement).value.trim();
+    const price = parseInt((document.getElementById('new-prod-price') as HTMLInputElement).value) || 0;
+    const stock = parseInt((document.getElementById('new-prod-stock') as HTMLInputElement).value) || 0;
+    const desc = (document.getElementById('new-prod-desc') as HTMLTextAreaElement).value.trim();
+    const fileInput = document.getElementById('new-prod-img') as HTMLInputElement;
+
+    const id = `custom-${Date.now()}`;
+
+    const saveProduct = (imgData?: string) => {
+      const newProduct: Product = {
+        id,
+        name,
+        category: cat,
+        price,
+        stock,
+        desc,
+        image: imgData,
+        ...(cat === 'Tiket UNIX' ? { ticketType: 'daily-sale', ticketTier: 'Premium' } : {}),
+      };
+
+      productsState[id] = newProduct;
+      localStorage.setItem('unix_store_products_v3', JSON.stringify(productsState));
+
+      alert('Produk baru berhasil ditambahkan ke katalog!');
+      (addProductForm as HTMLFormElement).reset();
+      renderCatalogGrid();
+      renderAdminTables();
+
+      // Alihkan ke tab sesuai produk yang baru dibuat
+      if (cat === 'Tiket UNIX') {
+        tabTicketing?.click();
+      } else {
+        tabSponsorship?.click();
+      }
+    };
+
+    if (fileInput.files && fileInput.files[0]) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        saveProduct(event.target?.result as string);
+      };
+      reader.readAsDataURL(fileInput.files[0]);
+    } else {
+      saveProduct();
+    }
+  });
+
+  // Mascot interaction
+  const btnToggleMascot = document.getElementById('btn-toggle-mascot');
+  const mascotBubble = document.getElementById('mascot-bubble');
+  const btnCloseBubble = document.getElementById('btn-close-bubble');
+
+  btnToggleMascot?.addEventListener('click', () => {
+    mascotBubble?.classList.toggle('hidden');
+  });
+
+  btnCloseBubble?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    mascotBubble?.classList.add('hidden');
+  });
+
+  setTimeout(() => {
+    mascotBubble?.classList.remove('hidden');
+  }, 2500);
+
+  // Inisialisasi awal
+  renderCatalogGrid();
+  checkAdminAuthorization();
+</script>
+
+<style is:global>
+  .site-container {
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding-left: clamp(1.25rem, 4vw, 3.5rem);
+    padding-right: clamp(1.25rem, 4vw, 3.5rem);
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: #f8fafc;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    font-family: inherit;
+  }
+
+  .store-page {
+    width: 100%;
+    overflow-x: hidden;
+    flex: 1;
+    padding-bottom: 7rem;
+  }
+
+  .fullwidth-section {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+  }
+
+  .bg-navy {
+    background-color: #12055f;
+    color: #ffffff;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+
+  .hidden {
+    display: none !important;
+  }
+
+  .squad-pass-section {
+    padding: clamp(2.5rem, 4vw, 3.5rem) 0 1.5rem 0;
+  }
+
+  .badge-pill-yellow {
+    display: inline-block;
+    padding: 0.3rem 0.95rem;
+    background: #facc15;
+    color: #12055f;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    border-radius: 999px;
+    margin-bottom: 0.5rem;
+  }
+
+  .squad-title {
+    font-size: clamp(2rem, 3.2vw, 2.7rem);
+    font-weight: 950;
+    color: #12055f;
+    margin: 0 0 0.35rem 0;
+  }
+
+  .squad-sub {
+    font-size: 0.95rem;
+    color: #64748b;
+    margin: 0 auto clamp(1.8rem, 3vw, 2.5rem) auto;
+  }
+
+  .squad-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .squad-card {
+    border-radius: 20px;
+    padding: 1.75rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+    transition: transform 0.25s ease;
+  }
+
+  .squad-card:hover {
+    transform: translateY(-4px);
+  }
+
+  .card-navy {
+    background-color: #12055f;
+    border: 2px solid rgba(250, 204, 21, 0.4);
+  }
+
+  .text-white {
+    color: #ffffff !important;
+  }
+
+  .badge-on-navy {
+    background: rgba(255, 255, 255, 0.18);
+    color: #ffffff;
+  }
+
+  .card-yellow {
+    background-color: #facc15;
+    border: 2px solid #eab308;
+  }
+
+  .text-black {
+    color: #000000 !important;
+  }
+
+  .badge-on-yellow {
+    background: rgba(0, 0, 0, 0.12);
+    color: #000000;
+  }
+
+  .squad-badge {
+    display: inline-block;
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.25rem 0.7rem;
+    border-radius: 6px;
+    width: fit-content;
+    margin-bottom: 0.6rem;
+  }
+
+  .squad-deal {
+    font-size: 1.8rem;
+    font-weight: 950;
+    margin: 0 0 0.5rem 0;
+  }
+
+  .squad-desc {
+    font-size: 0.88rem;
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  .store-nav-section {
+    padding: 1.5rem 0;
+  }
+
+  .search-category-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .search-input-box {
+    position: relative;
+    max-width: 650px;
+    display: flex;
+    align-items: center;
+  }
+
+  .search-svg {
+    position: absolute;
+    left: 1.25rem;
+    width: 20px;
+    height: 20px;
+    color: #64748b;
+  }
+
+  .search-text-field {
+    width: 100%;
+    padding: 0.9rem 1.25rem 0.9rem 3.2rem;
+    background: #ffffff;
+    border: 2px solid #e2e8f0;
+    border-radius: 999px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    outline: none;
+    transition: all 0.25s ease;
+  }
+
+  .search-text-field:focus {
+    border-color: #12055f;
+    box-shadow: 0 0 0 4px rgba(18, 5, 95, 0.08);
+  }
+
+  .category-pills-row {
+    display: flex;
+    gap: 0.75rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    scrollbar-width: none;
+  }
+
+  .category-pills-row::-webkit-scrollbar {
+    display: none;
+  }
+
+  .cat-pill-btn {
+    padding: 0.6rem 1.35rem;
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #475569;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+  }
+
+  .cat-pill-btn:hover {
+    border-color: #12055f;
+    color: #12055f;
+  }
+
+  .cat-pill-btn.active {
+    background-color: #12055f;
+    border-color: #12055f;
+    color: #facc15;
+    box-shadow: 0 4px 12px rgba(18, 5, 95, 0.2);
+  }
+
+  .store-catalog-section {
+    padding: 1rem 0 3.5rem 0;
+  }
+
+  .catalog-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+  }
+
+  .product-card {
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 18px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.03);
+    transition: all 0.25s ease;
+    position: relative;
+  }
+
+  .product-card:hover {
+    transform: translateY(-4px);
+    border-color: #12055f;
+    box-shadow: 0 12px 28px rgba(18, 5, 95, 0.08);
+  }
+
+  .product-thumb-container {
+    position: relative;
+    width: 100%;
+    height: 190px;
+    background: #f1f5f9;
+  }
+
+  .product-real-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .product-placeholder-box {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8;
+  }
+
+  .placeholder-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .placeholder-label {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #64748b;
+  }
+
+  .sold-out-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(2px);
+  }
+
+  .sold-out-badge {
+    background: #ef4444;
+    color: #ffffff;
+    font-size: 0.85rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    padding: 0.45rem 1rem;
+    border-radius: 8px;
+    letter-spacing: 0.05em;
+  }
+
+  .product-info-box {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .product-category-tag {
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: #d97706;
+    margin-bottom: 0.25rem;
+  }
+
+  .product-title-text {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0 0 0.35rem 0;
+    line-height: 1.35;
+  }
+
+  .product-desc-text {
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: #64748b;
+    margin: 0 0 1rem 0;
+  }
+
+  .product-price-wrapper {
+    margin-top: auto;
+    margin-bottom: 0.85rem;
+  }
+
+  .product-price-val {
+    font-size: 1.25rem;
+    font-weight: 950;
+    color: #12055f;
+  }
+
+  .product-btn-area {
+    width: 100%;
+    height: 40px;
+    position: relative;
+  }
+
+  .btn-add-item {
+    width: 100%;
+    height: 100%;
+    background: #12055f;
+    color: #facc15;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-add-item:hover {
+    background: #1c0a85;
+  }
+
+  .disabled-btn {
+    background: #cbd5e1 !important;
+    color: #64748b !important;
+    cursor: not-allowed;
+  }
+
+  .counter-stepper-box {
+    width: 100%;
+    height: 100%;
+    background: #fef08a;
+    border: 1.5px solid #facc15;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 0.5rem;
+    box-sizing: border-box;
+  }
+
+  .stepper-btn {
+    background: none;
+    border: none;
+    font-size: 1.3rem;
+    font-weight: 900;
+    color: #12055f;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+  }
+
+  .stepper-btn:hover {
+    background: rgba(18, 5, 95, 0.1);
+  }
+
+  .stepper-value {
+    font-size: 1rem;
+    font-weight: 900;
+    color: #12055f;
+  }
+
+  .cart-floating-bar {
+    position: fixed;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 990;
+    width: calc(100% - 2.5rem);
+    max-width: 680px;
+    background: #12055f;
+    border: 2px solid #facc15;
+    border-radius: 999px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+    padding: 0.65rem 1.25rem;
+    box-sizing: border-box;
+    animation: popUpFloat 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes popUpFloat {
+    from {
+      transform: translate(-50%, 40px);
+      opacity: 0;
+    }
+    to {
+      transform: translate(-50%, 0);
+      opacity: 1;
+    }
+  }
+
+  .cart-floating-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .cart-left-info {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+  }
+
+  .cart-icon-circle {
+    position: relative;
+    width: 42px;
+    height: 42px;
+    background: #facc15;
+    color: #12055f;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .cart-icon-circle svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .cart-count-pill {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: #ef4444;
+    color: #ffffff;
+    font-size: 0.72rem;
+    font-weight: 900;
+    width: 19px;
+    height: 19px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #12055f;
+  }
+
+  .cart-pricing-details {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cart-type-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #94a3b8;
+  }
+
+  .cart-prices-stack {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+
+  .cart-total-amount {
+    font-size: 1.15rem;
+    font-weight: 950;
+    color: #facc15;
+  }
+
+  .btn-order-action {
+    padding: 0.75rem 1.6rem;
+    background: #facc15;
+    color: #12055f;
+    border: none;
+    border-radius: 999px;
+    font-size: 0.95rem;
+    font-weight: 900;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-order-action:hover {
+    background: #eab308;
+    transform: translateY(-2px);
+  }
+
+  .modal-backdrop-clean {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.25rem;
+    box-sizing: border-box;
+  }
+
+  .modal-dialog-card {
+    background: #ffffff;
+    width: 100%;
+    max-width: 540px;
+    max-height: 90vh;
+    overflow-y: auto;
+    border-radius: 20px;
+    border: 2px solid #12055f;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+  }
+
+  .modal-sm {
+    max-width: 420px;
+  }
+
+  .modal-head {
+    background: #12055f;
+    color: #ffffff;
+    padding: 1.2rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .modal-head-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #facc15;
+    margin: 0;
+  }
+
+  .modal-close-icon {
+    background: none;
+    border: none;
+    color: #ffffff;
+    font-size: 1.6rem;
+    cursor: pointer;
+    line-height: 1;
+  }
+
+  .modal-body-content {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .conflict-text {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #334155;
+    white-space: pre-line;
+    margin: 0;
+  }
+
+  .order-items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    border-bottom: 1px dashed #cbd5e1;
+    padding-bottom: 1rem;
+  }
+
+  :global(.confirm-item-row) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.92rem;
+  }
+
+  .subtotal-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.95rem;
+    color: #64748b;
+    font-weight: 700;
+  }
+
+  .order-discount-notice {
+    background: #fef9c3;
+    border: 1px solid #facc15;
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #854d0e;
+  }
+
+  .order-grand-total-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 1.1rem;
+    color: #12055f;
+    border-top: 1px solid #e2e8f0;
+    padding-top: 0.75rem;
+  }
+
+  .order-grand-total-row strong {
+    font-size: 1.35rem;
+    font-weight: 950;
+  }
+
+  .checkout-form-container {
+    background: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 1.2rem;
+  }
+
+  .form-section-title {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: #12055f;
+    margin: 0 0 0.85rem 0;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.85rem;
+  }
+
+  .full-col {
+    grid-column: span 2;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .form-group label {
+    font-size: 0.78rem;
+    font-weight: 800;
+    color: #475569;
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 0.65rem 0.85rem;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-family: inherit;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.2s ease;
+  }
+
+  .form-input:focus {
+    border-color: #12055f;
+  }
+
+  .help-text {
+    font-size: 0.72rem;
+    color: #64748b;
+  }
+
+  .ticket-qris-container {
+    background: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 1.2rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .qris-caption-title {
+    font-size: 0.88rem;
+    font-weight: 800;
+    color: #12055f;
+  }
+
+  .qris-image-frame {
+    width: 220px;
+    height: auto;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    padding: 0.5rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  }
+
+  .qris-img-item {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+  }
+
+  .qris-guide-note {
+    font-size: 0.78rem;
+    line-height: 1.45;
+    color: #64748b;
+    margin: 0;
+  }
+
+  .modal-warning-text {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: #64748b;
+    margin: 0;
+    background: #f8fafc;
+    border-left: 3px solid #12055f;
+    padding: 0.65rem 0.85rem;
+    border-radius: 0 8px 8px 0;
+  }
+
+  .modal-foot {
+    padding: 1rem 1.5rem 1.5rem 1.5rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+  }
+
+  .center-foot {
+    justify-content: center;
+  }
+
+  .btn-modal-cancel {
+    padding: 0.75rem 1.4rem;
+    background: #e2e8f0;
+    color: #334155;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .btn-modal-proceed {
+    padding: 0.75rem 1.6rem;
+    background: #12055f;
+    color: #facc15;
+    border: none;
+    border-radius: 10px;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(18, 5, 95, 0.25);
+  }
+
+  .success-icon-wrap {
+    font-size: 3rem;
+  }
+
+  .success-title {
+    font-size: 1.3rem;
+    font-weight: 900;
+    color: #12055f;
+    margin: 0;
+  }
+
+  .success-desc {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: #475569;
+    margin: 0;
+  }
+
+  .admin-access-section {
+    padding: 4rem 0;
+    margin-top: 4rem;
+  }
+
+  .admin-header {
+    max-width: 720px;
+    margin: 0 auto 2.5rem auto;
+  }
+
+  .admin-role-badge {
+    display: inline-block;
+    padding: 0.35rem 1rem;
+    background: #facc15;
+    color: #12055f;
+    font-size: 0.8rem;
+    font-weight: 800;
+    border-radius: 999px;
+    margin-bottom: 0.6rem;
+  }
+
+  .admin-main-title {
+    font-size: clamp(2rem, 3vw, 2.6rem);
+    font-weight: 950;
+    color: #ffffff;
+    margin: 0 0 0.5rem 0;
+  }
+
+  .admin-sub-title {
+    font-size: 0.95rem;
+    color: #e2e8f0;
+    margin: 0;
+  }
+
+  .admin-dashboard-panel {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 2rem;
+    color: #0f172a;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+  }
+
+  .admin-tabs-row {
+    display: flex;
+    gap: 1rem;
+    border-bottom: 2px solid #e2e8f0;
+    margin-bottom: 1.5rem;
+    overflow-x: auto;
+  }
+
+  .admin-tab-btn {
+    padding: 0.75rem 1.5rem;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    font-size: 1rem;
+    font-weight: 800;
+    color: #64748b;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .admin-tab-btn.active {
+    color: #12055f;
+    border-bottom-color: #12055f;
+  }
+
+  .admin-content-heading {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #12055f;
+    margin: 0 0 1rem 0;
+  }
+
+  .admin-stock-table-wrap {
+    overflow-x: auto;
+  }
+
+  .admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+
+  .admin-table th,
+  .admin-table td {
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid #e2e8f0;
+    text-align: left;
+  }
+
+  .admin-table th {
+    background: #f8fafc;
+    color: #475569;
+    font-weight: 800;
+  }
+
+  :global(.admin-stock-input) {
+    width: 70px;
+    padding: 0.35rem 0.5rem;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 6px;
+    font-weight: 800;
+    text-align: center;
+  }
+
+  :global(.stock-status-tag) {
+    display: inline-block;
+    padding: 0.25rem 0.65rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  :global(.in-stock) {
+    background: #dcfce7;
+    color: #166534;
+  }
+
+  :global(.out-of-stock) {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+
+  :global(.btn-stock-toggle) {
+    padding: 0.4rem 0.85rem;
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 0.78rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  :global(.btn-stock-toggle:hover) {
+    background: #12055f;
+    color: #facc15;
+    border-color: #12055f;
+  }
+
+  .admin-form-box {
+    background: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 1.5rem;
+  }
+
+  .admin-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .btn-submit-product {
+    padding: 0.85rem 2rem;
+    background: #12055f;
+    color: #facc15;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 900;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .btn-submit-product:hover {
+    background: #1c0a85;
+  }
+
+  .mascot-interactive-widget {
+    position: fixed;
+    bottom: 2rem;
+    left: 2rem;
+    z-index: 995;
+    display: flex;
+    align-items: flex-end;
+    gap: 0.75rem;
+  }
+
+  .mascot-owix-btn {
+    width: 68px;
+    height: 68px;
+    background: #ffffff;
+    border: 3px solid #facc15;
+    border-radius: 50%;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.25s ease;
+  }
+
+  .mascot-owix-btn:hover {
+    transform: scale(1.1) rotate(5deg);
+  }
+
+  .owix-avatar-img {
+    width: 80%;
+    height: 80%;
+    object-fit: contain;
+  }
+
+  .mascot-bubble-talk {
+    background: #12055f;
+    color: #ffffff;
+    border: 1.5px solid #facc15;
+    border-radius: 16px;
+    padding: 0.85rem 1.15rem;
+    max-width: 230px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+    position: relative;
+    animation: popBubble 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes popBubble {
+    from {
+      opacity: 0;
+      transform: translateY(10px) scale(0.9);
+    }
+    to {
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .mascot-bubble-title {
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: #facc15;
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+
+  .mascot-bubble-desc {
+    font-size: 0.78rem;
+    line-height: 1.45;
+    margin: 0;
+    color: #f1f5f9;
+  }
+
+  .mascot-bubble-close {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    background: none;
+    border: none;
+    color: #ffffff;
+    font-size: 1.1rem;
+    cursor: pointer;
+    line-height: 1;
+    opacity: 0.7;
+  }
+
+  .mascot-bubble-close:hover {
+    opacity: 1;
+  }
+
+  @media (max-width: 1100px) {
+    .catalog-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (max-width: 860px) {
+    .squad-cards-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .catalog-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .admin-form-grid,
+    .form-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .full-col {
+      grid-column: span 1;
+    }
+  }
+
+  @media (max-width: 580px) {
+    .catalog-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .cart-floating-bar {
+      width: calc(100% - 1.5rem);
+      bottom: 1rem;
+      padding: 0.65rem 1rem;
+    }
+
+    .btn-order-action {
+      padding: 0.65rem 1.15rem;
+      font-size: 0.85rem;
+    }
+
+    .mascot-interactive-widget {
+      bottom: 5.5rem;
+      left: 1rem;
+    }
+  }
+</style>

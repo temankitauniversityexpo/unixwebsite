@@ -1,0 +1,983 @@
+---
+import { Image } from 'astro:assets';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import Slide from '../components/SlideHero.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+
+// Import Audio Lagu TemanKita
+import anthemTemanKita from '../assets/TemanKita.mp3';
+
+// Import Dokumentasi dari src/assets/
+import doc1 from '../assets/Doc1.jpg';
+import doc2 from '../assets/Doc2.jpg';
+import doc3 from '../assets/Doc3.jpg';
+import doc4 from '../assets/Doc11.jpg';
+import doc5 from '../assets/Doc6.png';
+import doc6 from '../assets/Doc12.jpg';
+import doc11 from '../assets/Dare1 (1).jpg';
+import doc12 from '../assets/Dare1 (2).jpg';
+import doc13 from '../assets/Dare1 (3).jpg';
+import doc14 from '../assets/Dare1 (4).jpg';
+import doc15 from '../assets/Dare1 (5).jpg';
+import doc16 from '../assets/Dare1 (6).jpg';
+import doc17 from '../assets/Dare1 (7).jpg';
+import doc18 from '../assets/Dare1 (8).jpg';
+
+// Koleksi 8 Gambar untuk Carousel Feed Instagram Dare Series (Rasio 3:4)
+const dareSlides = [
+  doc11, doc18, doc16, doc17,
+  doc15, doc14, doc13, doc12,
+];
+---
+
+<!doctype html>
+<html lang="id">
+  <head>
+    <BaseHead 
+      title={`Programs - ${SITE_TITLE}`} 
+      description="Rangkaian program komprehensif TemanKita University Expo 2027: Dare Series, Try Out, Talk Show, Campus Fair, Scholarship Fair, FGD, dan Mentoring." 
+    />
+  </head>
+  <body class="programs-body">
+    <Header />
+    <Slide />
+
+    <main class="programs-page">
+      <!-- ========================================================
+           HERO SECTION
+           ======================================================== -->
+      <section class="programs-hero-section fullwidth-wrap">
+        <div class="content-bound-wide">
+          <span class="badge-tag-navy">AGENDA KEGIATAN UNIX 2027</span>
+          <h1 class="hero-programs-title">
+            Rangkaian Program <span class="highlight-gold">TemanKita University Expo</span>
+          </h1>
+          <p class="hero-programs-sub">
+            Struktur alur program terencana yang dirancang sistematis guna mempersiapkan langkah SobatKita menuju universitas impian.
+          </p>
+        </div>
+      </section>
+
+      <!-- ========================================================
+           1. DARE SERIES (CAROUSEL LEBIH BESAR & TOMBOL LEBIH RINGKAS)
+           ======================================================== -->
+      <section class="program-full-row fullwidth-wrap">
+        <div class="content-bound-wide">
+          <div class="dare-content-row">
+            <div class="dare-text-col" id="dare-text-box">
+              <h2 class="editorial-title">1. Dare Series</h2>
+              <p class="editorial-paragraph">
+                Dare Series adalah ruang bagi siswa/i SMA/sederajat untuk merefleksikan dan membagikan perjalanan personal menuju kampus impian mulai dari rasa ragu, proses berjuang, hingga keberanian melangkah. Rangkaian lomba ini sekaligus menjadi pemanasan awal membangun antusiasme dan awareness terhadap TemanKita University Expo (UNIX) 2027 sebelum hari-H.
+              </p>
+              <p class="editorial-paragraph">
+                Melalui karya yang dibuat, peserta mengasah kreativitas dan kepercayaan diri, sekaligus memperkuat semangat "Silence the Fear, Start Your Future Here", membuktikan bahwa ketakutan dan keraguan merupakan bagian dari proses menuju kampus impian, serta menginspirasi siswa lain yang sedang berada di titik keraguan yang sama.
+              </p>
+            </div>
+
+            <!-- Carousel Post 8 Gambar Diperbesar dengan Tombol Ringkas -->
+            <div class="dare-visual-col">
+              <div class="instagram-carousel-card" id="dare-carousel">
+                <div class="carousel-ratio-box">
+                  {dareSlides.map((img, idx) => (
+                    <div class={`ig-slide-item ${idx === 0 ? 'active' : ''}`} data-index={idx}>
+                      <Image src={img} alt={`Contoh Post Carousel ${idx + 1}`} class="ig-photo-clean" />
+                    </div>
+                  ))}
+
+                  <!-- Tombol Panah Minimalis Putih di Dalam Gambar -->
+                  <button type="button" class="inner-nav-btn prev" id="dare-prev" aria-label="Sebelumnya">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" class="arrow-svg"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                  </button>
+                  <button type="button" class="inner-nav-btn next" id="dare-next" aria-label="Selanjutnya">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" class="arrow-svg"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                  </button>
+
+                  <!-- Indikator Dots Kecil di Bawah Dalam Gambar -->
+                  <div class="inner-dots-bar">
+                    {dareSlides.map((_, idx) => (
+                      <span class={`dot-pill ${idx === 0 ? 'active' : ''}`} data-target={idx}></span>
+                    ))}
+                  </div>
+                </div>
+
+                <!-- Tombol Contoh Carousel Berukuran Lebih Ringkas & Presisi -->
+                <a 
+                  href="https://www.instagram.com/khalil_hafzh/p/DUGNVY4knGz/" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  class="btn-carousel-under-compact"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-svg"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg>
+                  <span>Lihat Contoh Carousel Post di Instagram</span>
+                  <span class="arrow-sym">&rarr;</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================
+           2. TRY OUT & TES MINAT BAKAT
+           ======================================================== -->
+      <section class="program-full-row fullwidth-wrap bg-soft">
+        <div class="content-bound-wide">
+          <div class="text-block-pure">
+            <h2 class="editorial-title">2. Try Out & Tes Minat Bakat</h2>
+            <p class="editorial-paragraph">
+              Integrasi simulasi ujian tulis berbasis komputer standar nasional (SNBT) dengan asesmen diagnostik psikologi minat bakat. Program ini mengukur kesiapan akademis secara presisi, memetakan potensi kognitif, serta memberikan rekomendasi jurusan yang selaras dengan kepribadian dan tujuan karir siswa. Hasil evaluasi komprehensif ini menjadi rujukan objektif bagi pelajar dalam menetapkan pilihan universitas tanpa rasa ragu.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================
+           3. TALK SHOW INSPIRATIF
+           ======================================================== -->
+      <section class="program-full-row fullwidth-wrap">
+        <div class="content-bound-wide">
+          <div class="editorial-grid layout-reverse">
+            <div class="card-text-side">
+              <h2 class="editorial-title">3. Talk Show Inspiratif</h2>
+              <p class="editorial-paragraph">
+                Sesi dialog mendalam yang menghadirkan narasumber mahasiswa berprestasi, alumni berprestasi nasional, serta peraih beasiswa unggulan. Program ini berfokus membuka wawasan strategis seputar kiat menembus program studi favorit, membagikan metode belajar efektif, membedah realitas perkuliahan di berbagai kota, serta membangun mentalitas tangguh dalam menghadapi ketatnya seleksi perguruan tinggi.
+              </p>
+            </div>
+            <div class="card-visual-side">
+              <div class="clean-photo-frame">
+                <Image src={doc1} alt="Dokumentasi Talk Show Inspiratif" class="photo-clean" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================
+           4. CAMPUS FAIR (DREAM PARADE & EXPLORE THE DREAM)
+           ======================================================== -->
+      <section class="program-full-row fullwidth-wrap bg-soft">
+        <div class="content-bound-wide">
+          <div class="section-lead-head">
+            <h2 class="editorial-title">4. Campus Fair</h2>
+          </div>
+
+          <div class="sessions-dual-row">
+            <!-- Sesi 1: Dream Parade -->
+            <div class="session-plain-box">
+              <div class="session-image-holder">
+                <Image src={doc5} alt="Campus Fair: Dream Parade" class="session-img-fit" />
+              </div>
+              <div class="session-info">
+                <span class="session-label">SESI 1</span>
+                <h3 class="session-name">Dream Parade</h3>
+                <p class="session-desc">
+                  Seluruh paguyuban dari seluruh universitas akan tampil secara bergantian untuk memperkenalkan kampusnya secara singkat, dan juga menampilkan jargon dari masing masing universitas paguyuban.
+                </p>
+              </div>
+            </div>
+
+            <!-- Sesi 2: Explore the Dream -->
+            <div class="session-plain-box">
+              <div class="session-image-holder">
+                <Image src={doc3} alt="Campus Fair: Explore the Dream" class="session-img-fit" />
+              </div>
+              <div class="session-info">
+                <span class="session-label">SESI 2</span>
+                <h3 class="session-name">Explore the Dream</h3>
+                <p class="session-desc">
+                  Peserta menjelajahi stand universitas secara langsung dan menggali informasi lebih mendalam dan menyapa langsung kampus impian mereka. TemanKita University Expo (UNIX) 2027 akan menghadirkan 12 Perguruan Tinggi (11 PTN dan 1 PTS).
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================
+           5. SCHOLARSHIP FAIR
+           ======================================================== -->
+      <section class="program-full-row fullwidth-wrap">
+        <div class="content-bound-wide">
+          <div class="editorial-grid">
+            <div class="card-text-side">
+              <h2 class="editorial-title">5. Scholarship Fair</h2>
+              <p class="editorial-paragraph">
+                Scholarship Fair hadir sebagai jawaban nyata atas kekhawatiran tersebut, membuka wawasan peserta mengenai berbagai jalur dan pilihan beasiswa yang dapat mendukung pendidikan mereka, sekaligus menjadi bukti hidup bahwa keterbatasan finansial bukan penghalang untuk silence the fear dan tetap meraih kampus impian.
+              </p>
+            </div>
+            <div class="card-visual-side">
+              <div class="clean-photo-frame">
+                <Image src={doc4} alt="Dokumentasi Scholarship Fair" class="photo-clean" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================
+           6. FOCUS GROUP DISCUSSION (FGD)
+           ======================================================== -->
+      <section class="program-full-row fullwidth-wrap bg-soft">
+        <div class="content-bound-wide">
+          <div class="editorial-grid layout-reverse">
+            <div class="card-text-side">
+              <h2 class="editorial-title">6. Focus Group Discussion (FGD)</h2>
+              <p class="editorial-paragraph">
+                Focus Group Discussion (FGD) dibuat secara interaktif antara peserta dan mahasiswa dengan diskusi dan sharing mengenai pemilihan jurusan, mengenal dunia perkuliahan, serta jurusan apa saja yang ada di universitas yang mereka minati. Melalui ruang temu intensif ini, para peserta dapat mengikis keraguan, bertanya secara lebih leluasa mengenai realitas akademik di bangku kuliah, serta menyusun rencana studi yang matang dan terarah bersama rekan fasilitator.
+              </p>
+            </div>
+            <div class="card-visual-side">
+              <div class="clean-photo-frame">
+                <Image src={doc6} alt="Dokumentasi FGD" class="photo-clean" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================
+           7. PROGRAM MENTORING INTENSIF (DREAM CIRCLE)
+           ======================================================== -->
+      <section class="program-full-row fullwidth-wrap">
+        <div class="content-bound-wide">
+          <div class="text-block-pure accent-left">
+            <h2 class="editorial-title">7. Program Mentoring Intensif</h2>
+            <p class="editorial-paragraph">
+              Menyadari bahwa keraguan dan kebingungan peserta tidak selalu selesai dalam satu hari, TemanKita University Expo (UNIX) 2027 menghadirkan Dream Circle program pendampingan lanjutan pasca hari-H bagi peserta yang masih membutuhkan arahan dalam menentukan pilihan kampus dan jurusan. Program ini memastikan bahwa dukungan terhadap peserta tidak berhenti begitu acara usai, melainkan terus berlanjut hingga mereka benar-benar merasa yakin dengan langkah yang akan mereka ambil.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ========================================================
+         WIDGET AUDIO CD ANTHEM TEMANKITA (TERAPUNG DI POJOK)
+         ======================================================== -->
+    <div class="cd-merged-widget" id="anthem-widget" title="Klik 1x: Jeda/Putar | Klik 2x: Unduh Lagu">
+      <div class="cd-vinyl-disc" id="cd-vinyl">
+        <div class="cd-groove-ring ring-1"></div>
+        <div class="cd-groove-ring ring-2"></div>
+        <div class="cd-label-core">
+          <div class="cd-hole"></div>
+        </div>
+      </div>
+      <div class="cd-frame-label">
+        <span class="cd-main-text">Anthem TemanKita</span>
+        <span class="cd-status-indicator" id="cd-status">Sedang diputar</span>
+      </div>
+      <audio id="anthem-audio" src={anthemTemanKita} preload="auto" loop></audio>
+    </div>
+
+    <Footer />
+  </body>
+</html>
+
+<script>
+  // ========================================================
+  // CAROUSEL MANUAL DARE SERIES
+  // ========================================================
+  const carousel = document.getElementById('dare-carousel');
+  const slides = carousel?.querySelectorAll<HTMLElement>('.ig-slide-item') || [];
+  const dots = carousel?.querySelectorAll<HTMLElement>('.dot-pill') || [];
+  const prevBtn = document.getElementById('dare-prev');
+  const nextBtn = document.getElementById('dare-next');
+  let currentIdx = 0;
+
+  function setSlide(target: number) {
+    if (slides.length === 0) return;
+
+    if (target < 0) {
+      currentIdx = slides.length - 1;
+    } else if (target >= slides.length) {
+      currentIdx = 0;
+    } else {
+      currentIdx = target;
+    }
+
+    slides.forEach((s, idx) => {
+      s.classList.toggle('active', idx === currentIdx);
+    });
+
+    dots.forEach((d, idx) => {
+      d.classList.toggle('active', idx === currentIdx);
+    });
+  }
+
+  prevBtn?.addEventListener('click', () => setSlide(currentIdx - 1));
+  nextBtn?.addEventListener('click', () => setSlide(currentIdx + 1));
+
+  dots.forEach((dot) => {
+    dot.addEventListener('click', () => {
+      const idx = parseInt(dot.getAttribute('data-target') || '0', 10);
+      setSlide(idx);
+    });
+  });
+
+  // Swipe gesture untuk layar sentuh
+  let touchStartX = 0;
+  let touchEndX = 0;
+
+  carousel?.addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0].clientX;
+  }, { passive: true });
+
+  carousel?.addEventListener('touchend', (e) => {
+    touchEndX = e.changedTouches[0].clientX;
+    const diff = touchStartX - touchEndX;
+    if (Math.abs(diff) > 40) {
+      if (diff > 0) setSlide(currentIdx + 1);
+      else setSlide(currentIdx - 1);
+    }
+  }, { passive: true });
+
+  // Sinkronisasi tinggi Carousel dengan teks penjelasan Dare Series
+  function syncDareHeight() {
+    const textBox = document.getElementById('dare-text-box');
+    const ratioBox = document.querySelector('.carousel-ratio-box') as HTMLElement;
+    if (textBox && ratioBox && window.innerWidth > 960) {
+      const textHeight = Math.max(textBox.offsetHeight, 440);
+      ratioBox.style.height = `${textHeight}px`;
+      ratioBox.style.width = `${textHeight * (3 / 4)}px`;
+    } else if (ratioBox) {
+      ratioBox.style.height = '';
+      ratioBox.style.width = '';
+    }
+  }
+
+  window.addEventListener('load', syncDareHeight);
+  window.addEventListener('resize', syncDareHeight);
+
+  // ========================================================
+  // AUDIO CONTROLLER CD VINYL ANTHEM TEMANKITA
+  // ========================================================
+  const anthemAudio = document.getElementById('anthem-audio') as HTMLAudioElement;
+  const anthemWidget = document.getElementById('anthem-widget');
+  const cdVinyl = document.getElementById('cd-vinyl');
+  const cdStatus = document.getElementById('cd-status');
+  let clickTimeout: any = null;
+
+  function playAnthem() {
+    if (!anthemAudio) return;
+    anthemAudio.play().then(() => {
+      cdVinyl?.classList.add('cd-spinning');
+      if (cdStatus) cdStatus.textContent = 'Sedang diputar';
+    }).catch(() => {
+      if (cdStatus) cdStatus.textContent = 'Jeda';
+    });
+  }
+
+  function pauseAnthem() {
+    if (!anthemAudio) return;
+    anthemAudio.pause();
+    cdVinyl?.classList.remove('cd-spinning');
+    if (cdStatus) cdStatus.textContent = 'Jeda';
+  }
+
+  function toggleAnthem() {
+    if (!anthemAudio) return;
+    if (anthemAudio.paused) playAnthem();
+    else pauseAnthem();
+  }
+
+  anthemWidget?.addEventListener('click', () => {
+    if (clickTimeout === null) {
+      clickTimeout = setTimeout(() => {
+        clickTimeout = null;
+        toggleAnthem();
+      }, 260);
+    }
+  });
+
+  anthemWidget?.addEventListener('dblclick', () => {
+    if (clickTimeout) {
+      clearTimeout(clickTimeout);
+      clickTimeout = null;
+    }
+    const a = document.createElement('a');
+    a.href = (anthemAudio as any)?.src || '/TemanKita.mp3';
+    a.download = 'Anthem_TemanKita.mp3';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  });
+
+  window.addEventListener('DOMContentLoaded', playAnthem);
+
+  const onFirstInteract = () => {
+    if (anthemAudio && anthemAudio.paused) playAnthem();
+    window.removeEventListener('click', onFirstInteract);
+    window.removeEventListener('keydown', onFirstInteract);
+  };
+  window.addEventListener('click', onFirstInteract, { once: true });
+  window.addEventListener('keydown', onFirstInteract, { once: true });
+
+  window.addEventListener('pagehide', pauseAnthem);
+  window.addEventListener('beforeunload', pauseAnthem);
+</script>
+
+<style>
+  /* ===================================================
+     RESET & LAYOUT LEBAR PENUH
+     =================================================== */
+  .programs-body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background-color: #ffffff;
+    color: #0f172a;
+    font-family: inherit;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .programs-page {
+    flex: 1;
+    width: 100%;
+  }
+
+  .fullwidth-wrap {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    box-sizing: border-box;
+  }
+
+  .content-bound-wide {
+    width: 100%;
+    max-width: 100%;
+    padding-left: clamp(1.5rem, 5vw, 5.5rem);
+    padding-right: clamp(1.5rem, 5vw, 5.5rem);
+    box-sizing: border-box;
+  }
+
+  .bg-soft {
+    background-color: #f8fafc;
+  }
+
+  .highlight-gold {
+    color: #12055f;
+    border-bottom: 4px solid #facc15;
+    display: inline-block;
+  }
+
+  /* ===================================================
+     HERO SECTION
+     =================================================== */
+  .programs-hero-section {
+    padding: clamp(3.5rem, 6vw, 5.5rem) 0 3rem 0;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .badge-tag-navy {
+    display: inline-block;
+    padding: 0.35rem 0.95rem;
+    background-color: #12055f;
+    color: #facc15;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+  }
+
+  .hero-programs-title {
+    font-size: clamp(2.3rem, 4.2vw, 3.6rem);
+    font-weight: 950;
+    color: #12055f;
+    line-height: 1.15;
+    margin: 0 0 1rem 0;
+  }
+
+  .hero-programs-sub {
+    font-size: clamp(1.02rem, 1.2vw, 1.15rem);
+    color: #475569;
+    max-width: 900px;
+    line-height: 1.65;
+    margin: 0;
+  }
+
+  /* ===================================================
+     PROGRAM ROWS & EDITORIAL GRIDS
+     =================================================== */
+  .program-full-row {
+    padding: clamp(3.5rem, 5.5vw, 5rem) 0;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .editorial-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.9fr;
+    gap: clamp(2.5rem, 5vw, 5rem);
+    align-items: center;
+  }
+
+  .layout-reverse {
+    grid-template-columns: 0.9fr 1.2fr;
+  }
+
+  .layout-reverse .card-text-side {
+    order: 2;
+  }
+
+  .layout-reverse .card-visual-side {
+    order: 1;
+  }
+
+  .editorial-title {
+    font-size: clamp(1.9rem, 2.8vw, 2.5rem);
+    font-weight: 900;
+    color: #12055f;
+    margin: 0 0 1.2rem 0;
+    line-height: 1.25;
+  }
+
+  .editorial-paragraph {
+    font-size: clamp(0.98rem, 1.08vw, 1.08rem);
+    line-height: 1.85;
+    color: #334155;
+    text-align: justify;
+    text-justify: inter-word;
+    margin: 0 0 1.1rem 0;
+  }
+
+  .editorial-paragraph:last-child {
+    margin-bottom: 0;
+  }
+
+  /* ===================================================
+     1. DARE SERIES TATA LETAK & CAROUSEL LEBIH BESAR
+     =================================================== */
+  .dare-content-row {
+    display: grid;
+    grid-template-columns: 1.15fr auto;
+    gap: clamp(2.5rem, 5vw, 5rem);
+    align-items: center;
+  }
+
+  .dare-text-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .dare-visual-col {
+    display: flex;
+    justify-content: center;
+  }
+
+  .instagram-carousel-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: center;
+    width: 100%;
+  }
+
+  .carousel-ratio-box {
+    position: relative;
+    aspect-ratio: 3 / 4;
+    width: 380px; /* Diperbesar proporsional */
+    background: #0f172a;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 12px 30px rgba(18, 5, 95, 0.1);
+  }
+
+  .ig-slide-item {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+
+  .ig-slide-item.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .ig-photo-clean {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    transform: none !important;
+  }
+
+  /* Panah Minimalis Putih */
+  .inner-nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 34px;
+    height: 34px;
+    background: rgba(0, 0, 0, 0.45);
+    border: 1.5px solid #ffffff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 5;
+    padding: 0;
+    backdrop-filter: blur(4px);
+    transition: background-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .inner-nav-btn:hover {
+    background: rgba(0, 0, 0, 0.75);
+    transform: translateY(-50%) scale(1.08);
+  }
+
+  .inner-nav-btn.prev {
+    left: 10px;
+  }
+
+  .inner-nav-btn.next {
+    right: 10px;
+  }
+
+  .arrow-svg {
+    width: 18px;
+    height: 18px;
+    stroke: #ffffff !important;
+  }
+
+  /* Indikator Dots Kecil di Bawah Dalam Gambar */
+  .inner-dots-bar {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    z-index: 5;
+    background: rgba(0, 0, 0, 0.45);
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
+    backdrop-filter: blur(4px);
+  }
+
+  .dot-pill {
+    width: 6px;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.45);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .dot-pill.active {
+    width: 16px;
+    border-radius: 999px;
+    background: #ffffff;
+  }
+
+  /* Tombol Contoh Post Lebih Ringkas (Compact) */
+  .btn-carousel-under-compact {
+    width: 100%;
+    max-width: 380px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1rem;
+    background-color: #12055f;
+    color: #ffffff;
+    border: 1.5px solid #12055f;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-decoration: none;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+  }
+
+  .btn-carousel-under-compact:hover {
+    background-color: #facc15;
+    border-color: #facc15;
+    color: #12055f;
+  }
+
+  .btn-svg {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+  }
+
+  .arrow-sym {
+    font-size: 0.95rem;
+  }
+
+  /* ===================================================
+     FOTO DOKUMENTASI POLOS
+     =================================================== */
+  .clean-photo-frame {
+    width: 100%;
+    max-width: 480px;
+    aspect-ratio: 16 / 10;
+    margin: 0 auto;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1.5px solid #cbd5e1;
+    box-shadow: 0 10px 25px rgba(18, 5, 95, 0.06);
+    background: #0f172a;
+  }
+
+  .photo-clean {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    transform: none !important;
+  }
+
+  /* ===================================================
+     CAMPUS FAIR (DREAM PARADE & EXPLORE THE DREAM)
+     =================================================== */
+  .section-lead-head {
+    margin-bottom: 2.5rem;
+  }
+
+  .sessions-dual-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: clamp(1.8rem, 3.5vw, 3rem);
+  }
+
+  .session-plain-box {
+    border: 1.5px solid #cbd5e1;
+    border-radius: 10px;
+    background: #ffffff;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(18, 5, 95, 0.04);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .session-image-holder {
+    width: 100%;
+    height: 240px;
+    background: #0f172a;
+    overflow: hidden;
+  }
+
+  .session-img-fit {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    transform: none !important;
+  }
+
+  .session-info {
+    padding: 1.6rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .session-label {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 850;
+    color: #12055f;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.35rem;
+  }
+
+  .session-name {
+    font-size: 1.25rem;
+    font-weight: 850;
+    color: #12055f;
+    margin: 0 0 0.65rem 0;
+    line-height: 1.35;
+  }
+
+  .session-desc {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: #334155;
+    text-align: justify;
+    text-justify: inter-word;
+    margin: 0;
+  }
+
+  /* ===================================================
+     BLOK TEKS POLOS
+     =================================================== */
+  .text-block-pure {
+    max-width: 1040px;
+  }
+
+  .accent-left {
+    border-left: 4px solid #facc15;
+    padding-left: 1.5rem;
+  }
+
+  /* ===================================================
+     CD ANTHEM WIDGET (LAGU TEMANKITA)
+     =================================================== */
+  .cd-merged-widget {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.25s ease;
+  }
+
+  .cd-merged-widget:hover {
+    transform: translateY(-3px) scale(1.02);
+  }
+
+  .cd-vinyl-disc {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #334155 15%, #0f172a 60%, #020617 100%);
+    border: 2px solid #facc15;
+    position: relative;
+    box-shadow: -4px 6px 14px rgba(0, 0, 0, 0.35);
+    flex-shrink: 0;
+    margin-right: -28px;
+    z-index: 2;
+  }
+
+  .cd-groove-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px dashed rgba(255, 255, 255, 0.2);
+  }
+
+  .ring-1 { inset: 7px; }
+  .ring-2 { inset: 13px; border-style: solid; border-color: rgba(255, 255, 255, 0.12); }
+
+  .cd-label-core {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    background-color: #facc15;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .cd-hole {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #0f172a;
+  }
+
+  .cd-spinning {
+    animation: spinVinylCD 3s linear infinite;
+  }
+
+  @keyframes spinVinylCD {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .cd-frame-label {
+    background-color: #12055f;
+    border: 2px solid #facc15;
+    padding: 0.5rem 1.25rem 0.5rem 2.1rem;
+    border-radius: 999px;
+    box-shadow: 0 10px 25px rgba(18, 5, 95, 0.3);
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .cd-main-text {
+    font-size: 0.86rem;
+    font-weight: 800;
+    color: #ffffff;
+    white-space: nowrap;
+    line-height: 1.2;
+  }
+
+  .cd-status-indicator {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #facc15;
+    line-height: 1.2;
+    margin-top: 2px;
+  }
+
+  /* ===================================================
+     RESPONSIF TABLET & MOBILE
+     =================================================== */
+  @media (max-width: 960px) {
+    .dare-content-row,
+    .editorial-grid,
+    .layout-reverse {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .layout-reverse .card-text-side {
+      order: 1;
+    }
+
+    .layout-reverse .card-visual-side {
+      order: 2;
+    }
+
+    .sessions-dual-row {
+      grid-template-columns: 1fr;
+    }
+
+    .instagram-carousel-card,
+    .clean-photo-frame {
+      max-width: 100%;
+    }
+
+    .carousel-ratio-box {
+      width: 100% !important;
+      max-width: 360px;
+      height: auto !important;
+    }
+
+    .btn-carousel-under-compact {
+      max-width: 360px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .content-bound-wide {
+      padding-left: 1.25rem;
+      padding-right: 1.25rem;
+    }
+
+    .hero-programs-title {
+      font-size: 2.1rem;
+    }
+
+    .editorial-title {
+      font-size: 1.65rem;
+    }
+
+    .cd-merged-widget {
+      bottom: 1.25rem;
+      right: 1.25rem;
+    }
+  }
+</style>

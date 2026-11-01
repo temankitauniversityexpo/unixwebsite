@@ -1,0 +1,454 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+---
+
+<!doctype html>
+<html lang="id">
+  <head>
+    <BaseHead 
+      title={`Daftar Akun Baru - ${SITE_TITLE}`} 
+      description={SITE_DESCRIPTION} 
+    />
+  </head>
+  <body class="auth-body">
+    <main class="auth-container">
+      <div class="auth-card">
+        <div class="auth-header">
+          <h1 class="auth-title">Buat Akun Baru</h1>
+          <p class="auth-subtitle">Yuk Daftar Segera SobatKita</p>
+        </div>
+
+        <form class="auth-form" id="register-form">
+          <!-- 1. Nama Lengkap -->
+          <div class="input-group">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="input-icon">
+              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <input 
+              type="text" 
+              id="reg-fullname" 
+              placeholder="Nama Lengkap" 
+              class="form-control" 
+              required 
+            />
+          </div>
+
+          <!-- 2. No WhatsApp (Dicek tidak boleh terdaftar ganda) -->
+          <div class="input-group-phone">
+            <div class="phone-prefix-box">
+              <span class="flag-icon">🇮🇩</span>
+              <span class="prefix-text">+62</span>
+            </div>
+            <input 
+              type="tel" 
+              id="reg-phone" 
+              placeholder="Nomor WhatsApp (Contoh: 81234567890)" 
+              class="form-control phone-input" 
+              required 
+            />
+          </div>
+
+          <!-- 3. Gmail / Email (Dicek tidak boleh terdaftar ganda) -->
+          <div class="input-group">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="input-icon">
+              <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+            </svg>
+            <input 
+              type="email" 
+              id="reg-email" 
+              placeholder="Gmail Kamu" 
+              class="form-control" 
+              required 
+            />
+          </div>
+
+          <!-- 4. Password dengan Ketentuan Validasi Realtime -->
+          <div class="password-block">
+            <div class="input-group">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="input-icon">
+                <rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              <input 
+                type="password" 
+                id="reg-password" 
+                placeholder="Password" 
+                class="form-control" 
+                required 
+              />
+              <button type="button" class="btn-toggle-eye" id="toggle-pwd-btn" aria-label="Lihat Password">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="eye-icon">
+                  <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
+
+            <!-- Bar Kekuatan Password -->
+            <div class="pwd-strength-bar">
+              <div class="strength-segment" id="seg-1"></div>
+              <div class="strength-segment" id="seg-2"></div>
+              <div class="strength-segment" id="seg-3"></div>
+              <div class="strength-segment" id="seg-4"></div>
+            </div>
+
+            <!-- 4 Indikator Ketentuan Password -->
+            <div class="pwd-requirements-grid">
+              <span class="req-item" id="req-len">○ Min. 8 karakter</span>
+              <span class="req-item" id="req-upper">○ Huruf kapital</span>
+              <span class="req-item" id="req-num">○ Angka</span>
+              <span class="req-item" id="req-sym">○ Simbol (!@#$%)</span>
+            </div>
+          </div>
+
+          <!-- Tombol Daftar Akun Langsung -->
+          <button type="submit" class="btn-primary-action">
+            Daftar Sekarang
+          </button>
+        </form>
+
+        <p class="auth-switch-text">
+          Sudah punya akun? <a href="/login" class="auth-switch-link">Masuk</a>
+        </p>
+      </div>
+    </main>
+  </body>
+</html>
+
+<script>
+  const toggleBtn = document.getElementById('toggle-pwd-btn');
+  const pwdInput = document.getElementById('reg-password') as HTMLInputElement;
+
+  toggleBtn?.addEventListener('click', () => {
+    pwdInput.type = pwdInput.type === 'password' ? 'text' : 'password';
+  });
+
+  const reqLen = document.getElementById('req-len');
+  const reqUpper = document.getElementById('req-upper');
+  const reqNum = document.getElementById('req-num');
+  const reqSym = document.getElementById('req-sym');
+  const seg1 = document.getElementById('seg-1');
+  const seg2 = document.getElementById('seg-2');
+  const seg3 = document.getElementById('seg-3');
+  const seg4 = document.getElementById('seg-4');
+
+  let isPasswordValid = false;
+
+  pwdInput?.addEventListener('input', () => {
+    const val = pwdInput.value;
+    const hasLen = val.length >= 8;
+    const hasUpper = /[A-Z]/.test(val);
+    const hasNum = /[0-9]/.test(val);
+    const hasSym = /[!@#$%^&*(),.?":{}|<>]/.test(val);
+
+    updateRequirement(reqLen, hasLen, 'Min. 8 karakter');
+    updateRequirement(reqUpper, hasUpper, 'Huruf kapital');
+    updateRequirement(reqNum, hasNum, 'Angka');
+    updateRequirement(reqSym, hasSym, 'Simbol (!@#$%)');
+
+    const score = (hasLen ? 1 : 0) + (hasUpper ? 1 : 0) + (hasNum ? 1 : 0) + (hasSym ? 1 : 0);
+    [seg1, seg2, seg3, seg4].forEach((seg, idx) => {
+      if (idx < score) seg?.classList.add('active');
+      else seg?.classList.remove('active');
+    });
+
+    isPasswordValid = hasLen && hasUpper && hasNum && hasSym;
+  });
+
+  function updateRequirement(el: HTMLElement | null, isValid: boolean, label: string) {
+    if (!el) return;
+    if (isValid) {
+      el.innerHTML = `✓ ${label}`;
+      el.classList.add('valid');
+    } else {
+      el.innerHTML = `○ ${label}`;
+      el.classList.remove('valid');
+    }
+  }
+
+  const registerForm = document.getElementById('register-form');
+
+  registerForm?.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    if (!isPasswordValid) {
+      alert('Password belum memenuhi seluruh ketentuan yang disyaratkan.');
+      return;
+    }
+
+    const fullName = (document.getElementById('reg-fullname') as HTMLInputElement).value.trim();
+    let phoneInput = (document.getElementById('reg-phone') as HTMLInputElement).value.trim();
+    const email = (document.getElementById('reg-email') as HTMLInputElement).value.trim();
+    const password = pwdInput.value;
+
+    // Normalisasi format nomor WA
+    if (phoneInput.startsWith('0')) phoneInput = phoneInput.substring(1);
+    if (phoneInput.startsWith('+62')) phoneInput = phoneInput.substring(3);
+    if (phoneInput.startsWith('62')) phoneInput = phoneInput.substring(2);
+    const formattedPhone = `62${phoneInput}`;
+
+    // Ambil database akun tersimpan
+    const existingUsers = JSON.parse(localStorage.getItem('unix_registered_users') || '[]');
+
+    // Validasi 1: Cek apakah Gmail/Email sudah terdaftar
+    const isEmailTaken = existingUsers.some(
+      (u: any) => u.email.toLowerCase() === email.toLowerCase()
+    );
+    if (isEmailTaken) {
+      alert('Email ini sudah terdaftar! Silakan gunakan email lain atau masuk ke akun Anda.');
+      return;
+    }
+
+    // Validasi 2: Cek apakah Nomor WhatsApp sudah terdaftar
+    const isPhoneTaken = existingUsers.some(
+      (u: any) => u.phone === formattedPhone
+    );
+    if (isPhoneTaken) {
+      alert('Nomor WhatsApp ini sudah terdaftar pada akun lain! Silakan gunakan nomor yang berbeda.');
+      return;
+    }
+
+    // Simpan akun baru ke database lokal
+    const newUser = {
+      fullName,
+      phone: formattedPhone,
+      email,
+      password,
+    };
+
+    existingUsers.push(newUser);
+    localStorage.setItem('unix_registered_users', JSON.stringify(existingUsers));
+
+    // Otomatis langsung login
+    localStorage.setItem('unix_logged_in_user', 'user_member');
+    localStorage.setItem('unix_user_name', fullName);
+    localStorage.setItem('unix_user_email', email);
+    localStorage.setItem('unix_user_phone', formattedPhone);
+
+    alert(`Pendaftaran Berhasil! Selamat datang di SobatKita, ${fullName}.`);
+    window.location.href = '/';
+  });
+</script>
+
+<style>
+  .auth-body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background-image: url('../assets/background.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .auth-container {
+    width: 100%;
+    max-width: 480px;
+    padding: 1.5rem;
+    box-sizing: border-box;
+    z-index: 2;
+  }
+
+  .auth-card {
+    background: #ffffff;
+    border-radius: 24px;
+    padding: clamp(2rem, 4vw, 2.8rem);
+    box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.35);
+  }
+
+  .auth-header {
+    text-align: center;
+    margin-bottom: 1.8rem;
+  }
+
+  .auth-title {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin: 0 0 0.35rem 0;
+  }
+
+  .auth-subtitle {
+    font-size: 0.9rem;
+    color: #64748b;
+    margin: 0;
+  }
+
+  .auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.05rem;
+  }
+
+  .input-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .input-icon {
+    position: absolute;
+    left: 1rem;
+    width: 19px;
+    height: 19px;
+    color: #94a3b8;
+    pointer-events: none;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 0.85rem 1rem 0.85rem 2.8rem;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 0.92rem;
+    font-family: inherit;
+    outline: none;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+  }
+
+  .form-control:focus {
+    border-color: #f59e0b;
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
+  }
+
+  /* Input No WhatsApp (+62) */
+  .input-group-phone {
+    display: flex;
+    align-items: center;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.2s ease;
+  }
+
+  .input-group-phone:focus-within {
+    border-color: #f59e0b;
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
+  }
+
+  .phone-prefix-box {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0 0.85rem;
+    background-color: #f8fafc;
+    border-right: 1.5px solid #e2e8f0;
+    height: 46px;
+  }
+
+  .prefix-text {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #334155;
+  }
+
+  .phone-input {
+    border: none !important;
+    border-radius: 0 !important;
+    padding-left: 1rem !important;
+    box-shadow: none !important;
+  }
+
+  .btn-toggle-eye {
+    position: absolute;
+    right: 0.85rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #94a3b8;
+    padding: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .eye-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Password Strength & Requirements */
+  .password-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .pwd-strength-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.4rem;
+  }
+
+  .strength-segment {
+    height: 4px;
+    background-color: #e2e8f0;
+    border-radius: 2px;
+    transition: background-color 0.25s ease;
+  }
+
+  .strength-segment.active {
+    background-color: #f59e0b;
+  }
+
+  .pwd-requirements-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.35rem 0.6rem;
+  }
+
+  .req-item {
+    font-size: 0.78rem;
+    color: #94a3b8;
+  }
+
+  .req-item.valid {
+    color: #10b981;
+    font-weight: 700;
+  }
+
+  .btn-primary-action {
+    width: 100%;
+    padding: 0.85rem;
+    background-color: #f59e0b;
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);
+    transition: all 0.2s ease;
+    margin-top: 0.35rem;
+  }
+
+  .btn-primary-action:hover {
+    background-color: #d97706;
+    transform: translateY(-1px);
+  }
+
+  .auth-switch-text {
+    text-align: center;
+    font-size: 0.85rem;
+    color: #64748b;
+    margin: 1.4rem 0 0 0;
+  }
+
+  .auth-switch-link {
+    color: #f59e0b;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .auth-switch-link:hover {
+    text-decoration: underline;
+  }
+</style>

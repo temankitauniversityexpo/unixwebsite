@@ -1,0 +1,1416 @@
+---
+import { Image } from 'astro:assets';
+import BaseHead from '../components/BaseHead.astro';
+import { SITE_TITLE } from '../consts';
+
+// Import Aset Gambar
+import logoNama from '../assets/logo nama.png';
+import gambarProfil from '../assets/Gambar Profil.png';
+import docBg from '../assets/Doc1.jpg';
+---
+
+<!doctype html>
+<html lang="id">
+  <head>
+    <BaseHead 
+      title={`Pengumuman Volunteer UNIX 2027 - ${SITE_TITLE}`} 
+      description="Pengumuman Resmi Hasil Seleksi Volunteer TemanKita University Expo 2027." 
+    />
+    <script is:inline src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  </head>
+  <body class="portal-body" style={`--bg-url: url('${docBg.src}');`}>
+    
+    <!-- Canvas Efek Bara Api Jika Tidak Lulus -->
+    <canvas id="fire-canvas" class="fire-canvas hidden"></canvas>
+
+    <!-- Overlay Countdown 5 4 3 2 1 -->
+    <div class="reveal-countdown-overlay hidden" id="reveal-countdown-overlay">
+      <div class="countdown-pulse-box">
+        <span class="countdown-pulse-num" id="countdown-pulse-num">5</span>
+        <p class="countdown-pulse-label">Membuka Status Hasil Seleksi...</p>
+      </div>
+    </div>
+
+    <main class="portal-main-wrapper">
+      <div class="portal-landscape-box">
+        
+        <!-- 1. KONDISI LEBIH 12 JAM: COMING SOON -->
+        <div class="portal-glass-panel coming-soon-panel hidden" id="panel-coming-soon">
+          <div class="portal-header-banner">
+            <div class="header-logo-row">
+              <Image src={logoNama} alt="Logo TemanKita UNIX" class="header-logo-img" />
+            </div>
+            <h2 class="banner-headline">PENGUMUMAN HASIL SELEKSI VOLUNTEER UNIX 2027</h2>
+          </div>
+          <div class="coming-soon-body text-center">
+            <span class="badge-status-pill">STATUS PORTAL</span>
+            <h1 class="coming-soon-title">COMING SOON</h1>
+            <p class="coming-soon-desc">
+              Portal pengumuman hasil seleksi Volunteer UNIX 2027 belum dibuka. Pantau terus jadwal resmi yang telah ditetapkan panitia.
+            </p>
+            <div class="target-date-box" id="cs-target-date">Menghubungkan ke jadwal rilis...</div>
+          </div>
+        </div>
+
+        <!-- 2. KONDISI H-6 JAM: COUNTDOWN HITUNG MUNDUR -->
+        <div class="portal-glass-panel countdown-panel hidden" id="panel-countdown">
+          <div class="portal-header-banner">
+            <div class="header-logo-row">
+              <Image src={logoNama} alt="Logo TemanKita UNIX" class="header-logo-img" />
+            </div>
+            <h2 class="banner-headline">PENGUMUMAN HASIL SELEKSI VOLUNTEER UNIX 2027</h2>
+          </div>
+          <div class="countdown-body text-center">
+            <span class="badge-status-pill pill-countdown">HITUNG MUNDUR RILIS (H-6 JAM)</span>
+            <div class="countdown-digits-row">
+              <div class="digit-box"><span id="cd-hours">00</span><label>Jam</label></div>
+              <div class="digit-sep">:</div>
+              <div class="digit-box"><span id="cd-minutes">00</span><label>Menit</label></div>
+              <div class="digit-sep">:</div>
+              <div class="digit-box"><span id="cd-seconds">00</span><label>Detik</label></div>
+            </div>
+            <p class="countdown-note-text">Formulir verifikasi akun pendaftar akan terbuka otomatis begitu hitung mundur selesai.</p>
+          </div>
+        </div>
+
+        <!-- 3. KONDISI WAKTU TIBA: FORM VERIFIKASI -->
+        <div class="portal-glass-panel form-panel hidden" id="panel-form">
+          <div class="portal-header-banner">
+            <div class="header-logo-row">
+              <Image src={logoNama} alt="TemanKita University Expo 2027" class="header-logo-img" />
+            </div>
+            <h2 class="banner-headline">PENGUMUMAN HASIL SELEKSI VOLUNTEER UNIX 2027</h2>
+          </div>
+
+          <div class="portal-form-body">
+            <p class="form-instruction-text">
+              Masukkan Gmail Pendaftar dan Password akun yang telah Anda daftarkan di platform.
+            </p>
+
+            <form id="volunteer-check-form">
+              <div class="form-field-group">
+                <label class="field-label">Gmail Pendaftar</label>
+                <input 
+                  type="email" 
+                  id="input-gmail" 
+                  placeholder="Masukkan alamat email pendaftar Anda" 
+                  class="snpmb-input" 
+                  required 
+                />
+                <span class="field-hint">Pastikan penulisan Gmail sesuai saat mendaftar.</span>
+              </div>
+
+              <div class="form-field-group">
+                <label class="field-label">Password Akun</label>
+                <div class="input-password-wrap">
+                  <input 
+                    type="password" 
+                    id="input-pass" 
+                    placeholder="Masukkan password akun Anda" 
+                    class="snpmb-input" 
+                    required 
+                  />
+                  <button type="button" class="btn-toggle-eye" id="btn-toggle-eye" aria-label="Lihat Password">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="eye-svg">
+                      <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                  </button>
+                </div>
+                <span class="field-error-text hidden" id="error-inline-msg">Akun atau password yang Anda masukkan tidak sesuai.</span>
+              </div>
+
+              <div class="form-checkbox-row">
+                <input type="checkbox" id="check-statement" required />
+                <label for="check-statement">
+                  Dengan ini saya menyatakan bahwa data yang saya masukkan adalah sah dan benar milik saya pribadi.
+                </label>
+              </div>
+
+              <div class="form-action-row" id="initial-action-row">
+                <button type="submit" class="btn-snpmb-blue" id="btn-submit-check">
+                  Periksa Akun
+                </button>
+              </div>
+            </form>
+
+            <div class="chameleon-reveal-wrap hidden" id="chameleon-reveal-wrap">
+              <p class="chameleon-guide-text">✓ Akun Anda Terverifikasi! Tekan tombol di bawah untuk membuka hasil:</p>
+              <button type="button" class="btn-chameleon-pulsing" id="btn-open-result">
+                LIHAT PENGUMUMAN
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. KARTU HASIL SELEKSI RESMI (LANDSCAPE MELEBAR) -->
+        <div class="portal-result-card-landscape hidden" id="portal-result-card">
+          <!-- Header Banner Status (Hijau / Merah) -->
+          <div class="result-header-strip" id="result-header-strip">
+            <div class="header-strip-left">
+              <h2 class="result-status-title" id="result-status-title">ANDA DINYATAKAN LULUS VOLUNTEER UNIX 2027</h2>
+              <p class="result-status-quote" id="result-status-quote"></p>
+            </div>
+            <div class="header-strip-logo">
+              <Image src={gambarProfil} alt="Logo UNIX" class="logo-plain-unboxed" />
+            </div>
+          </div>
+
+          <!-- Bagian Detail Identitas Sesuai Ketentuan -->
+          <div class="result-identity-body">
+            <div class="metadata-custom-grid">
+              <div class="meta-side-col left-col">
+                <span class="label-tiny">Nama Lengkap</span>
+                <span class="value-prominent" id="result-candidate-name">-</span>
+              </div>
+
+              <div class="meta-side-col right-col">
+                <span class="label-tiny">No.Registrasi</span>
+                <span class="value-prominent text-code" id="result-candidate-noreg">-</span>
+              </div>
+
+              <div class="meta-grid-divider"></div>
+
+              <div class="meta-side-col left-col empty-col"></div>
+
+              <div class="meta-side-col right-col">
+                <span class="label-tiny">Alamat gmail</span>
+                <span class="value-prominent text-email" id="result-candidate-email">-</span>
+              </div>
+            </div>
+
+            <!-- KOTAK BARCODE WAJIB CHAT KE ADMIN UNIX (KHUSUS YANG LULUS) -->
+            <div class="whatsapp-qr-container hidden" id="whatsapp-qr-container">
+              <div class="qr-content-card">
+                <div class="qr-image-frame">
+                  <img id="qr-whatsapp-img" src="" alt="Barcode Chat WhatsApp Admin UNIX" class="qr-code-img" />
+                </div>
+                <div class="qr-desc-col">
+                  <span class="qr-badge-pill">KONFIRMASI PENERIMAAN VOLUNTEER</span>
+                  <h4 class="qr-heading-title">Chat Admin UNIX untuk Bergabung ke Grup</h4>
+                  <p class="qr-instruction-text">
+                    Scan barcode di samping atau klik tombol di bawah untuk konfirmasi langsung ke WhatsApp Admin UNIX (<strong>0895-7049-06969</strong>) dan bergabung ke grup resmi.
+                  </p>
+                  <a href="" id="btn-direct-wa" target="_blank" rel="noopener noreferrer" class="btn-contact-admin-solid">
+                    Hubungi Admin Sekarang! &rarr;
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pesan Informasi Auto Refresh -->
+            <div class="refresh-countdown-notice">
+              <span class="refresh-dot"></span>
+              <span>Halaman akan memuat ulang otomatis dalam <strong id="refresh-timer-count">15</strong> detik.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- NAVIGASI BAWAH MENETAP (KIRI: ADMIN PENDAFTARAN | KANAN: KELUAR) -->
+        <footer class="portal-bottom-nav">
+          <button type="button" class="btn-bottom-nav btn-admin-gate" id="btn-open-admin-gate" title="Khusus Panitia Seleksi">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="nav-btn-icon"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+            <span>Admin Pendaftaran</span>
+          </button>
+
+          <a href="/" class="btn-bottom-nav btn-exit-nav" title="Kembali ke Beranda">
+            <span>Keluar</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="nav-btn-icon">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+          </a>
+        </footer>
+
+      </div>
+    </main>
+
+    <!-- Modal Pop-Up Silang Error (5 Detik) -->
+    <div class="modal-backdrop-clean hidden" id="error-popup-modal">
+      <div class="modal-dialog-error">
+        <div class="error-cross-circle">✖</div>
+        <h3 class="error-title">Data Akun Tidak Cocok!</h3>
+        <p class="error-desc" id="error-desc-text">Gmail atau Password yang Anda masukkan tidak sesuai dengan database pendaftar. Silakan periksa kembali.</p>
+        <div class="error-countdown-bar">
+          <div class="countdown-progress-fill"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Pop-Up PIN Verifikasi Akses Admin (A1B2C3) -->
+    <div class="modal-backdrop-clean hidden" id="pin-modal-overlay">
+      <div class="modal-dialog-pin">
+        <div class="pin-icon-wrap">🔒</div>
+        <h3 class="pin-modal-title">Autentikasi Panitia</h3>
+        <p class="pin-modal-desc">Masukkan PIN Keamanan untuk membuka portal pengelolaan data seleksi pendaftaran.</p>
+        
+        <div class="pin-input-group">
+          <input 
+            type="password" 
+            id="input-admin-pin" 
+            placeholder="Ketik PIN..." 
+            class="pin-field-clean" 
+            maxlength="10" 
+            autocomplete="off"
+          />
+          <span class="pin-error-msg hidden" id="pin-error-msg">PIN salah! Akses ditolak.</span>
+        </div>
+
+        <div class="pin-btn-actions">
+          <button type="button" class="btn-pin-cancel" id="btn-cancel-pin">Batal</button>
+          <button type="button" class="btn-pin-submit" id="btn-submit-pin">Buka Portal</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+
+<script>
+  let pendaftaranConfig = {
+    schedule: '',
+    waLink: 'https://chat.whatsapp.com/LJk3X0aPRnHCi5mDjhj0E8?s=sh&p=a&iam=2'
+  };
+
+  try {
+    const savedConfig = localStorage.getItem('unix_pendaftaran_config');
+    if (savedConfig) pendaftaranConfig = JSON.parse(savedConfig);
+  } catch (e) {
+    console.warn(e);
+  }
+
+  let gradData: any[] = [];
+  try {
+    gradData = JSON.parse(localStorage.getItem('unix_pendaftaran_grad_data') || '[]');
+  } catch (e) {
+    gradData = [];
+  }
+
+  const panelComingSoon = document.getElementById('panel-coming-soon');
+  const panelCountdown = document.getElementById('panel-countdown');
+  const panelForm = document.getElementById('panel-form');
+  const csTargetDate = document.getElementById('cs-target-date');
+
+  const cdHours = document.getElementById('cd-hours');
+  const cdMin = document.getElementById('cd-minutes');
+  const cdSec = document.getElementById('cd-seconds');
+
+  const formEl = document.getElementById('volunteer-check-form');
+  const inputGmail = document.getElementById('input-gmail') as HTMLInputElement;
+  const inputPass = document.getElementById('input-pass') as HTMLInputElement;
+  const errorInlineMsg = document.getElementById('error-inline-msg');
+  const btnToggleEye = document.getElementById('btn-toggle-eye');
+
+  const initialActionRow = document.getElementById('initial-action-row');
+  const chameleonWrap = document.getElementById('chameleon-reveal-wrap');
+  const btnOpenResult = document.getElementById('btn-open-result');
+
+  const revealOverlay = document.getElementById('reveal-countdown-overlay');
+  const countdownNumEl = document.getElementById('countdown-pulse-num');
+  const resultCard = document.getElementById('portal-result-card');
+
+  const resultHeaderStrip = document.getElementById('result-header-strip');
+  const resultStatusTitle = document.getElementById('result-status-title');
+  const resultStatusQuote = document.getElementById('result-status-quote');
+  const resultCandidateName = document.getElementById('result-candidate-name');
+  const resultCandidateEmail = document.getElementById('result-candidate-email');
+  const resultCandidateNoreg = document.getElementById('result-candidate-noreg');
+
+  const whatsappQrContainer = document.getElementById('whatsapp-qr-container');
+  const qrWhatsappImg = document.getElementById('qr-whatsapp-img') as HTMLImageElement;
+  const btnDirectWa = document.getElementById('btn-direct-wa') as HTMLAnchorElement;
+  const refreshTimerCount = document.getElementById('refresh-timer-count');
+
+  const errorModal = document.getElementById('error-popup-modal');
+  const fireCanvas = document.getElementById('fire-canvas') as HTMLCanvasElement;
+
+  const pinModal = document.getElementById('pin-modal-overlay');
+  const btnOpenAdminGate = document.getElementById('btn-open-admin-gate');
+  const btnCancelPin = document.getElementById('btn-cancel-pin');
+  const btnSubmitPin = document.getElementById('btn-submit-pin');
+  const inputAdminPin = document.getElementById('input-admin-pin') as HTMLInputElement;
+  const pinErrorMsg = document.getElementById('pin-error-msg');
+
+  let errorTimer: any = null;
+  let verifiedCandidate: any = null;
+
+  btnToggleEye?.addEventListener('click', () => {
+    inputPass.type = inputPass.type === 'password' ? 'text' : 'password';
+  });
+
+  let targetDateTime = pendaftaranConfig.schedule;
+  if (targetDateTime) {
+    const dtObj = new Date(targetDateTime);
+    if (csTargetDate) {
+      csTargetDate.textContent = `Jadwal Rilis: ${dtObj.toLocaleString('id-ID', { dateStyle: 'full', timeStyle: 'short' })} WIB`;
+    }
+  } else {
+    const defaultTime = new Date();
+    defaultTime.setHours(defaultTime.getHours() + 14);
+    targetDateTime = defaultTime.toISOString();
+    if (csTargetDate) csTargetDate.textContent = 'Jadwal Rilis: Segera Diumumkan Panitia';
+  }
+
+  function evaluateTimePhase() {
+    const targetTime = new Date(targetDateTime).getTime();
+    const now = new Date().getTime();
+    const distance = targetTime - now;
+    const SIX_HOURS = 6 * 60 * 60 * 1000;
+
+    if (distance <= 0) {
+      panelComingSoon?.classList.add('hidden');
+      panelCountdown?.classList.add('hidden');
+      panelForm?.classList.remove('hidden');
+      return true;
+    } else if (distance <= SIX_HOURS) {
+      panelComingSoon?.classList.add('hidden');
+      panelCountdown?.classList.remove('hidden');
+      panelForm?.classList.add('hidden');
+
+      const hours = Math.floor(distance / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      if (cdHours) cdHours.textContent = hours.toString().padStart(2, '0');
+      if (cdMin) cdMin.textContent = minutes.toString().padStart(2, '0');
+      if (cdSec) cdSec.textContent = seconds.toString().padStart(2, '0');
+      return false;
+    } else {
+      panelComingSoon?.classList.remove('hidden');
+      panelCountdown?.classList.add('hidden');
+      panelForm?.classList.add('hidden');
+      return false;
+    }
+  }
+
+  const isReleased = evaluateTimePhase();
+  if (!isReleased) {
+    const timerInterval = setInterval(() => {
+      const finished = evaluateTimePhase();
+      if (finished) clearInterval(timerInterval);
+    }, 1000);
+  }
+
+  // Verifikasi Akun Pendaftar
+  formEl?.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const emailVal = inputGmail.value.trim().toLowerCase();
+    const passVal = inputPass.value.trim();
+
+    try {
+      gradData = JSON.parse(localStorage.getItem('unix_pendaftaran_grad_data') || '[]');
+    } catch {
+      gradData = [];
+    }
+
+    const targetUser = gradData.find((g: any) => {
+      const cEmail = (g.email || '').toLowerCase().trim();
+      const cPass = (g.password || g.pass || '').trim();
+      return cEmail === emailVal && cPass === passVal;
+    });
+
+    if (targetUser) {
+      verifiedCandidate = targetUser;
+      errorInlineMsg?.classList.add('hidden');
+      initialActionRow?.classList.add('hidden');
+      chameleonWrap?.classList.remove('hidden');
+    } else {
+      errorInlineMsg?.classList.remove('hidden');
+      showErrorPopup('Gmail atau Password Anda salah / tidak terdaftar dalam database seleksi.');
+    }
+  });
+
+  function showErrorPopup(msg: string) {
+    const errorDesc = document.getElementById('error-desc-text');
+    if (errorDesc) errorDesc.textContent = msg;
+    errorModal?.classList.remove('hidden');
+
+    if (errorTimer) clearTimeout(errorTimer);
+    errorTimer = setTimeout(() => {
+      errorModal?.classList.add('hidden');
+    }, 5000);
+  }
+
+  // Buka Hasil Seleksi & Mulai Timer Auto-Refresh 5 Detik
+  btnOpenResult?.addEventListener('click', () => {
+    if (!verifiedCandidate) return;
+
+    revealOverlay?.classList.remove('hidden');
+
+    let count = 5;
+    if (countdownNumEl) {
+      countdownNumEl.textContent = count.toString();
+      restartPulseAnimation(countdownNumEl);
+    }
+
+    const interval = setInterval(() => {
+      count--;
+      if (count > 0) {
+        if (countdownNumEl) {
+          countdownNumEl.textContent = count.toString();
+          restartPulseAnimation(countdownNumEl);
+        }
+      } else {
+        clearInterval(interval);
+        revealOverlay?.classList.add('hidden');
+
+        panelForm?.classList.add('hidden');
+        resultCard?.classList.remove('hidden');
+
+        renderFinalResult();
+
+        // HITUNG MUNDUR AUTO-REFRESH 5 DETIK
+        let refreshSeconds = 5;
+        if (refreshTimerCount) refreshTimerCount.textContent = refreshSeconds.toString();
+
+        const refreshInterval = setInterval(() => {
+          refreshSeconds--;
+          if (refreshTimerCount) refreshTimerCount.textContent = refreshSeconds.toString();
+          if (refreshSeconds <= 0) {
+            clearInterval(refreshInterval);
+            window.location.reload();
+          }
+        }, 1000);
+      }
+    }, 1000);
+  });
+
+  function restartPulseAnimation(el: HTMLElement) {
+    el.style.animation = 'none';
+    void el.offsetWidth;
+    el.style.animation = 'pulseScaleNum 0.9s cubic-bezier(0.16, 1, 0.3, 1)';
+  }
+
+  function renderFinalResult() {
+    const isPass = (verifiedCandidate.status || '').toUpperCase().trim() === 'LULUS';
+    const candidateName = verifiedCandidate.name || '-';
+    const candidateEmail = verifiedCandidate.email || '-';
+    const candidateReg = verifiedCandidate.noreg || '-';
+
+    if (resultCandidateName) resultCandidateName.textContent = candidateName;
+    if (resultCandidateEmail) resultCandidateEmail.textContent = candidateEmail;
+    if (resultCandidateNoreg) resultCandidateNoreg.textContent = candidateReg;
+
+    if (isPass) {
+      resultHeaderStrip?.classList.remove('strip-fail');
+      resultHeaderStrip?.classList.add('strip-pass');
+
+      if (resultStatusTitle) {
+        resultStatusTitle.textContent = 'ANDA DINYATAKAN LULUS VOLUNTEER UNIX 2027';
+      }
+      if (resultStatusQuote) {
+        resultStatusQuote.textContent = '"Selamat SobatKita telah tergabung di Keluarga Besar TemanKita University Expo 2027, semoga kita dapat bekerjasama dengan baik kedepannya, Selamat dan Semangat SobatKita!"';
+      }
+
+      const targetWaUrl = pendaftaranConfig.waLink || 'https://chat.whatsapp.com/LJk3X0aPRnHCi5mDjhj0E8?s=sh&p=a&iam=2';
+
+      if (qrWhatsappImg) {
+        qrWhatsappImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(targetWaUrl)}`;
+      }
+      if (btnDirectWa) {
+        btnDirectWa.href = targetWaUrl;
+      }
+
+      whatsappQrContainer?.classList.remove('hidden');
+      launchConfetti();
+    } else {
+      resultHeaderStrip?.classList.remove('strip-pass');
+      resultHeaderStrip?.classList.add('strip-fail');
+
+      if (resultStatusTitle) {
+        resultStatusTitle.textContent = 'ANDA DINYATAKAN TIDAK LULUS VOLUNTEER UNIX 2027';
+      }
+      if (resultStatusQuote) {
+        resultStatusQuote.textContent = '"Tetap semangat SobatKita ini bukanlah akhir masih banyak kesempatan untuk kita berkembang lebih baik, cari terus kesempatan itu, Semangat SobatKita!"';
+      }
+
+      whatsappQrContainer?.classList.add('hidden');
+      startFireParticles();
+    }
+  }
+
+  function launchConfetti() {
+    try {
+      if (typeof (window as any).confetti === 'function') {
+        const duration = 5 * 1000;
+        const end = Date.now() + duration;
+
+        (function frame() {
+          (window as any).confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0, y: 0.7 } });
+          (window as any).confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1, y: 0.7 } });
+          if (Date.now() < end) requestAnimationFrame(frame);
+        })();
+      }
+    } catch (e) {
+      console.warn(e);
+    }
+  }
+
+  function startFireParticles() {
+    if (!fireCanvas) return;
+    fireCanvas.classList.remove('hidden');
+
+    const ctx = fireCanvas.getContext('2d');
+    if (!ctx) return;
+
+    let width = (fireCanvas.width = window.innerWidth);
+    let height = (fireCanvas.height = window.innerHeight);
+
+    window.addEventListener('resize', () => {
+      width = fireCanvas.width = window.innerWidth;
+      height = fireCanvas.height = window.innerHeight;
+    });
+
+    const particles: any[] = [];
+    for (let i = 0; i < 80; i++) {
+      particles.push({
+        x: Math.random() * width,
+        y: height + Math.random() * 80,
+        radius: Math.random() * 4 + 2,
+        speedY: Math.random() * 3 + 1.5,
+        speedX: (Math.random() - 0.5) * 1.5,
+        alpha: Math.random() * 0.7 + 0.3,
+        color: Math.random() > 0.4 ? '#f59e0b' : '#ef4444'
+      });
+    }
+
+    function animateFire() {
+      if (!ctx) return;
+      ctx.clearRect(0, 0, width, height);
+
+      particles.forEach((p) => {
+        p.y -= p.speedY;
+        p.x += p.speedX;
+        p.alpha -= 0.005;
+
+        if (p.y < 0 || p.alpha <= 0) {
+          p.x = Math.random() * width;
+          p.y = height + 10;
+          p.alpha = Math.random() * 0.7 + 0.3;
+        }
+
+        ctx.save();
+        ctx.globalAlpha = p.alpha;
+        ctx.fillStyle = p.color;
+        ctx.shadowBlur = 12;
+        ctx.shadowColor = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      });
+
+      requestAnimationFrame(animateFire);
+    }
+
+    animateFire();
+  }
+
+  // Autentikasi PIN Gate
+  btnOpenAdminGate?.addEventListener('click', () => {
+    if (inputAdminPin) inputAdminPin.value = '';
+    pinErrorMsg?.classList.add('hidden');
+    pinModal?.classList.remove('hidden');
+    inputAdminPin?.focus();
+  });
+
+  btnCancelPin?.addEventListener('click', () => {
+    pinModal?.classList.add('hidden');
+  });
+
+  function verifyAdminPin() {
+    const pinVal = inputAdminPin ? inputAdminPin.value.trim() : '';
+    if (pinVal === 'A1B2C3') {
+      sessionStorage.setItem('unix_pendaftaran_auth', 'granted');
+      window.location.href = '/adminpendaftaran';
+    } else {
+      pinErrorMsg?.classList.remove('hidden');
+      inputAdminPin?.focus();
+    }
+  }
+
+  btnSubmitPin?.addEventListener('click', verifyAdminPin);
+  inputAdminPin?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') verifyAdminPin();
+  });
+</script>
+
+<style>
+  .portal-body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background-color: #0b1120;
+    background-image: 
+      linear-gradient(135deg, rgba(18, 5, 95, 0.92) 0%, rgba(15, 23, 42, 0.94) 100%),
+      var(--bg-url);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    box-sizing: border-box;
+  }
+
+  .fire-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 5;
+  }
+
+  .portal-main-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3.5rem clamp(1rem, 3vw, 2.5rem) 7rem clamp(1rem, 3vw, 2.5rem);
+    box-sizing: border-box;
+    position: relative;
+    z-index: 10;
+    width: 100%;
+  }
+
+  .portal-landscape-box {
+    width: 100%;
+    max-width: 1380px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .portal-glass-panel {
+    background: rgba(30, 41, 59, 0.72);
+    border: 1.5px solid rgba(255, 255, 255, 0.18);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(16px);
+  }
+
+  .portal-header-banner {
+    background: #0284c7;
+    padding: 1.6rem 2.5rem;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .header-logo-row { margin-bottom: 0.75rem; }
+
+  .header-logo-img {
+    height: 52px;
+    width: auto;
+    object-fit: contain;
+    display: block;
+  }
+
+  .banner-headline {
+    font-size: clamp(1.25rem, 2.3vw, 1.65rem);
+    font-weight: 900;
+    color: #ffffff;
+    margin: 0;
+    letter-spacing: 0.02em;
+    line-height: 1.3;
+  }
+
+  .coming-soon-body, .countdown-body { padding: 3.5rem 2rem; }
+
+  .badge-status-pill {
+    display: inline-block;
+    padding: 0.35rem 1.1rem;
+    background: rgba(255, 255, 255, 0.15);
+    color: #facc15;
+    font-size: 0.78rem;
+    font-weight: 850;
+    letter-spacing: 0.08em;
+    border-radius: 6px;
+    margin-bottom: 1.25rem;
+  }
+
+  .pill-countdown { background: #facc15; color: #12055f; }
+
+  .coming-soon-title {
+    font-size: clamp(2.8rem, 6vw, 4.2rem);
+    font-weight: 950;
+    color: #facc15;
+    letter-spacing: 0.04em;
+    margin: 0 0 1rem 0;
+    text-shadow: 0 0 30px rgba(250, 204, 21, 0.5);
+  }
+
+  .coming-soon-desc, .countdown-note-text {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: #cbd5e1;
+    max-width: 620px;
+    margin: 0 auto;
+  }
+
+  .target-date-box {
+    display: inline-block;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(250, 204, 21, 0.4);
+    color: #facc15;
+    padding: 0.6rem 1.5rem;
+    border-radius: 8px;
+    font-size: 0.92rem;
+    font-weight: 700;
+    margin-top: 1.5rem;
+  }
+
+  .countdown-digits-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.75rem;
+    margin: 1.8rem 0;
+  }
+
+  .digit-box { display: flex; flex-direction: column; }
+
+  .digit-box span {
+    font-size: clamp(3rem, 6vw, 4.8rem);
+    font-weight: 950;
+    color: #facc15;
+    line-height: 1;
+  }
+
+  .digit-box label { font-size: 0.85rem; color: #cbd5e1; margin-top: 0.4rem; }
+
+  .digit-sep {
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: rgba(255, 255, 255, 0.35);
+    line-height: 1;
+  }
+
+  .portal-form-body { padding: 2.2rem 2.8rem; }
+
+  .form-instruction-text {
+    font-size: 0.95rem;
+    color: #e2e8f0;
+    margin: 0 0 1.8rem 0;
+    line-height: 1.5;
+  }
+
+  .form-field-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.4rem;
+  }
+
+  .field-label {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 0.5rem;
+  }
+
+  .snpmb-input {
+    width: 100%;
+    padding: 0.9rem 1.25rem;
+    background: #ffffff;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    color: #0f172a;
+    outline: none;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+  }
+
+  .snpmb-input:focus {
+    border-color: #facc15;
+    box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.25);
+  }
+
+  .field-hint { font-size: 0.78rem; color: #94a3b8; margin-top: 0.35rem; }
+  .field-error-text { font-size: 0.82rem; color: #f87171; font-weight: 700; margin-top: 0.4rem; }
+
+  .input-password-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .btn-toggle-eye {
+    position: absolute;
+    right: 0.85rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #64748b;
+    padding: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .eye-svg { width: 19px; height: 19px; }
+
+  .form-checkbox-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+    margin: 1.5rem 0;
+    font-size: 0.85rem;
+    line-height: 1.45;
+    color: #cbd5e1;
+  }
+
+  .form-checkbox-row input { margin-top: 3px; accent-color: #0284c7; }
+  .form-action-row { margin-top: 1rem; }
+
+  .btn-snpmb-blue {
+    padding: 0.85rem 2.4rem;
+    background-color: #0284c7;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+    transition: all 0.2s ease;
+  }
+
+  .btn-snpmb-blue:hover {
+    background-color: #0369a1;
+    transform: translateY(-1px);
+  }
+
+  .chameleon-reveal-wrap {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px dashed rgba(255, 255, 255, 0.2);
+    text-align: center;
+  }
+
+  .chameleon-guide-text {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: #4ade80;
+    margin-bottom: 1rem;
+  }
+
+  .btn-chameleon-pulsing {
+    width: 100%;
+    padding: 1.15rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 950;
+    color: #ffffff;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    animation: chameleonPulsing 1.8s infinite alternate ease-in-out;
+  }
+
+  @keyframes chameleonPulsing {
+    0% {
+      background-color: #16a34a;
+      box-shadow: 0 0 25px rgba(22, 163, 74, 0.6);
+      transform: scale(1);
+    }
+    100% {
+      background-color: #dc2626;
+      box-shadow: 0 0 25px rgba(220, 38, 38, 0.6);
+      transform: scale(1.02);
+    }
+  }
+
+  .reveal-countdown-overlay {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(18, 5, 95, 0.95);
+    backdrop-filter: blur(14px);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .countdown-pulse-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .countdown-pulse-num {
+    font-size: clamp(6.5rem, 16vw, 11rem);
+    font-weight: 950;
+    color: #facc15;
+    line-height: 1;
+    text-shadow: 0 0 35px rgba(250, 204, 21, 0.6);
+    animation: pulseScaleNum 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes pulseScaleNum {
+    0% { transform: scale(0.3); opacity: 0; }
+    60% { transform: scale(1.15); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  .countdown-pulse-label {
+    font-size: clamp(1.1rem, 2vw, 1.4rem);
+    font-weight: 800;
+    color: #ffffff;
+    margin-top: 1rem;
+    letter-spacing: 0.05em;
+  }
+
+  .portal-result-card-landscape {
+    background: #1e293b;
+    border: 2px solid rgba(255, 255, 255, 0.22);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 25px 65px rgba(0, 0, 0, 0.75);
+    width: 100%;
+  }
+
+  .result-header-strip {
+    padding: 2.2rem 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2.5rem;
+  }
+
+  .strip-fail { background-color: #dc2626; }
+  .strip-pass { background-color: #16a34a; }
+
+  .header-strip-left { flex: 1; }
+
+  .result-status-title {
+    font-size: clamp(1.4rem, 2.6vw, 1.9rem);
+    font-weight: 950;
+    color: #ffffff;
+    margin: 0 0 0.5rem 0;
+    letter-spacing: 0.02em;
+    line-height: 1.25;
+  }
+
+  .result-status-quote {
+    font-size: 0.98rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.96);
+    margin: 0;
+    font-weight: 500;
+    max-width: 980px;
+  }
+
+  .header-strip-logo {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .logo-plain-unboxed {
+    height: 100px;
+    width: auto;
+    object-fit: contain;
+    display: block;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.25));
+  }
+
+  .result-identity-body {
+    padding: 2.8rem 3rem;
+    background: rgba(15, 23, 42, 0.92);
+  }
+
+  .metadata-custom-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    row-gap: 1.5rem;
+    column-gap: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .meta-side-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    min-width: 0;
+  }
+
+  .meta-side-col.right-col { text-align: right; }
+
+  .meta-grid-divider {
+    grid-column: 1 / -1;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.12);
+    margin: 0.5rem 0;
+  }
+
+  .label-tiny { font-size: 0.82rem; color: #94a3b8; font-weight: 600; }
+
+  .value-prominent {
+    font-size: clamp(1.2rem, 1.8vw, 1.55rem);
+    font-weight: 900;
+    color: #ffffff;
+    line-height: 1.35;
+    word-break: break-word;
+  }
+
+  .text-code {
+    color: #facc15 !important;
+    font-family: 'JetBrains Mono', monospace, inherit;
+    font-size: clamp(1.1rem, 1.6vw, 1.4rem);
+    white-space: normal;
+  }
+
+  .text-email {
+    font-size: clamp(1.05rem, 1.5vw, 1.3rem);
+    color: #e2e8f0;
+    font-weight: 700;
+    word-break: break-all;
+  }
+
+  .whatsapp-qr-container {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 2rem;
+    color: #0f172a;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+    margin-top: 2rem;
+  }
+
+  .qr-content-card {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+  }
+
+  .qr-image-frame {
+    width: 175px;
+    height: 175px;
+    background: #ffffff;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 0.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .qr-code-img { width: 100%; height: 100%; object-fit: contain; }
+
+  .qr-desc-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .qr-badge-pill {
+    display: inline-block;
+    padding: 0.25rem 0.65rem;
+    background: #dcfce7;
+    color: #15803d;
+    font-size: 0.72rem;
+    font-weight: 850;
+    letter-spacing: 0.06em;
+    border-radius: 4px;
+    width: fit-content;
+  }
+
+  .qr-heading-title {
+    font-size: 1.35rem;
+    font-weight: 900;
+    color: #12055f;
+    margin: 0;
+    line-height: 1.3;
+  }
+
+  .qr-instruction-text {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: #475569;
+    margin: 0 0 0.8rem 0;
+  }
+
+  .qr-instruction-text strong { color: #0f172a; }
+
+  .btn-contact-admin-solid {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    padding: 0.9rem 1.8rem;
+    background-color: #16a34a;
+    color: #ffffff;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 850;
+    text-decoration: none;
+    box-shadow: 0 4px 14px rgba(22, 163, 74, 0.35);
+    transition: all 0.2s ease;
+  }
+
+  .btn-contact-admin-solid:hover {
+    background-color: #15803d;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(22, 163, 74, 0.5);
+  }
+
+  /* Indikator Hitung Mundur Auto Refresh */
+  .refresh-countdown-notice {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 1.75rem;
+    padding: 0.75rem 1.25rem;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px dashed rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    font-size: 0.88rem;
+    color: #cbd5e1;
+  }
+
+  .refresh-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #facc15;
+    animation: blinkDot 1s infinite alternate;
+  }
+
+  @keyframes blinkDot {
+    from { opacity: 0.3; }
+    to { opacity: 1; }
+  }
+
+  .refresh-countdown-notice strong {
+    color: #facc15;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1rem;
+  }
+
+  /* Navigasi Bawah Menetap */
+  .portal-bottom-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 3.5rem;
+    width: 100%;
+    gap: 1.5rem;
+  }
+
+  .btn-bottom-nav {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.75rem 1.6rem;
+    border-radius: 10px;
+    font-size: 0.92rem;
+    font-weight: 850;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  }
+
+  .btn-admin-gate {
+    background: rgba(18, 5, 95, 0.85);
+    border: 1.5px solid rgba(255, 255, 255, 0.25);
+    color: #e2e8f0;
+  }
+
+  .btn-admin-gate:hover {
+    background: #12055f;
+    border-color: #facc15;
+    color: #facc15;
+    transform: translateY(-2px);
+  }
+
+  .btn-exit-nav {
+    background: rgba(18, 5, 95, 0.9);
+    border: 1.5px solid #facc15;
+    color: #ffffff;
+  }
+
+  .btn-exit-nav:hover {
+    background: #facc15;
+    color: #12055f;
+    transform: translateY(-2px);
+  }
+
+  .nav-btn-icon { width: 18px; height: 18px; }
+
+  /* Modal PIN */
+  .modal-backdrop-clean {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.78);
+    backdrop-filter: blur(6px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+  }
+
+  .modal-dialog-pin {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 2.2rem 2rem;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    color: #0f172a;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+  }
+
+  .pin-icon-wrap { font-size: 2.5rem; margin-bottom: 0.6rem; }
+
+  .pin-modal-title {
+    font-size: 1.3rem;
+    font-weight: 900;
+    color: #12055f;
+    margin: 0 0 0.4rem 0;
+  }
+
+  .pin-modal-desc {
+    font-size: 0.88rem;
+    color: #64748b;
+    margin: 0 0 1.4rem 0;
+    line-height: 1.5;
+  }
+
+  .pin-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .pin-field-clean {
+    width: 100%;
+    padding: 0.85rem;
+    border: 2px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    text-align: center;
+    letter-spacing: 0.2em;
+    font-weight: 900;
+    font-family: 'JetBrains Mono', monospace;
+    outline: none;
+    box-sizing: border-box;
+  }
+
+  .pin-field-clean:focus { border-color: #12055f; }
+  .pin-error-msg { font-size: 0.82rem; color: #dc2626; font-weight: 700; }
+
+  .pin-btn-actions { display: flex; gap: 0.75rem; }
+
+  .btn-pin-cancel {
+    flex: 1;
+    padding: 0.75rem;
+    background: #f1f5f9;
+    color: #475569;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  .btn-pin-submit {
+    flex: 1;
+    padding: 0.75rem;
+    background: #12055f;
+    color: #facc15;
+    border: none;
+    border-radius: 8px;
+    font-weight: 850;
+    cursor: pointer;
+  }
+
+  .modal-dialog-error {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 2.5rem 2rem 1.8rem 2rem;
+    width: 100%;
+    max-width: 440px;
+    text-align: center;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .error-cross-circle {
+    width: 68px;
+    height: 68px;
+    background: #fee2e2;
+    color: #dc2626;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.2rem;
+    font-weight: 900;
+    margin: 0 auto 1.25rem auto;
+    border: 3px solid #fca5a5;
+  }
+
+  .error-title {
+    font-size: 1.35rem;
+    font-weight: 900;
+    color: #0f172a;
+    margin: 0 0 0.5rem 0;
+  }
+
+  .error-desc {
+    font-size: 0.9rem;
+    color: #64748b;
+    line-height: 1.55;
+    margin: 0 0 1.5rem 0;
+  }
+
+  .error-countdown-bar {
+    width: 100%;
+    height: 6px;
+    background: #e2e8f0;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .countdown-progress-fill {
+    height: 100%;
+    background: #dc2626;
+    width: 100%;
+    animation: shrinkTimer 5s linear forwards;
+  }
+
+  @keyframes shrinkTimer {
+    from { width: 100%; }
+    to { width: 0%; }
+  }
+
+  .hidden { display: none !important; }
+
+  @media (max-width: 768px) {
+    .portal-main-wrapper { padding: 3.5rem 0.8rem 6rem 0.8rem; }
+    .result-header-strip { flex-direction: column-reverse; text-align: center; padding: 1.6rem 1.4rem; }
+    .logo-plain-unboxed { height: 75px; }
+    .result-identity-body { padding: 1.8rem 1.4rem; }
+    .metadata-custom-grid { grid-template-columns: 1fr; row-gap: 1.2rem; }
+    .meta-side-col.right-col { text-align: left; }
+    .empty-col, .meta-grid-divider { display: none; }
+    .qr-content-card { flex-direction: column; text-align: center; }
+    .btn-contact-admin-solid { width: 100%; }
+    .portal-bottom-nav { flex-direction: column; }
+    .btn-bottom-nav { width: 100%; justify-content: center; }
+  }
+</style>

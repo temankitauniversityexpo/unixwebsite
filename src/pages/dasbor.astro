@@ -1,0 +1,2429 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+---
+
+<!doctype html>
+<html lang="id">
+  <head>
+    <BaseHead 
+      title={`Dasbor Pribadi SobatKita - ${SITE_TITLE}`} 
+      description={SITE_DESCRIPTION} 
+    />
+    <script is:inline src="https://unpkg.com/html5-qrcode"></script>
+  </head>
+  <body class="dash-page-body">
+
+    <div class="dash-main-container">
+      
+      <!-- ========================================================
+           KOLOM KIRI: KONTEN UTAMA SESUAI TAB
+           ======================================================== -->
+      <div class="dash-content-left">
+        
+        <!-- ========================================================
+             1. TAB: DASBOR AKUN (SAPAAN + E-TICKET RESMI)
+             ======================================================== -->
+        <section class="tab-pane active" id="tab-akun">
+          <div class="pane-headline-box">
+            <span class="sub-lead-navy" id="pane-sub-greeting">DASBOR PRIBADI SOBATKITA</span>
+            <h1 class="main-lead-navy" id="pane-main-greeting">SobatKita</h1>
+            <h2 class="role-lead-gold" id="role-title-text">Memuat akun...</h2>
+            <p class="date-text" id="current-date-text">Minggu, 1 November 2026</p>
+          </div>
+
+          <!-- KONTEN KHUSUS PESERTA: FORMAT TIKET PERSIS SEPERTI GAMBAR 2 -->
+          <div id="user-ticket-display-section" class="hidden">
+            <div id="user-tickets-cards-list" class="tickets-layout-flow">
+              <!-- Kartu E-Ticket Resmi UNIX 2027 dirender via JavaScript -->
+            </div>
+          </div>
+
+          <!-- KONTEN KHUSUS ADMIN: INPUT AKUN & DATABASE AKUN -->
+          <div id="admin-account-section" class="hidden">
+            <div class="card-white-flat">
+              <h3 class="card-title-navy">Tambah Akun Baru</h3>
+              <p class="card-desc-gray">Masukkan data pengguna baru atau tempel langsung baris data dari Excel.</p>
+              
+              <div class="form-grid-three">
+                <div class="form-group">
+                  <label class="field-label">Nama Lengkap</label>
+                  <input type="text" id="acc-name" placeholder="Contoh: Fazl Islami Pasha" class="flat-input" />
+                </div>
+                <div class="form-group">
+                  <label class="field-label">Alamat Gmail</label>
+                  <input type="email" id="acc-email" placeholder="contoh@gmail.com" class="flat-input" />
+                </div>
+                <div class="form-group">
+                  <label class="field-label">WhatsApp / HP</label>
+                  <input type="tel" id="acc-phone" placeholder="0895xxxxxxxx" class="flat-input" />
+                </div>
+                <div class="form-group full-span">
+                  <label class="field-label">Password Akun</label>
+                  <input type="text" id="acc-pass" placeholder="Minimal 6 karakter" class="flat-input" />
+                </div>
+                <div class="form-group full-span">
+                  <button type="button" class="btn-flat-gold" id="btn-save-user-manual">
+                    + Simpan Akun Baru
+                  </button>
+                </div>
+              </div>
+
+              <div class="excel-divider-wrap">
+                <span>Atau Import dari Excel / Spreadsheet (Copy-Paste)</span>
+              </div>
+
+              <textarea 
+                id="excel-paste-users" 
+                class="flat-textarea" 
+                placeholder="Tempel (paste) baris data dari Excel di sini: [Nama Lengkap] [Tab] [Gmail] [Tab] [No HP] [Tab] [Password]"
+                rows="3"
+              ></textarea>
+              <button type="button" class="btn-flat-green" id="btn-import-users-excel">
+                Import Data Akun dari Excel
+              </button>
+            </div>
+
+            <div class="card-white-flat margin-top-2">
+              <div class="card-header-flex">
+                <div>
+                  <h3 class="card-title-navy">Database Seluruh Akun Terdaftar</h3>
+                  <p class="card-desc-gray">Kelola, ubah sandi, atau hapus data akun peserta yang terdaftar di platform.</p>
+                </div>
+                <span class="badge-count-navy" id="badge-total-users">0 Akun Terdaftar</span>
+              </div>
+
+              <div class="search-wrap-simple">
+                <input type="text" id="search-acc-input" placeholder="Cari nama, email, atau no WhatsApp..." class="flat-search-input" />
+              </div>
+
+              <div class="table-scroll-wrap wide-table-space">
+                <table class="flat-table">
+                  <thead>
+                    <tr>
+                      <th>No</th>
+                      <th>Nama Lengkap</th>
+                      <th>Email</th>
+                      <th>WhatsApp</th>
+                      <th>Password</th>
+                      <th class="text-center">Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tbody-users-list"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================================
+             2. TAB ADMIN: TICKET UNIX (TANPA PASSWORD, LEGA, PILIHAN HAPUS)
+             ======================================================== -->
+        <section class="tab-pane hidden" id="tab-tiket">
+          <div class="pane-headline-box">
+            <h1 class="main-lead-navy-large">Manajemen Tiket UNIX 2027</h1>
+            <p class="desc-lead-gray">Scan barcode tiket menggunakan kamera perangkat atau input pendaftaran tiket peserta (Tanpa perlu password peserta).</p>
+          </div>
+
+          <!-- Scanner Kamera -->
+          <div class="card-white-flat">
+            <div class="green-dot-header">
+              <span class="green-dot"></span>
+              <h3 class="card-title-navy inline-h3">Scanner Kamera Barcode & QR Tiket</h3>
+            </div>
+            
+            <div class="scanner-camera-display">
+              <div id="qr-reader-box" class="qr-camera-viewport"></div>
+              <button type="button" class="btn-scan-overlay" id="btn-toggle-camera">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-svg-mini"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                <span>Buka Kamera Scanner</span>
+              </button>
+            </div>
+
+            <div class="manual-validate-row">
+              <input type="text" id="manual-ticket-code" placeholder="Atau ketik/scan Kode Tiket manual..." class="flat-input-tall" />
+              <button type="button" class="btn-flat-navy-tall" id="btn-verify-ticket-code">
+                Validasi Tiket
+              </button>
+            </div>
+            <div id="verify-scan-result" class="scan-alert-msg hidden"></div>
+          </div>
+
+          <!-- Daftarkan Tiket Baru (Sudah Dihapus Password-nya Sesuai Permintaan) -->
+          <div class="card-white-flat margin-top-2">
+            <div class="card-sub-header">
+              <div class="icon-memo-box">📝</div>
+              <div>
+                <h3 class="card-title-navy">Daftarkan Tiket Baru</h3>
+                <p class="card-desc-gray">Masukkan data peserta agar tiket otomatis muncul di akun mereka (Password peserta tidak diperlukan).</p>
+              </div>
+            </div>
+
+            <div class="form-grid-two">
+              <div class="form-group">
+                <label class="field-label">Nama Lengkap / Email Akun Peserta:</label>
+                <input type="text" id="tkt-email" placeholder="Contoh: Fazl Islami Pasha atau email pendaftar" class="flat-input" />
+              </div>
+              <div class="form-group">
+                <label class="field-label">Kode Tiket Unik:</label>
+                <input type="text" id="tkt-code" placeholder="Contoh: UNIX-VIP-231" class="flat-input" />
+              </div>
+              <div class="form-group">
+                <label class="field-label">Jenis Tiket:</label>
+                <input type="text" id="tkt-type" placeholder="Contoh: Tiket VIP - Daily Sale / Reguler" class="flat-input" />
+              </div>
+              <div class="form-group">
+                <label class="field-label">Keterangan Promo / Paket:</label>
+                <input type="text" id="tkt-promo" placeholder="Contoh: Duo Ambisius / Reguler / -" class="flat-input" />
+              </div>
+              
+              <div class="form-btn-dual-row full-span-two">
+                <button type="button" class="btn-flat-gold" id="btn-save-ticket-manual">
+                  Simpan Tiket
+                </button>
+                <button type="button" class="btn-flat-green" id="btn-show-import-ticket">
+                  Import dari Excel (CSV)
+                </button>
+              </div>
+            </div>
+
+            <div class="excel-dropdown-box hidden" id="box-import-tickets">
+              <p class="excel-guide-text">
+                Salin baris Excel dengan urutan:<br>
+                <code>[Gmail / Nama] [Tab] [Kode Tiket] [Tab] [Jenis Tiket] [Tab] [Promo] [Tab] [Qty]</code>
+              </p>
+              <textarea id="excel-paste-tickets" class="flat-textarea" rows="4" placeholder="Tempel data tiket dari Excel di sini..."></textarea>
+              <button type="button" class="btn-flat-green" id="btn-import-tickets-excel">
+                Eksekusi Import Tiket
+              </button>
+            </div>
+          </div>
+
+          <!-- Database Tiket Terdaftar Diperluas & Pilihan Hapus Per Baris -->
+          <div class="card-white-flat margin-top-2">
+            <div class="card-header-flex">
+              <div>
+                <h3 class="card-title-navy">Database Seluruh Tiket Terdaftar</h3>
+                <p class="card-desc-gray">Tampilan tabel lega dan luas. Anda dapat menghapus tiket satuan atau double click status untuk penukaran.</p>
+              </div>
+              <div class="search-wrap-simple">
+                <input type="text" id="search-ticket-input" placeholder="Cari kode tiket, email, atau jenis..." class="flat-search-input" />
+              </div>
+            </div>
+
+            <div class="table-scroll-wrap wide-table-space">
+              <table class="flat-table table-spacious">
+                <thead>
+                  <tr>
+                    <th>Kode Tiket</th>
+                    <th>Nama / Akun Gmail</th>
+                    <th>Jenis Tiket</th>
+                    <th>Promo / Paket</th>
+                    <th>QR Barcode</th>
+                    <th>Status Penukaran</th>
+                    <th class="text-center">Aksi Hapus</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody-tickets-list"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 3. TAB ADMIN: STORAGE MANAGEMENT -->
+        <section class="tab-pane hidden" id="tab-storage">
+          <div class="pane-headline-box">
+            <h1 class="main-lead-navy-large">Storage Management</h1>
+            <p class="desc-lead-gray">Atur jumlah stok barang dan ubah status ketersediaan (Tersedia / Tidak Tersedia) produk Official Store.</p>
+          </div>
+
+          <div class="card-white-flat">
+            <div class="card-header-flex">
+              <div>
+                <h3 class="card-title-navy">Pengaturan Stok & Status Ketersediaan</h3>
+                <p class="card-desc-gray">Ubah angka pada kolom stok untuk memperbarui jumlah, atau klik tombol status untuk beralih ketersediaan.</p>
+              </div>
+              <span class="badge-count-navy" id="badge-total-products">0 Produk</span>
+            </div>
+
+            <div class="table-scroll-wrap wide-table-space">
+              <table class="flat-table">
+                <thead>
+                  <tr>
+                    <th>Nama Produk</th>
+                    <th>Kategori</th>
+                    <th>Harga</th>
+                    <th>Jumlah Stok (Edit Langsung)</th>
+                    <th>Status Ketersediaan (Klik Ubah)</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody-products-list"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 4. TAB ADMIN: QNA SOBATKITA -->
+        <section class="tab-pane hidden" id="tab-qna">
+          <div class="pane-headline-box">
+            <h1 class="main-lead-navy-large">QnA SobatKita (Takita)</h1>
+            <p class="desc-lead-gray">Jawab pertanyaan pelajar dari Takita atau hapus jika tidak relevan.</p>
+          </div>
+
+          <div class="card-white-flat">
+            <div class="card-header-flex">
+              <div>
+                <h3 class="card-title-navy">Daftar Pertanyaan Masuk</h3>
+                <p class="card-desc-gray">Berikan jawaban langsung agar tampil di portal siswa.</p>
+              </div>
+              <button type="button" class="btn-flat-gold btn-small" id="btn-add-dummy-qna">
+                + Simulasi Pertanyaan
+              </button>
+            </div>
+
+            <div class="table-scroll-wrap margin-top-1 wide-table-space">
+              <table class="flat-table">
+                <thead>
+                  <tr>
+                    <th>Pengirim</th>
+                    <th>Instansi</th>
+                    <th>Pertanyaan</th>
+                    <th>Status</th>
+                    <th class="text-center">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody-qna-list"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 5. TAB ADMIN: KELOLA KELULUSAN -->
+        <section class="tab-pane hidden" id="tab-kelulusan">
+          <div class="pane-headline-box">
+            <h1 class="main-lead-navy-large">Pengaturan Pengumuman Kelulusan</h1>
+            <p class="desc-lead-gray">Atur jadwal rilis, tautan grup WhatsApp, dan kelola data kelulusan yang tampil di laman publik pengumuman.astro.</p>
+          </div>
+
+          <div class="card-white-flat">
+            <h3 class="card-title-navy">Atur Jadwal Rilis & Grup WhatsApp</h3>
+            <div class="form-grid-two margin-top-1">
+              <div class="form-group">
+                <label class="field-label">Tanggal & Jam Rilis Pengumuman:</label>
+                <input type="datetime-local" id="grad-datetime-input" class="flat-input" />
+              </div>
+              <div class="form-group">
+                <label class="field-label">Link Grup WhatsApp (Bagi yang Lulus):</label>
+                <input type="url" id="grad-walink-input" placeholder="https://chat.whatsapp.com/..." class="flat-input" />
+              </div>
+            </div>
+            <div class="margin-top-1">
+              <button type="button" class="btn-flat-gold" id="btn-save-grad-config">
+                Simpan Jadwal & Link
+              </button>
+            </div>
+          </div>
+
+          <div class="card-white-flat margin-top-2">
+            <h3 class="card-title-navy">Input Data Hasil Kelulusan Pendaftar</h3>
+            <div class="form-grid-three margin-top-1">
+              <div class="form-group">
+                <label class="field-label">Nama Lengkap:</label>
+                <input type="text" id="grad-name" placeholder="Contoh: Fazl Islami Pasha" class="flat-input" />
+              </div>
+              <div class="form-group">
+                <label class="field-label">Email Akun / Email Pendaftar:</label>
+                <input type="email" id="grad-email" placeholder="contoh@gmail.com" class="flat-input" />
+              </div>
+              <div class="form-group">
+                <label class="field-label">Password Akun:</label>
+                <input type="text" id="grad-pass" placeholder="Password akun" class="flat-input" />
+              </div>
+              <div class="form-group">
+                <label class="field-label">No. Registrasi (Kosong = Otomatis):</label>
+                <input type="text" id="grad-noreg" placeholder="Format: A001-VOLUNTEERUNIX-2027" class="flat-input" />
+              </div>
+              <div class="form-group full-span-two">
+                <label class="field-label">Keterangan Kelulusan:</label>
+                <select id="grad-status" class="flat-input">
+                  <option value="LULUS">LULUS</option>
+                  <option value="TIDAK LULUS">TIDAK LULUS</option>
+                </select>
+              </div>
+              <div class="form-btn-dual-row full-span-three">
+                <button type="button" class="btn-flat-gold" id="btn-save-grad-manual">
+                  Tambah Data Kelulusan
+                </button>
+                <button type="button" class="btn-flat-green" id="btn-show-import-grad">
+                  Import Excel Kelulusan (CSV)
+                </button>
+              </div>
+            </div>
+
+            <div class="excel-dropdown-box hidden" id="box-import-grad">
+              <p class="excel-guide-text">
+                Salin baris Excel dengan urutan:<br>
+                <code>[Nama Lengkap] [Tab] [Gmail] [Tab] [Password] [Tab] [No Registrasi] [Tab] [LULUS / TIDAK LULUS]</code>
+              </p>
+              <textarea id="excel-paste-grad" class="flat-textarea" rows="4" placeholder="Tempel data kelulusan dari Excel di sini..."></textarea>
+              <button type="button" class="btn-flat-green" id="btn-import-grad-excel">
+                Eksekusi Import Kelulusan
+              </button>
+            </div>
+          </div>
+
+          <div class="card-white-flat margin-top-2">
+            <div class="card-header-flex">
+              <div>
+                <h3 class="card-title-navy">Database Kelulusan Volunteer UNIX 2027</h3>
+                <p class="card-desc-gray">Klik <strong>Double Click</strong> status buka untuk beralih status 'Sudah' &harr; 'Belum'.</p>
+              </div>
+              <div class="search-wrap-simple">
+                <input type="text" id="search-grad-input" placeholder="Cari nama, Gmail, atau No Reg..." class="flat-search-input" />
+              </div>
+            </div>
+
+            <div class="table-scroll-wrap wide-table-space">
+              <table class="flat-table">
+                <thead>
+                  <tr>
+                    <th>No. Registrasi</th>
+                    <th>Nama Lengkap</th>
+                    <th>Alamat Gmail</th>
+                    <th>Password</th>
+                    <th>Hasil Seleksi</th>
+                    <th>Status Buka (Double Click)</th>
+                    <th class="text-center">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody-grad-list"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================================
+             6. TAB: GANTI PASSWORD (ADMIN BISA CARI & GANTI SEMUA AKUN)
+             ======================================================== -->
+        <section class="tab-pane hidden" id="tab-password">
+          <div class="pane-headline-box">
+            <h1 class="main-lead-navy-large">Ganti Password Akun</h1>
+            <p class="desc-lead-gray" id="desc-ganti-pass">
+              Pembaruan kata sandi akun sistem SobatKita UNIX 2027.
+            </p>
+          </div>
+
+          <!-- FORM UNTUK PESERTA (GANTI AKUN SENDIRI) -->
+          <div class="card-white-flat" id="user-password-change-box">
+            <h3 class="card-title-navy">Ubah Password Akun Kamu</h3>
+            <p class="card-desc-gray">Masukkan kata sandi lama dan kata sandi baru untuk akun kamu.</p>
+            <div class="form-vertical-flow margin-top-1">
+              <div class="form-group">
+                <label class="field-label">Password Lama Saat Ini</label>
+                <input type="password" id="field-old-pass" placeholder="Masukkan password lama" class="flat-input" />
+              </div>
+              <div class="form-group">
+                <label class="field-label">Password Baru</label>
+                <input type="password" id="field-new-pass" placeholder="Minimal 6 karakter" class="flat-input" />
+              </div>
+              <button type="button" class="btn-flat-gold btn-full" id="btn-submit-change-pass">
+                Perbarui Password Akun Saya
+              </button>
+            </div>
+          </div>
+
+          <!-- FITUR KHUSUS ADMIN UNIX: CARI SEMUA AKUN & GANTI PASSWORD MEREKA -->
+          <div class="card-white-flat hidden" id="admin-password-manager-box">
+            <div class="card-header-flex">
+              <div>
+                <h3 class="card-title-navy">Manajemen & Reset Password Pengguna (Admin UNIX)</h3>
+                <p class="card-desc-gray">Cari akun peserta / pengguna dan ubah password mereka secara langsung.</p>
+              </div>
+            </div>
+
+            <!-- Kolom Pencarian Akun untuk Ganti Password -->
+            <div class="search-wrap-simple">
+              <input type="text" id="search-pwd-user-input" placeholder="Ketik nama, Gmail, atau no WhatsApp akun yang ingin diubah..." class="flat-search-input" />
+            </div>
+
+            <!-- Tabel Akun dengan Fitur Ubah Password Langsung -->
+            <div class="table-scroll-wrap wide-table-space margin-top-1">
+              <table class="flat-table table-spacious">
+                <thead>
+                  <tr>
+                    <th>Nama Pengguna</th>
+                    <th>Alamat Email</th>
+                    <th>Password Saat Ini</th>
+                    <th>Password Baru</th>
+                    <th class="text-center">Aksi Simpan</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody-admin-pwd-list"></tbody>
+              </table>
+            </div>
+
+            <hr style="margin: 2rem 0; border: none; border-top: 1px solid #e2e8f0;" />
+
+            <!-- Ganti Password Akun Admin Sendiri -->
+            <h4 class="card-title-navy" style="font-size: 1.1rem;">Ubah Password Administrator Sendiri</h4>
+            <div class="form-grid-two margin-top-1">
+              <div class="form-group">
+                <label class="field-label">Password Lama Admin</label>
+                <input type="password" id="admin-self-old-pass" class="flat-input" />
+              </div>
+              <div class="form-group">
+                <label class="field-label">Password Baru Admin</label>
+                <input type="password" id="admin-self-new-pass" class="flat-input" />
+              </div>
+              <div class="form-group full-span-two">
+                <button type="button" class="btn-flat-gold" id="btn-submit-admin-self-pass">
+                  Perbarui Password Admin
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- ========================================================
+           KOLOM KANAN: PROFILE CARD & NAVIGASI DASBOR
+           ======================================================== -->
+      <aside class="dash-sidebar-right">
+        
+        <!-- Kartu Biru Navy: Profil Akun & Tiket Aktif (Sesuai Gambar 2) -->
+        <div class="profile-card-navy">
+          <div class="admin-identity-row">
+            <div class="avatar-circle-gold" id="side-avatar-circle">A</div>
+            <div class="identity-text-col">
+              <span class="sub-identity-label">SobatKita</span>
+              <h3 class="admin-full-title" id="side-admin-title">Nama Akun</h3>
+              <span class="badge-master-tag" id="side-master-role">Peserta UNIX</span>
+            </div>
+          </div>
+
+          <div class="active-ticket-box">
+            <span class="big-stat-number" id="side-active-ticket-stat">0</span>
+            <span class="stat-caption-text">Tiket Aktif</span>
+          </div>
+        </div>
+
+        <!-- Kartu Putih: Navigasi Dasbor Vertikal (Sesuai Gambar 2) -->
+        <div class="nav-card-white">
+          <span class="nav-menu-title">NAVIGASI DASBOR</span>
+          <nav class="nav-vertical-menu">
+            
+            <!-- 1. Dasbor Akun -->
+            <button type="button" class="nav-menu-btn active" data-tab="tab-akun">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="nav-svg"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+              <span>Dasbor Akun</span>
+            </button>
+
+            <!-- Menu Khusus Peserta: Tautan Langsung ke Pengumuman -->
+            <a href="/pengumuman" class="nav-menu-btn nav-link-item hidden" id="nav-item-pengumuman">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="nav-svg"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+              <span>Cek Pengumuman Kelulusan</span>
+            </a>
+
+            <!-- Menu Khusus Admin -->
+            <button type="button" class="nav-menu-btn nav-admin-only hidden" data-tab="tab-tiket">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="nav-svg"><rect width="20" height="12" x="2" y="6" rx="2"></rect><circle cx="12" cy="12" r="2"></circle><path d="M6 12h.01M18 12h.01"></path></svg>
+              <span>Ticket UNIX</span>
+            </button>
+
+            <button type="button" class="nav-menu-btn nav-admin-only hidden" data-tab="tab-storage">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="nav-svg"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+              <span>Storage Management</span>
+            </button>
+
+            <button type="button" class="nav-menu-btn nav-admin-only hidden" data-tab="tab-qna">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="nav-svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+              <span>QnA SobatKita</span>
+            </button>
+
+            <button type="button" class="nav-menu-btn nav-admin-only hidden" data-tab="tab-kelulusan">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="nav-svg"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+              <span>Kelola Kelulusan</span>
+            </button>
+
+            <!-- 2. Ganti Password -->
+            <button type="button" class="nav-menu-btn" data-tab="tab-password">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="nav-svg"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+              <span>Ganti Password</span>
+            </button>
+
+            <!-- Keluar Akun -->
+            <button type="button" class="nav-menu-btn btn-exit-nav" id="btn-portal-logout">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="nav-svg"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+              <span>Keluar Akun</span>
+            </button>
+          </nav>
+        </div>
+
+      </aside>
+
+    </div>
+
+    <!-- Modal Respons QnA Admin -->
+    <div class="dash-modal-backdrop hidden" id="qna-reply-modal">
+      <div class="dash-modal-card">
+        <h3 class="card-title-navy">Beri Jawaban QnA</h3>
+        <p class="qna-preview-text" id="modal-qna-question-text"></p>
+        <div class="form-group margin-top-1">
+          <label class="field-label">Jawaban Resmi Admin:</label>
+          <textarea id="modal-qna-reply-text" rows="4" class="flat-textarea" placeholder="Tuliskan jawaban yang ramah..."></textarea>
+        </div>
+        <div class="modal-actions-row">
+          <button type="button" class="btn-simple-gray" id="btn-cancel-qna-modal">Batal</button>
+          <button type="button" class="btn-flat-gold" id="btn-submit-qna-reply">Kirim Jawaban</button>
+        </div>
+      </div>
+    </div>
+
+    <Footer />
+  </body>
+</html>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    // ==========================================
+    // 1. SINKRONISASI SESI MASUK & DETEKSI ROLE
+    // ==========================================
+    const loggedRole = localStorage.getItem('unix_logged_in_user') || '';
+    const loggedName = localStorage.getItem('unix_user_name') || 'SobatKita';
+    const loggedEmail = (localStorage.getItem('unix_user_email') || '').toLowerCase().trim();
+
+    if (!loggedRole) {
+      alert('Sesi masuk tidak ditemukan. Silakan login ke akun Anda terlebih dahulu.');
+      window.location.href = '/login';
+      return;
+    }
+
+    const isAdmin = loggedRole.startsWith('admin_');
+
+    const roleTitleText = document.getElementById('role-title-text');
+    const sideAdminTitle = document.getElementById('side-admin-title');
+    const sideMasterRole = document.getElementById('side-master-role');
+    const sideAvatarCircle = document.getElementById('side-avatar-circle');
+    const sideActiveTicketStat = document.getElementById('side-active-ticket-stat');
+
+    const paneSubGreeting = document.getElementById('pane-sub-greeting');
+    const paneMainGreeting = document.getElementById('pane-main-greeting');
+    const descGantiPass = document.getElementById('desc-ganti-pass');
+
+    if (sideAvatarCircle) {
+      sideAvatarCircle.textContent = loggedName.charAt(0).toUpperCase() || 'S';
+    }
+
+    const dateTextEl = document.getElementById('current-date-text');
+    if (dateTextEl) {
+      dateTextEl.textContent = new Date().toLocaleDateString('id-ID', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      });
+    }
+
+    // Database Tiket Keseluruhan (Dari Admin UNIX 27)
+    let unixTickets = [];
+    try {
+      unixTickets = JSON.parse(localStorage.getItem('unix_tickets_data') || '[]');
+    } catch {
+      unixTickets = [];
+    }
+
+    // Database Akun Terdaftar
+    let registeredUsers = [];
+    try {
+      registeredUsers = JSON.parse(localStorage.getItem('unix_registered_users') || '[]');
+    } catch {
+      registeredUsers = [];
+    }
+
+    if (isAdmin) {
+      // ------------------------------------------
+      // ROLE ADMINISTRATOR
+      // ------------------------------------------
+      if (roleTitleText) roleTitleText.textContent = loggedName;
+      if (sideAdminTitle) sideAdminTitle.textContent = loggedName;
+      if (sideMasterRole) sideMasterRole.textContent = loggedRole.replace('admin_', 'Divisi ');
+
+      // Tampilkan Menu Admin
+      document.querySelectorAll('.nav-admin-only').forEach((el) => el.classList.remove('hidden'));
+      document.getElementById('nav-item-pengumuman')?.classList.add('hidden');
+
+      document.getElementById('admin-account-section')?.classList.remove('hidden');
+      document.getElementById('user-ticket-display-section')?.classList.add('hidden');
+
+      // Tampilkan Panel Manajemen Password Pengguna untuk Admin
+      document.getElementById('admin-password-manager-box')?.classList.remove('hidden');
+      document.getElementById('user-password-change-box')?.classList.add('hidden');
+
+      const totalActiveTickets = unixTickets.filter((t) => !t.isRedeemed).length;
+      if (sideActiveTicketStat) sideActiveTicketStat.textContent = totalActiveTickets.toString();
+
+    } else {
+      // ------------------------------------------
+      // ROLE PESERTA / PENDAFTAR BIASA
+      // ------------------------------------------
+      if (paneSubGreeting) paneSubGreeting.textContent = 'RUANG BELAJAR KAMU';
+      if (paneMainGreeting) paneMainGreeting.textContent = 'Halo,';
+      if (roleTitleText) roleTitleText.textContent = `${loggedName}.`;
+
+      if (sideAdminTitle) sideAdminTitle.textContent = loggedName;
+      if (sideMasterRole) sideMasterRole.textContent = 'Peserta UNIX 2027';
+      if (descGantiPass) descGantiPass.textContent = 'Perbarui kata sandi akun Anda untuk menjaga keamanan akun sendiri.';
+
+      // Tampilkan menu khusus peserta
+      document.querySelectorAll('.nav-admin-only').forEach((el) => el.classList.add('hidden'));
+      document.getElementById('nav-item-pengumuman')?.classList.remove('hidden');
+
+      document.getElementById('admin-account-section')?.classList.add('hidden');
+      document.getElementById('user-ticket-display-section')?.classList.remove('hidden');
+
+      document.getElementById('admin-password-manager-box')?.classList.add('hidden');
+      document.getElementById('user-password-change-box')?.classList.remove('hidden');
+
+      // Filter Tiket Milik Peserta yang Login
+      const myTickets = unixTickets.filter((t) => {
+        const tEmail = (t.email || '').toLowerCase().trim();
+        return tEmail === loggedEmail || tEmail === loggedName.toLowerCase().trim();
+      });
+
+      const myActiveTickets = myTickets.filter((t) => !t.isRedeemed).length;
+      if (sideActiveTicketStat) sideActiveTicketStat.textContent = myActiveTickets.toString();
+
+      // Render Format Tiket Persis Gambar 2
+      const ticketCardsList = document.getElementById('user-tickets-cards-list');
+      if (ticketCardsList) {
+        if (myTickets.length === 0) {
+          ticketCardsList.innerHTML = `
+            <div class="user-empty-ticket-card">
+              <p>Belum ada tiket yang terhubung dengan akun <strong>${loggedEmail}</strong>.</p>
+              <p class="empty-subtext">Pastikan tiket Anda telah didaftarkan oleh panitia Admin UNIX 27 atau beli melalui Store.</p>
+              <a href="/store" class="btn-flat-gold btn-small" style="display:inline-block; margin-top:0.8rem; text-decoration:none;">
+                Ke Official Store &rarr;
+              </a>
+            </div>
+          `;
+        } else {
+ticketCardsList.innerHTML = myTickets.map((t) => {
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(t.code)}`;
+  const isRedeemed = !!t.isRedeemed;
+
+  return `
+    <div class="ticket-blue-frame">
+      <!-- Kolom Kiri: Informasi Tiket -->
+      <div class="ticket-left-info">
+        <div class="ticket-badge-row">
+          <span class="ticket-header-title">E-TICKET RESMI UNIX 2027</span>
+          <span class="ticket-status-pill ${isRedeemed ? 'used' : 'valid'}">
+            ${isRedeemed ? 'SUDAH DITUKAR' : 'BELUM DITUKAR'}
+          </span>
+        </div>
+
+        <div class="ticket-divider-line"></div>
+
+        <h3 class="ticket-owner-name">${loggedName}</h3>
+        <div class="ticket-type-text">${t.type || 'Tiket VIP - Daily Sale'}</div>
+        
+        <div class="ticket-detail-item">
+          Promo / Paket: <strong>${t.promo || '-'}</strong>
+        </div>
+
+        <div class="ticket-code-row">
+          <span>Kode Tiket:</span>
+          <span class="ticket-code-badge">${t.code}</span>
+        </div>
+
+        <p class="ticket-note-text">
+          *Tunjukkan Barcode QR ini ke panitia di meja registrasi pada hari kegiatan.
+        </p>
+      </div>
+
+      <!-- Kolom Kanan: Kotak Putih Khusus Barcode QR -->
+      <div class="ticket-right-qr">
+        <div class="qr-white-box">
+          <img src="${qrUrl}" alt="QR Tiket ${t.code}" class="qr-image-clean" />
+          <span class="qr-sub-label">${isRedeemed ? 'SUDAH DIPAKAI' : 'QR VALID'}</span>
+        </div>
+      </div>
+    </div>
+  `;
+}).join('');
+        }
+      }
+    }
+
+    // ==========================================
+    // 2. NAVIGASI TAB VERTICAL
+    // ==========================================
+    const navMenuBtns = document.querySelectorAll('.nav-menu-btn');
+    const tabPanes = document.querySelectorAll('.tab-pane');
+
+    navMenuBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        if (btn.classList.contains('nav-link-item') || btn.id === 'btn-portal-logout') return;
+
+        navMenuBtns.forEach((b) => b.classList.remove('active'));
+        tabPanes.forEach((p) => p.classList.add('hidden'));
+
+        btn.classList.add('active');
+        const targetTab = btn.getAttribute('data-tab');
+        if (targetTab) {
+          document.getElementById(targetTab)?.classList.remove('hidden');
+        }
+      });
+    });
+
+    document.getElementById('btn-portal-logout')?.addEventListener('click', () => {
+      localStorage.removeItem('unix_logged_in_user');
+      localStorage.removeItem('unix_user_name');
+      localStorage.removeItem('unix_user_email');
+      window.location.href = '/login';
+    });
+
+    // ==========================================
+    // 3. FITUR GANTI PASSWORD PESERTA (AKUN SENDIRI)
+    // ==========================================
+    document.getElementById('btn-submit-change-pass')?.addEventListener('click', () => {
+      const oldPassInput = document.getElementById('field-old-pass');
+      const newPassInput = document.getElementById('field-new-pass');
+
+      const oldPass = oldPassInput ? oldPassInput.value.trim() : '';
+      const newPass = newPassInput ? newPassInput.value.trim() : '';
+
+      if (!oldPass || !newPass) {
+        alert('Mohon isi password lama dan password baru Anda!');
+        return;
+      }
+
+      if (newPass.length < 6) {
+        alert('Password baru harus terdiri dari minimal 6 karakter!');
+        return;
+      }
+
+      const userIndex = registeredUsers.findIndex((u) => (u.email || '').toLowerCase().trim() === loggedEmail);
+
+      if (userIndex === -1) {
+        alert('Data akun Anda tidak ditemukan di database pendaftar!');
+        return;
+      }
+
+      if (registeredUsers[userIndex].password !== oldPass) {
+        alert('Password lama yang Anda masukkan tidak cocok!');
+        return;
+      }
+
+      registeredUsers[userIndex].password = newPass;
+      localStorage.setItem('unix_registered_users', JSON.stringify(registeredUsers));
+
+      if (oldPassInput) oldPassInput.value = '';
+      if (newPassInput) newPassInput.value = '';
+
+      alert('Password akun Anda berhasil diperbarui! Silakan gunakan password baru ini saat masuk berikutnya.');
+    });
+
+    // ==========================================
+    // 4. FITUR GANTI SEMUA PASSWORD USER (ADMIN UNIX DENGAN KOLOM CARI)
+    // ==========================================
+    const searchPwdUserInput = document.getElementById('search-pwd-user-input');
+    const tbodyAdminPwd = document.getElementById('tbody-admin-pwd-list');
+
+    function renderAdminPwdTable(data) {
+      if (!tbodyAdminPwd) return;
+      const list = data || registeredUsers;
+
+      if (list.length === 0) {
+        tbodyAdminPwd.innerHTML = `<tr><td colspan="5" class="text-center-empty">Tidak ada akun yang cocok.</td></tr>`;
+        return;
+      }
+
+      tbodyAdminPwd.innerHTML = list.map((u) => {
+        const originalIdx = registeredUsers.findIndex((item) => item.email.toLowerCase() === u.email.toLowerCase());
+        return `
+          <tr>
+            <td><strong>${u.fullName}</strong></td>
+            <td>${u.email}</td>
+            <td><code class="code-ticket">${u.password}</code></td>
+            <td>
+              <input 
+                type="text" 
+                placeholder="Ketik sandi baru..." 
+                class="flat-input" 
+                style="padding:0.4rem 0.75rem; font-size:0.85rem;" 
+                id="input-reset-pass-${originalIdx}" 
+              />
+            </td>
+            <td class="text-center">
+              <button 
+                type="button" 
+                class="btn-flat-gold btn-small" 
+                data-change-user-pwd="${originalIdx}"
+              >
+                Simpan Sandi
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    if (isAdmin) {
+      renderAdminPwdTable();
+
+      // Kolom Cari Akun yang Mau Diubah Password-nya
+      searchPwdUserInput?.addEventListener('input', () => {
+        const q = searchPwdUserInput.value.trim().toLowerCase();
+        const filtered = registeredUsers.filter((u) => 
+          u.fullName.toLowerCase().includes(q) ||
+          u.email.toLowerCase().includes(q) ||
+          (u.phone && u.phone.includes(q))
+        );
+        renderAdminPwdTable(filtered);
+      });
+
+      // Aksi Simpan Password Baru Akun Tertentu oleh Admin
+      document.addEventListener('click', (e) => {
+        const changePwdIdx = e.target?.getAttribute('data-change-user-pwd');
+        if (changePwdIdx !== null && changePwdIdx !== undefined) {
+          const idx = parseInt(changePwdIdx, 10);
+          const targetInput = document.getElementById(`input-reset-pass-${idx}`);
+          const newPwdVal = targetInput ? targetInput.value.trim() : '';
+
+          if (!newPwdVal) {
+            alert('Silakan ketikkan password baru terlebih dahulu!');
+            targetInput?.focus();
+            return;
+          }
+
+          if (newPwdVal.length < 6) {
+            alert('Password minimal terdiri dari 6 karakter!');
+            return;
+          }
+
+          if (registeredUsers[idx]) {
+            registeredUsers[idx].password = newPwdVal;
+            localStorage.setItem('unix_registered_users', JSON.stringify(registeredUsers));
+            alert(`Password untuk akun "${registeredUsers[idx].fullName}" (${registeredUsers[idx].email}) berhasil diubah menjadi: ${newPwdVal}`);
+            renderAdminPwdTable();
+            renderUsersTable();
+          }
+        }
+      });
+
+      // Ganti Password Admin Sendiri
+      document.getElementById('btn-submit-admin-self-pass')?.addEventListener('click', () => {
+        const oldP = document.getElementById('admin-self-old-pass')?.value;
+        const newP = document.getElementById('admin-self-new-pass')?.value;
+
+        if (oldP === 'unixgaspol1701._') {
+          alert(`Password Administrator berhasil diperbarui menjadi: ${newP}`);
+          const p1 = document.getElementById('admin-self-old-pass');
+          const p2 = document.getElementById('admin-self-new-pass');
+          if (p1) p1.value = '';
+          if (p2) p2.value = '';
+        } else {
+          alert('Password lama Administrator salah!');
+        }
+      });
+    }
+
+    // ==========================================
+    // 5. OPERASIONAL TIKET ADMIN (TANPA PASSWORD, LEGA, HAPUS PER TIKET)
+    // ==========================================
+    const tbodyTickets = document.getElementById('tbody-tickets-list');
+    const searchTicketInput = document.getElementById('search-ticket-input');
+
+    function renderTicketsTable(data) {
+      if (!tbodyTickets) return;
+      const list = data || unixTickets;
+
+      if (list.length === 0) {
+        tbodyTickets.innerHTML = `<tr><td colspan="7" class="text-center-empty">Belum ada tiket terdaftar.</td></tr>`;
+        return;
+      }
+
+      tbodyTickets.innerHTML = list.map((t) => {
+        const originalIdx = unixTickets.findIndex((item) => item.code.toUpperCase() === t.code.toUpperCase());
+        const isRedeemed = !!t.isRedeemed;
+        const qrApi = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(t.code)}`;
+
+        return `
+          <tr>
+            <td><code class="code-ticket">${t.code}</code></td>
+            <td><strong>${t.email}</strong></td>
+            <td><span class="badge-cat-tag cat-tiket">${t.type}</span></td>
+            <td>${t.promo || '-'}</td>
+            <td>
+              <a href="${qrApi}" target="_blank" rel="noopener noreferrer" class="link-qr-plain">
+                <img src="${qrApi}" alt="QR" class="qr-micro-thumb" />
+                <span>Lihat Barcode</span>
+              </a>
+            </td>
+            <td>
+              <span 
+                class="badge-pill-simple ${isRedeemed ? 'badge-redeemed' : 'badge-pending'}" 
+                title="Double Click untuk mengubah status" 
+                data-toggle-ticket="${originalIdx}"
+              >
+                ${isRedeemed ? 'Sudah Ditukarkan' : 'Belum Ditukarkan'}
+              </span>
+            </td>
+            <td class="text-center">
+              <button 
+                type="button" 
+                class="btn-action-simple btn-danger" 
+                data-del-ticket="${originalIdx}"
+                title="Hapus tiket ini"
+              >
+                Hapus Tiket
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    if (isAdmin) {
+      renderTicketsTable();
+
+      // Pilihan Hapus Per Tiket
+      document.addEventListener('click', (e) => {
+        const delTktIdx = e.target?.getAttribute('data-del-ticket');
+        if (delTktIdx !== null && delTktIdx !== undefined) {
+          const idx = parseInt(delTktIdx, 10);
+          if (confirm(`Yakin ingin menghapus tiket dengan kode "${unixTickets[idx]?.code}" milik ${unixTickets[idx]?.email}?`)) {
+            unixTickets.splice(idx, 1);
+            localStorage.setItem('unix_tickets_data', JSON.stringify(unixTickets));
+            renderTicketsTable();
+            // Perbarui counter aktif
+            const totalActive = unixTickets.filter((t) => !t.isRedeemed).length;
+            if (sideActiveTicketStat) sideActiveTicketStat.textContent = totalActive.toString();
+          }
+        }
+      });
+
+      // Double Click Toggle Status Tiket
+      document.addEventListener('dblclick', (e) => {
+        const tIdx = e.target?.getAttribute('data-toggle-ticket');
+        if (tIdx !== null && tIdx !== undefined) {
+          const idx = parseInt(tIdx, 10);
+          if (unixTickets[idx]) {
+            unixTickets[idx].isRedeemed = !unixTickets[idx].isRedeemed;
+            localStorage.setItem('unix_tickets_data', JSON.stringify(unixTickets));
+            renderTicketsTable();
+          }
+        }
+      });
+
+      searchTicketInput?.addEventListener('input', () => {
+        const q = searchTicketInput.value.trim().toLowerCase();
+        const filtered = unixTickets.filter((t) => 
+          t.code.toLowerCase().includes(q) ||
+          t.email.toLowerCase().includes(q) ||
+          t.type.toLowerCase().includes(q)
+        );
+        renderTicketsTable(filtered);
+      });
+
+      // DAFTARKAN TIKET BARU: TANPA MEMINTA PASSWORD PESERTA
+      document.getElementById('btn-save-ticket-manual')?.addEventListener('click', () => {
+        const emailInput = document.getElementById('tkt-email');
+        const codeInput = document.getElementById('tkt-code');
+        const typeInput = document.getElementById('tkt-type');
+        const promoInput = document.getElementById('tkt-promo');
+
+        const email = emailInput ? emailInput.value.trim().toLowerCase() : '';
+        const code = codeInput ? codeInput.value.trim().toUpperCase() : '';
+        const type = typeInput ? typeInput.value.trim() : 'Tiket Reguler';
+        const promo = promoInput ? promoInput.value.trim() : '-';
+
+        if (!email || !code) {
+          alert('Nama / Email peserta dan Kode tiket wajib diisi!');
+          return;
+        }
+
+        // Cek keberadaan user (Berdasarkan email atau nama lengkap)
+        const foundUser = registeredUsers.find((u) => 
+          u.email.toLowerCase() === email || 
+          u.fullName.toLowerCase() === email
+        );
+
+        if (!foundUser) {
+          alert(`Akun "${email}" tidak ditemukan di database akun. Pastikan peserta sudah mendaftar terlebih dahulu di platform.`);
+          return;
+        }
+
+        if (unixTickets.some((t) => t.code.toUpperCase() === code)) {
+          alert(`Kode tiket "${code}" sudah terdaftar sebelumnya.`);
+          return;
+        }
+
+        // Simpan tiket tanpa memerlukan password
+        unixTickets.push({ 
+          email: foundUser.email, 
+          password: foundUser.password || '-', 
+          code, 
+          type, 
+          promo, 
+          qty: 1, 
+          isRedeemed: false 
+        });
+
+        localStorage.setItem('unix_tickets_data', JSON.stringify(unixTickets));
+        renderTicketsTable();
+
+        if (emailInput) emailInput.value = '';
+        if (codeInput) codeInput.value = '';
+        if (typeInput) typeInput.value = '';
+        if (promoInput) promoInput.value = '';
+
+        const totalActive = unixTickets.filter((t) => !t.isRedeemed).length;
+        if (sideActiveTicketStat) sideActiveTicketStat.textContent = totalActive.toString();
+
+        alert(`Tiket ${code} berhasil didaftarkan untuk ${foundUser.fullName} (${foundUser.email})!`);
+      });
+
+      // Import Excel Tiket (Tanpa Wajib Password)
+      document.getElementById('btn-import-tickets-excel')?.addEventListener('click', () => {
+        const text = document.getElementById('excel-paste-tickets')?.value.trim();
+        if (!text) {
+          alert('Tempelkan data tiket dari Excel terlebih dahulu!');
+          return;
+        }
+
+        const lines = text.split('\n');
+        let count = 0;
+
+        lines.forEach((line) => {
+          const parts = line.split('\t').map((p) => p.trim());
+          if (parts.length >= 2) {
+            const emailOrName = parts[0].toLowerCase();
+            const code = parts[1].toUpperCase();
+            const type = parts[2] || 'Tiket VIP - Daily Sale';
+            const promo = parts[3] || '-';
+            const qty = parseInt(parts[4] || '1', 10);
+
+            const foundUser = registeredUsers.find((u) => 
+              u.email.toLowerCase() === emailOrName || 
+              u.fullName.toLowerCase() === emailOrName
+            );
+
+            const codeUnique = !unixTickets.some((t) => t.code.toUpperCase() === code);
+
+            if (foundUser && codeUnique) {
+              unixTickets.push({ 
+                email: foundUser.email, 
+                password: foundUser.password || '-', 
+                code, 
+                type, 
+                promo, 
+                qty, 
+                isRedeemed: false 
+              });
+              count++;
+            }
+          }
+        });
+
+        localStorage.setItem('unix_tickets_data', JSON.stringify(unixTickets));
+        renderTicketsTable();
+        const txtArea = document.getElementById('excel-paste-tickets');
+        if (txtArea) txtArea.value = '';
+        alert(`Berhasil mengimpor ${count} tiket dari Excel!`);
+      });
+
+      // Inisialisasi Scanner Kamera Admin
+      let html5QrScanner = null;
+      const btnToggleCam = document.getElementById('btn-toggle-camera');
+      const scanAlertBox = document.getElementById('verify-scan-result');
+
+      function showScanResult(msg, isSuccess) {
+        if (!scanAlertBox) return;
+        scanAlertBox.className = `scan-alert-msg ${isSuccess ? 'msg-success' : 'msg-error'}`;
+        scanAlertBox.innerHTML = msg;
+        scanAlertBox.classList.remove('hidden');
+      }
+
+      function verifyTicketCode(codeToVerify) {
+        const cleanCode = codeToVerify.trim().toUpperCase();
+        const ticket = unixTickets.find((t) => t.code.toUpperCase() === cleanCode);
+
+        if (!ticket) {
+          showScanResult(`✖ KODE TIKET TIDAK VALID: "${cleanCode}" tidak terdaftar.`, false);
+          return;
+        }
+
+        if (ticket.isRedeemed) {
+          showScanResult(`⚠️ TIKET SUDAH PERNAH DIGUNAKAN! Pemilik: <strong>${ticket.email}</strong>.`, false);
+        } else {
+          ticket.isRedeemed = true;
+          localStorage.setItem('unix_tickets_data', JSON.stringify(unixTickets));
+          renderTicketsTable();
+          showScanResult(`✓ VALIDASI BERHASIL! Kode: <strong>${ticket.code}</strong> (${ticket.type}) &bull; Pemilik: <strong>${ticket.email}</strong>. Berhasil ditukarkan.`, true);
+        }
+      }
+
+      btnToggleCam?.addEventListener('click', () => {
+        if (html5QrScanner) {
+          html5QrScanner.stop().then(() => {
+            html5QrScanner = null;
+            if (btnToggleCam) btnToggleCam.innerHTML = `<span>Buka Kamera Scanner</span>`;
+          });
+        } else {
+          if (typeof window.Html5Qrcode === 'undefined') {
+            alert('Scanner library sedang dimuat, silakan coba beberapa detik lagi.');
+            return;
+          }
+          html5QrScanner = new window.Html5Qrcode("qr-reader-box");
+          html5QrScanner.start(
+            { facingMode: "environment" },
+            { fps: 10, qrbox: { width: 250, height: 250 } },
+            (decodedText) => verifyTicketCode(decodedText),
+            () => {}
+          ).then(() => {
+            if (btnToggleCam) btnToggleCam.innerHTML = `<span>Tutup Kamera Scanner</span>`;
+          }).catch((err) => {
+            alert('Kamera tidak dapat diakses: ' + err);
+          });
+        }
+      });
+
+      document.getElementById('btn-verify-ticket-code')?.addEventListener('click', () => {
+        const val = document.getElementById('manual-ticket-code')?.value;
+        if (val) verifyTicketCode(val);
+      });
+    }
+
+    // ==========================================
+    // 6. OPERASIONAL STORAGE, QNA, DAN KELULUSAN
+    // ==========================================
+    if (isAdmin) {
+      // Storage Management
+      let storeProducts = JSON.parse(localStorage.getItem('unix_store_products') || '[]');
+      const tbodyProducts = document.getElementById('tbody-products-list');
+      const badgeTotalProducts = document.getElementById('badge-total-products');
+
+      function renderStorageTable() {
+        if (!tbodyProducts) return;
+        if (badgeTotalProducts) badgeTotalProducts.textContent = `${storeProducts.length} Produk`;
+
+        if (storeProducts.length === 0) {
+          tbodyProducts.innerHTML = `<tr><td colspan="5" class="text-center-empty">Belum ada produk di store.</td></tr>`;
+        } else {
+          tbodyProducts.innerHTML = storeProducts.map((p, idx) => `
+            <tr>
+              <td><strong>${p.name}</strong></td>
+              <td><span class="badge-cat-tag cat-${p.category}">${p.category}</span></td>
+              <td>Rp ${parseInt(p.price).toLocaleString('id-ID')}</td>
+              <td><input type="number" min="0" value="${p.stock}" class="stock-input-inline" data-stock-idx="${idx}" /></td>
+              <td>
+                <span class="badge-pill-simple ${p.isAvailable ? 'badge-redeemed' : 'badge-pending'}" style="cursor:pointer;" data-toggle-avail="${idx}">
+                  ${p.isAvailable ? 'Tersedia ✓' : 'Tidak Tersedia ✖'}
+                </span>
+              </td>
+            </tr>
+          `).join('');
+        }
+      }
+
+      renderStorageTable();
+
+      document.addEventListener('click', (e) => {
+        const toggleAvailIdx = e.target?.getAttribute('data-toggle-avail');
+        if (toggleAvailIdx !== null && toggleAvailIdx !== undefined) {
+          const idx = parseInt(toggleAvailIdx, 10);
+          if (storeProducts[idx]) {
+            storeProducts[idx].isAvailable = !storeProducts[idx].isAvailable;
+            localStorage.setItem('unix_store_products', JSON.stringify(storeProducts));
+            renderStorageTable();
+          }
+        }
+      });
+
+      document.addEventListener('change', (e) => {
+        const stockIdx = e.target?.getAttribute('data-stock-idx');
+        if (stockIdx !== null && stockIdx !== undefined) {
+          const idx = parseInt(stockIdx, 10);
+          if (storeProducts[idx]) {
+            storeProducts[idx].stock = parseInt(e.target.value, 10) || 0;
+            if (storeProducts[idx].stock === 0) storeProducts[idx].isAvailable = false;
+            localStorage.setItem('unix_store_products', JSON.stringify(storeProducts));
+            renderStorageTable();
+          }
+        }
+      });
+
+      // Tabel Akun Admin
+      const tbodyUsers = document.getElementById('tbody-users-list');
+      const badgeTotalUsers = document.getElementById('badge-total-users');
+      const searchAccInput = document.getElementById('search-acc-input');
+
+      function renderUsersTable(data) {
+        if (!tbodyUsers) return;
+        const list = data || registeredUsers;
+        if (badgeTotalUsers) badgeTotalUsers.textContent = `${registeredUsers.length} Akun Terdaftar`;
+
+        if (list.length === 0) {
+          tbodyUsers.innerHTML = `<tr><td colspan="6" class="text-center-empty">Tidak ada data akun.</td></tr>`;
+          return;
+        }
+
+        tbodyUsers.innerHTML = list.map((u, idx) => {
+          const originalIdx = registeredUsers.findIndex((item) => item.email.toLowerCase() === u.email.toLowerCase());
+          return `
+            <tr>
+              <td>${idx + 1}</td>
+              <td><strong>${u.fullName}</strong></td>
+              <td>${u.email}</td>
+              <td>${u.phone || '-'}</td>
+              <td><span class="password-box-gray">${u.password}</span></td>
+              <td class="text-center">
+                <button type="button" class="btn-action-simple" data-del-user="${originalIdx}">Hapus</button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      renderUsersTable();
+
+      document.addEventListener('click', (e) => {
+        const delUserIdx = e.target?.getAttribute('data-del-user');
+        if (delUserIdx !== null && delUserIdx !== undefined) {
+          const idx = parseInt(delUserIdx, 10);
+          if (confirm(`Hapus akun ${registeredUsers[idx]?.fullName}?`)) {
+            registeredUsers.splice(idx, 1);
+            localStorage.setItem('unix_registered_users', JSON.stringify(registeredUsers));
+            renderUsersTable();
+            renderAdminPwdTable();
+          }
+        }
+      });
+
+      searchAccInput?.addEventListener('input', () => {
+        const q = searchAccInput.value.trim().toLowerCase();
+        const filtered = registeredUsers.filter((u) => 
+          u.fullName.toLowerCase().includes(q) ||
+          u.email.toLowerCase().includes(q) ||
+          (u.phone && u.phone.includes(q))
+        );
+        renderUsersTable(filtered);
+      });
+
+      document.getElementById('btn-save-user-manual')?.addEventListener('click', () => {
+        const nameInput = document.getElementById('acc-name');
+        const emailInput = document.getElementById('acc-email');
+        const phoneInput = document.getElementById('acc-phone');
+        const passInput = document.getElementById('acc-pass');
+
+        const fullName = nameInput ? nameInput.value.trim() : '';
+        const email = emailInput ? emailInput.value.trim().toLowerCase() : '';
+        const phone = phoneInput ? phoneInput.value.trim() : '';
+        const password = passInput ? passInput.value.trim() : '';
+
+        if (!fullName || !email) {
+          alert('Nama lengkap dan alamat email tidak boleh kosong!');
+          return;
+        }
+
+        if (registeredUsers.some((u) => u.email.toLowerCase() === email)) {
+          alert('Alamat Gmail ini sudah terdaftar!');
+          return;
+        }
+
+        registeredUsers.push({ fullName, email, phone, password: password || 'unix2027' });
+        localStorage.setItem('unix_registered_users', JSON.stringify(registeredUsers));
+        renderUsersTable();
+        renderAdminPwdTable();
+
+        if (nameInput) nameInput.value = '';
+        if (emailInput) emailInput.value = '';
+        if (phoneInput) phoneInput.value = '';
+        if (passInput) passInput.value = '';
+
+        alert(`Akun ${fullName} berhasil ditambahkan!`);
+      });
+
+      document.getElementById('btn-import-users-excel')?.addEventListener('click', () => {
+        const text = document.getElementById('excel-paste-users')?.value.trim();
+        if (!text) {
+          alert('Tempelkan teks tabel dari Excel terlebih dahulu!');
+          return;
+        }
+
+        const lines = text.split('\n');
+        let count = 0;
+
+        lines.forEach((line) => {
+          const parts = line.split('\t').map((p) => p.trim());
+          if (parts.length >= 3) {
+            const fullName = parts[0];
+            const email = parts[1].toLowerCase();
+            const phone = parts[2];
+            const password = parts[3] || 'unix2027';
+
+            if (email && !registeredUsers.some((u) => u.email.toLowerCase() === email)) {
+              registeredUsers.push({ fullName, email, phone, password });
+              count++;
+            }
+          }
+        });
+
+        localStorage.setItem('unix_registered_users', JSON.stringify(registeredUsers));
+        renderUsersTable();
+        renderAdminPwdTable();
+        const txtArea = document.getElementById('excel-paste-users');
+        if (txtArea) txtArea.value = '';
+        alert(`Berhasil mengimpor ${count} data akun dari Excel!`);
+      });
+
+      // QnA
+      let qnaList = JSON.parse(localStorage.getItem('unix_qna_data') || '[]');
+      const tbodyQna = document.getElementById('tbody-qna-list');
+      const qnaModal = document.getElementById('qna-reply-modal');
+      const modalQuestionPreview = document.getElementById('modal-qna-question-text');
+      const modalReplyText = document.getElementById('modal-qna-reply-text');
+      let selectedQnaIdx = -1;
+
+      function renderQnaTable() {
+        if (!tbodyQna) return;
+        if (qnaList.length === 0) {
+          tbodyQna.innerHTML = `<tr><td colspan="5" class="text-center-empty">Tidak ada pertanyaan.</td></tr>`;
+          return;
+        }
+
+        tbodyQna.innerHTML = qnaList.map((q, idx) => `
+          <tr>
+            <td><strong>${q.sender}</strong></td>
+            <td>${q.instansi || '-'}</td>
+            <td>${q.question}</td>
+            <td><span class="status-badge-plain">${q.reply ? 'Terjawab' : (q.status || 'Menunggu')}</span></td>
+            <td class="text-center">
+              <div class="action-btn-inline-group">
+                <button type="button" class="btn-action-simple" data-reply-qna="${idx}">Jawab</button>
+                <button type="button" class="btn-action-simple btn-danger" data-del-qna="${idx}">✕</button>
+              </div>
+            </td>
+          </tr>
+        `).join('');
+      }
+
+      renderQnaTable();
+
+      document.addEventListener('click', (e) => {
+        const replyIdx = e.target?.getAttribute('data-reply-qna');
+        if (replyIdx !== null && replyIdx !== undefined) {
+          selectedQnaIdx = parseInt(replyIdx, 10);
+          if (modalQuestionPreview) modalQuestionPreview.textContent = `"${qnaList[selectedQnaIdx]?.question}"`;
+          if (modalReplyText) modalReplyText.value = qnaList[selectedQnaIdx]?.reply || '';
+          qnaModal?.classList.remove('hidden');
+          return;
+        }
+
+        const delQnaIdx = e.target?.getAttribute('data-del-qna');
+        if (delQnaIdx !== null && delQnaIdx !== undefined) {
+          const idx = parseInt(delQnaIdx, 10);
+          if (confirm('Hapus pertanyaan ini?')) {
+            qnaList.splice(idx, 1);
+            localStorage.setItem('unix_qna_data', JSON.stringify(qnaList));
+            renderQnaTable();
+          }
+        }
+      });
+
+      document.getElementById('btn-cancel-qna-modal')?.addEventListener('click', () => {
+        qnaModal?.classList.add('hidden');
+      });
+
+      document.getElementById('btn-submit-qna-reply')?.addEventListener('click', () => {
+        if (selectedQnaIdx !== -1 && modalReplyText) {
+          qnaList[selectedQnaIdx].reply = modalReplyText.value.trim();
+          qnaList[selectedQnaIdx].status = 'Terjawab';
+          localStorage.setItem('unix_qna_data', JSON.stringify(qnaList));
+          renderQnaTable();
+          qnaModal?.classList.add('hidden');
+        }
+      });
+
+      // Kelulusan
+      let gradData = JSON.parse(localStorage.getItem('unix_grad_data') || '[]');
+      const tbodyGrad = document.getElementById('tbody-grad-list');
+      const searchGradInput = document.getElementById('search-grad-input');
+      const gradDtInput = document.getElementById('grad-datetime-input');
+      const gradWaInput = document.getElementById('grad-walink-input');
+
+      if (gradDtInput) gradDtInput.value = localStorage.getItem('unix_grad_datetime') || '';
+      if (gradWaInput) gradWaInput.value = localStorage.getItem('unix_grad_walink') || 'https://chat.whatsapp.com/UNIX2027FamilyOfficial';
+
+      document.getElementById('btn-save-grad-config')?.addEventListener('click', () => {
+        if (gradDtInput) localStorage.setItem('unix_grad_datetime', gradDtInput.value);
+        if (gradWaInput) localStorage.setItem('unix_grad_walink', gradWaInput.value);
+        alert('Jadwal rilis & link WhatsApp resmi berhasil diperbarui!');
+      });
+
+      function renderGradTable(data) {
+        if (!tbodyGrad) return;
+        const list = data || gradData;
+
+        if (list.length === 0) {
+          tbodyGrad.innerHTML = `<tr><td colspan="7" class="text-center-empty">Belum ada data kelulusan yang diinput.</td></tr>`;
+          return;
+        }
+
+        tbodyGrad.innerHTML = list.map((g) => {
+          const originalIdx = gradData.findIndex((item) => item.email.toLowerCase() === g.email.toLowerCase());
+          const isOpened = !!g.hasOpened;
+          const isPass = g.status === 'LULUS';
+          const noReg = g.noreg || `A${(originalIdx + 1).toString().padStart(3, '0')}-VOLUNTEERUNIX-2027`;
+
+          return `
+            <tr>
+              <td><code class="code-noreg">${noReg}</code></td>
+              <td><strong>${g.name}</strong></td>
+              <td>${g.email}</td>
+              <td><code>${g.pass || '-'}</code></td>
+              <td><span class="badge-status-result ${isPass ? 'result-pass' : 'result-fail'}">${g.status}</span></td>
+              <td>
+                <span class="badge-pill-simple ${isOpened ? 'badge-redeemed' : 'badge-pending'}" title="Double Click untuk mengubah status" data-toggle-grad="${originalIdx}">
+                  ${isOpened ? 'Sudah Buka ✓' : 'Belum Buka ✖'}
+                </span>
+              </td>
+              <td class="text-center">
+                <button type="button" class="btn-action-simple" data-del-grad="${originalIdx}">Hapus</button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      renderGradTable();
+
+      document.addEventListener('dblclick', (e) => {
+        const gradIdx = e.target?.getAttribute('data-toggle-grad');
+        if (gradIdx !== null && gradIdx !== undefined) {
+          const idx = parseInt(gradIdx, 10);
+          if (gradData[idx]) {
+            gradData[idx].hasOpened = !gradData[idx].hasOpened;
+            localStorage.setItem('unix_grad_data', JSON.stringify(gradData));
+            renderGradTable();
+          }
+        }
+      });
+
+      document.addEventListener('click', (e) => {
+        const delGradIdx = e.target?.getAttribute('data-del-grad');
+        if (delGradIdx !== null && delGradIdx !== undefined) {
+          const idx = parseInt(delGradIdx, 10);
+          if (confirm(`Hapus data kelulusan ${gradData[idx]?.name}?`)) {
+            gradData.splice(idx, 1);
+            localStorage.setItem('unix_grad_data', JSON.stringify(gradData));
+            renderGradTable();
+          }
+        }
+      });
+
+      searchGradInput?.addEventListener('input', () => {
+        const q = searchGradInput.value.trim().toLowerCase();
+        const filtered = gradData.filter((g) => 
+          g.name.toLowerCase().includes(q) ||
+          g.email.toLowerCase().includes(q) ||
+          (g.noreg && g.noreg.toLowerCase().includes(q)) ||
+          g.status.toLowerCase().includes(q)
+        );
+        renderGradTable(filtered);
+      });
+
+      document.getElementById('btn-save-grad-manual')?.addEventListener('click', () => {
+        const nameInput = document.getElementById('grad-name');
+        const emailInput = document.getElementById('grad-email');
+        const passInput = document.getElementById('grad-pass');
+        const noregInput = document.getElementById('grad-noreg');
+        const statusInput = document.getElementById('grad-status');
+
+        const name = nameInput ? nameInput.value.trim() : '';
+        const email = emailInput ? emailInput.value.trim().toLowerCase() : '';
+        const pass = passInput ? passInput.value.trim() : '';
+        let noreg = noregInput ? noregInput.value.trim().toUpperCase() : '';
+        const status = statusInput ? statusInput.value : 'LULUS';
+
+        if (!name || !email) {
+          alert('Nama lengkap dan email pendaftar tidak boleh kosong!');
+          return;
+        }
+
+        if (!noreg) {
+          const nextNum = gradData.length + 1;
+          noreg = `A${nextNum.toString().padStart(3, '0')}-VOLUNTEERUNIX-2027`;
+        }
+
+        gradData.push({ name, email, pass: pass || 'unix2027', noreg, status, hasOpened: false });
+        localStorage.setItem('unix_grad_data', JSON.stringify(gradData));
+        renderGradTable();
+
+        if (nameInput) nameInput.value = '';
+        if (emailInput) emailInput.value = '';
+        if (passInput) passInput.value = '';
+        if (noregInput) noregInput.value = '';
+
+        alert(`Data kelulusan untuk ${name} berhasil disimpan!`);
+      });
+    }
+  });
+</script>
+
+<style is:global>
+  /* ===================================================
+     RESET & STRUKTUR DUA KOLOM
+     =================================================== */
+  .dash-page-body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background-color: #f8fafc;
+    color: #0f172a;
+    font-family: inherit;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .dash-main-container {
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 3rem clamp(1.2rem, 3.5vw, 3rem);
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 2.5rem;
+    box-sizing: border-box;
+    flex: 1;
+  }
+
+  .dash-content-left { min-width: 0; }
+  .pane-headline-box { margin-bottom: 2.5rem; }
+
+  .sub-lead-navy {
+    font-size: 0.82rem;
+    font-weight: 850;
+    color: #12055f;
+    letter-spacing: 0.08em;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  .main-lead-navy {
+    font-size: clamp(2.2rem, 3.8vw, 3.2rem);
+    font-weight: 950;
+    color: #12055f;
+    margin: 0;
+    line-height: 1.1;
+  }
+
+  .role-lead-gold {
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    font-weight: 900;
+    color: #ca8a04;
+    margin: 0.25rem 0 0.6rem 0;
+    line-height: 1.2;
+  }
+
+  .main-lead-navy-large {
+    font-size: clamp(2.2rem, 3.5vw, 2.8rem);
+    font-weight: 950;
+    color: #12055f;
+    margin: 0 0 0.5rem 0;
+  }
+
+  .date-text, .desc-lead-gray {
+    font-size: 0.95rem;
+    color: #64748b;
+    margin: 0;
+  }
+
+  /* ========================================================
+     FRAME BIRU E-TICKET RESMI (SESUAI GAMBAR REFERENSI)
+     ======================================================== */
+  .tickets-layout-flow {
+    display: flex;
+    flex-direction: column;
+    gap: 1.8rem;
+    width: 100%;
+  }
+
+  .ticket-blue-frame {
+    background-color: #204fa6 !important; /* Warna biru tiket resmi */
+    border-radius: 20px !important;
+    padding: 2.2rem 2.6rem !important;
+    color: #ffffff !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 2rem !important;
+    box-shadow: 0 15px 35px rgba(32, 79, 166, 0.25) !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+  }
+
+  .ticket-left-info {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  .ticket-badge-row {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-bottom: 0.85rem !important;
+  }
+
+  .ticket-header-title {
+    font-size: 0.92rem !important;
+    font-weight: 900 !important;
+    color: #facc15 !important; /* Teks E-TICKET emas */
+    letter-spacing: 0.08em !important;
+  }
+
+  .ticket-status-pill {
+    font-size: 0.78rem !important;
+    font-weight: 900 !important;
+    padding: 0.35rem 1.2rem !important;
+    border-radius: 999px !important;
+    letter-spacing: 0.05em !important;
+  }
+
+  .ticket-status-pill.valid {
+    background-color: #facc15 !important;
+    color: #0f172a !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+  }
+
+  .ticket-status-pill.used {
+    background-color: #ef4444 !important;
+    color: #ffffff !important;
+  }
+
+  .ticket-divider-line {
+    height: 1px !important;
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    margin-bottom: 1.4rem !important;
+  }
+
+  .ticket-owner-name {
+    font-size: 2.2rem !important;
+    font-weight: 900 !important;
+    color: #ffffff !important;
+    margin: 0 0 0.4rem 0 !important;
+    line-height: 1.2 !important;
+  }
+
+  .ticket-type-text {
+    font-size: 1.15rem !important;
+    font-weight: 850 !important;
+    color: #facc15 !important;
+    margin-bottom: 0.75rem !important;
+  }
+
+  .ticket-detail-item {
+    font-size: 0.95rem !important;
+    color: rgba(255, 255, 255, 0.95) !important;
+    margin-bottom: 1rem !important;
+  }
+
+  .ticket-detail-item strong {
+    color: #ffffff !important;
+  }
+
+  .ticket-code-row {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.6rem !important;
+    margin-bottom: 1.2rem !important;
+    font-size: 0.95rem !important;
+  }
+
+  .ticket-code-badge {
+    background-color: rgba(18, 5, 95, 0.55) !important;
+    color: #facc15 !important;
+    padding: 0.25rem 0.8rem !important;
+    border-radius: 6px !important;
+    font-family: 'JetBrains Mono', monospace !important;
+    font-weight: 900 !important;
+    font-size: 1rem !important;
+    border: 1px solid rgba(250, 204, 21, 0.4) !important;
+  }
+
+  .ticket-note-text {
+    font-size: 0.85rem !important;
+    color: rgba(255, 255, 255, 0.85) !important;
+    margin: 0 !important;
+    font-style: italic !important;
+  }
+
+  /* KOTAK PUTIH QR DI SISI KANAN */
+  .ticket-right-qr {
+    flex-shrink: 0 !important;
+  }
+
+  .qr-white-box {
+    background-color: #ffffff !important;
+    border-radius: 18px !important;
+    padding: 1.4rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2) !important;
+    width: 210px !important;
+    height: 210px !important;
+    box-sizing: border-box !important;
+  }
+
+  .qr-image-clean {
+    width: 145px !important;
+    height: 145px !important;
+    object-fit: contain !important;
+  }
+
+  .qr-sub-label {
+    margin-top: 0.6rem !important;
+    font-size: 0.78rem !important;
+    font-weight: 850 !important;
+    color: #475569 !important;
+    letter-spacing: 0.05em !important;
+  }
+
+  @media (max-width: 900px) {
+    .ticket-blue-frame {
+      flex-direction: column-reverse !important;
+      text-align: center !important;
+      padding: 1.8rem 1.4rem !important;
+    }
+
+    .ticket-badge-row {
+      flex-direction: column !important;
+      gap: 0.5rem !important;
+    }
+
+    .ticket-code-row {
+      justify-content: center !important;
+    }
+  }
+
+  /* ===================================================
+     SIDEBAR PROFILE & NAVIGASI KANAN
+     =================================================== */
+  .dash-sidebar-right {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .profile-card-navy {
+    background: #0f0b42;
+    border-radius: 20px;
+    padding: 1.8rem 1.6rem;
+    color: #ffffff;
+    box-shadow: 0 10px 25px rgba(15, 11, 66, 0.15);
+  }
+
+  .admin-identity-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.6rem;
+  }
+
+  .avatar-circle-gold {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: #facc15;
+    color: #0f0b42;
+    font-size: 1.4rem;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .sub-identity-label { font-size: 0.72rem; color: #94a3b8; }
+
+  .admin-full-title {
+    font-size: 1.15rem;
+    font-weight: 850;
+    color: #ffffff;
+    margin: 0.1rem 0 0.25rem 0;
+  }
+
+  .badge-master-tag { font-size: 0.75rem; color: #facc15; font-weight: 750; }
+
+  .active-ticket-box {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    padding: 1.6rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .big-stat-number {
+    font-size: 2.2rem;
+    font-weight: 950;
+    color: #facc15;
+    line-height: 1;
+  }
+
+  .stat-caption-text { font-size: 0.82rem; color: #cbd5e1; }
+
+  .nav-card-white {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    padding: 1.8rem 1.4rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+  }
+
+  .nav-menu-title {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 850;
+    color: #64748b;
+    letter-spacing: 0.06em;
+    margin-bottom: 1.25rem;
+  }
+
+  .nav-vertical-menu { display: flex; flex-direction: column; gap: 0.5rem; }
+
+  .nav-menu-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    width: 100%;
+    padding: 0.85rem 1.15rem;
+    background: transparent;
+    color: #334155;
+    border: none;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 0.92rem;
+    font-weight: 750;
+    cursor: pointer;
+    text-align: left;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+  }
+
+  .nav-menu-btn:hover { background: #f1f5f9; }
+
+  .nav-menu-btn.active {
+    background: #0f0b42;
+    color: #facc15;
+    font-weight: 850;
+    box-shadow: 0 6px 18px rgba(15, 11, 66, 0.2);
+  }
+
+  .btn-exit-nav { color: #dc2626; margin-top: 0.5rem; }
+  .btn-exit-nav:hover { background: #fee2e2; }
+
+  .nav-svg { width: 19px; height: 19px; flex-shrink: 0; }
+
+  /* ===================================================
+     TABLE LEGA (WIDE TABLE SPACING) & FORM STYLES
+     =================================================== */
+  .card-white-flat {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    padding: clamp(1.8rem, 2.5vw, 2.4rem);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+  }
+
+  .margin-top-2 { margin-top: 2rem; }
+  .margin-top-1 { margin-top: 1.2rem; }
+
+  .card-header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .card-title-navy {
+    font-size: 1.25rem;
+    font-weight: 900;
+    color: #12055f;
+    margin: 0 0 0.35rem 0;
+  }
+
+  .card-desc-gray {
+    font-size: 0.88rem;
+    color: #64748b;
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .badge-count-navy {
+    display: inline-block;
+    padding: 0.45rem 1.25rem;
+    background: #12055f;
+    color: #facc15;
+    font-size: 0.82rem;
+    font-weight: 850;
+    border-radius: 999px;
+  }
+
+  .form-grid-three {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+  }
+
+  .form-grid-two {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+
+  .full-span { grid-column: 1 / -1; }
+  .full-span-two { grid-column: span 2; }
+  .full-span-three { grid-column: span 3; }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .field-label {
+    font-size: 0.84rem;
+    font-weight: 700;
+    color: #334155;
+  }
+
+  .flat-input {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 0.92rem;
+    font-family: inherit;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease;
+  }
+
+  .flat-input:focus { border-color: #12055f; }
+
+  .flat-input-tall {
+    flex: 1;
+    padding: 0.9rem 1.2rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    outline: none;
+    box-sizing: border-box;
+  }
+
+  .flat-textarea {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-family: inherit;
+    outline: none;
+    box-sizing: border-box;
+    resize: vertical;
+    margin: 0.6rem 0;
+  }
+
+  .excel-divider-wrap {
+    text-align: center;
+    position: relative;
+    margin: 1.8rem 0 1rem 0;
+  }
+
+  .excel-divider-wrap span {
+    background: #ffffff;
+    padding: 0 1rem;
+    color: #94a3b8;
+    font-size: 0.8rem;
+    font-weight: 700;
+    position: relative;
+    z-index: 2;
+  }
+
+  .excel-divider-wrap::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: #e2e8f0;
+    z-index: 1;
+  }
+
+  .btn-flat-gold {
+    padding: 0.8rem 1.8rem;
+    background: #facc15;
+    color: #12055f;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.92rem;
+    font-weight: 850;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(250, 204, 21, 0.3);
+    transition: all 0.2s ease;
+  }
+
+  .btn-flat-gold:hover { background: #eab308; transform: translateY(-1px); }
+
+  .btn-flat-green {
+    padding: 0.8rem 1.8rem;
+    background: #16a34a;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.92rem;
+    font-weight: 850;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+  }
+
+  .btn-flat-green:hover { background: #15803d; }
+
+  .btn-flat-navy-tall {
+    padding: 0.9rem 2.2rem;
+    background: #12055f;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 850;
+    cursor: pointer;
+  }
+
+  .btn-flat-navy-tall:hover { background: #200a94; }
+
+  .btn-full { width: 100%; }
+  .btn-small { padding: 0.45rem 1rem; font-size: 0.82rem; }
+
+  .form-btn-dual-row { display: flex; gap: 1rem; margin-top: 0.5rem; }
+
+  /* TABEL LEGA DAN LAPANG TIDAK MEPET */
+  .table-scroll-wrap.wide-table-space {
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+  }
+
+  .flat-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    text-align: left;
+  }
+
+  .table-spacious th {
+    padding: 1.1rem 1.4rem;
+    background: #f8fafc;
+    color: #475569;
+    font-weight: 800;
+    border-bottom: 2px solid #e2e8f0;
+    white-space: nowrap;
+  }
+
+  .table-spacious td {
+    padding: 1.1rem 1.4rem;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+  }
+
+  .text-center { text-align: center; }
+  .text-center-empty {
+    text-align: center;
+    padding: 2.5rem;
+    color: #94a3b8;
+    font-style: italic;
+  }
+
+  .password-box-gray {
+    display: inline-block;
+    padding: 0.25rem 0.6rem;
+    background: #e2e8f0;
+    color: #334155;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+  }
+
+  .btn-action-simple {
+    padding: 0.35rem 0.85rem;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    color: #334155;
+    font-size: 0.82rem;
+    font-weight: 750;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .btn-action-simple:hover { background: #fee2e2; border-color: #fca5a5; color: #dc2626; }
+  .btn-action-simple.btn-danger { color: #dc2626; border-color: #fca5a5; background: #fff5f5; }
+  .btn-action-simple.btn-danger:hover { background: #dc2626; color: #ffffff; }
+
+  .search-wrap-simple { margin-bottom: 1.25rem; }
+
+  .flat-search-input {
+    width: 100%;
+    padding: 0.75rem 1.1rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    outline: none;
+    box-sizing: border-box;
+  }
+
+  .flat-search-input:focus { border-color: #12055f; }
+
+  .green-dot-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .green-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #22c55e;
+  }
+
+  .inline-h3 { margin: 0 !important; }
+
+  .scanner-camera-display {
+    width: 100%;
+    height: 380px;
+    background-color: #0b1120;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .qr-camera-viewport { width: 100%; height: 100%; }
+
+  .btn-scan-overlay {
+    position: absolute;
+    bottom: 24px;
+    padding: 0.8rem 1.6rem;
+    background: #12055f;
+    border: 1.5px solid #facc15;
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 0.92rem;
+    font-weight: 850;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    z-index: 5;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  }
+
+  .btn-scan-overlay:hover { background: #facc15; color: #12055f; }
+
+  .manual-validate-row { display: flex; gap: 0.85rem; margin-top: 1.5rem; }
+  .btn-svg-mini { width: 18px; height: 18px; }
+
+  .card-sub-header {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .icon-memo-box { font-size: 1.5rem; }
+
+  .badge-pill-simple {
+    display: inline-block;
+    padding: 0.35rem 0.85rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 800;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.15s ease;
+  }
+
+  .badge-pill-simple:hover { transform: scale(1.05); }
+
+  .badge-redeemed { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
+  .badge-pending { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; }
+
+  .code-ticket, .code-noreg {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 800;
+  }
+
+  .code-ticket { color: #ca8a04; }
+  .code-noreg { color: #12055f; }
+
+  .link-qr-plain {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: #12055f;
+    font-weight: 750;
+    font-size: 0.82rem;
+  }
+
+  .qr-micro-thumb {
+    width: 28px;
+    height: 28px;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+  }
+
+  .badge-status-result {
+    display: inline-block;
+    padding: 0.25rem 0.65rem;
+    border-radius: 4px;
+    font-size: 0.78rem;
+    font-weight: 900;
+  }
+
+  .result-pass { background: #16a34a; color: #ffffff; }
+  .result-fail { background: #dc2626; color: #ffffff; }
+
+  .scan-alert-msg {
+    margin-top: 1rem;
+    padding: 0.95rem 1.2rem;
+    border-radius: 8px;
+    font-size: 0.88rem;
+  }
+
+  .msg-success { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
+  .msg-error { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+
+  .badge-cat-tag {
+    display: inline-block;
+    padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  .cat-makanan { background: #fef3c7; color: #b45309; }
+  .cat-minuman { background: #e0f2fe; color: #0369a1; }
+  .cat-merchandise { background: #f3e8ff; color: #6b21a8; }
+  .cat-tiket { background: #dcfce7; color: #15803d; }
+  .cat-premium { background: #fee2e2; color: #b91c1c; }
+
+  .stock-input-inline {
+    width: 80px;
+    padding: 0.45rem 0.6rem;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: #12055f;
+    outline: none;
+  }
+
+  .stock-input-inline:focus {
+    border-color: #12055f;
+    background-color: #f0fdf4;
+  }
+
+  .dash-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(4px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+  }
+
+  .dash-modal-card {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+  }
+
+  .qna-preview-text {
+    font-size: 0.92rem;
+    font-style: italic;
+    color: #475569;
+    background: #f8fafc;
+    padding: 0.75rem 1rem;
+    border-left: 3px solid #12055f;
+    border-radius: 4px;
+    margin: 0.85rem 0;
+  }
+
+  .modal-actions-row {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+  }
+
+  .btn-simple-gray {
+    padding: 0.65rem 1.2rem;
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-weight: 750;
+    cursor: pointer;
+  }
+
+  .hidden { display: none !important; }
+
+  @media (max-width: 1024px) {
+    .dash-main-container { grid-template-columns: 1fr; }
+    .dash-sidebar-right { order: -1; }
+    .ticket-eticket-official-card {
+      flex-direction: column-reverse;
+      text-align: center;
+    }
+    .ticket-top-badge-row {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .eticket-code-row {
+      justify-content: center;
+    }
+    .form-grid-three { grid-template-columns: 1fr; }
+    .form-grid-two { grid-template-columns: 1fr; }
+    .full-span-two, .full-span-three { grid-column: 1 / -1; }
+  }
+</style>

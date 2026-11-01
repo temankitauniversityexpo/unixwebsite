@@ -1,0 +1,693 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import { SITE_TITLE } from '../consts';
+---
+
+<!doctype html>
+<html lang="id">
+  <head>
+    <BaseHead 
+      title={`Admin Seleksi Pendaftaran Volunteer - ${SITE_TITLE}`} 
+      description="Portal Pengelolaan Data Seleksi & Pengumuman Volunteer TemanKita UNIX 2027" 
+    />
+  </head>
+  <body class="admin-pend-body">
+    
+    <header class="admin-pend-header">
+      <div class="admin-pend-container header-flex">
+        <div class="header-brand-wrap">
+          <span class="badge-role-tag">PANITIA SELEKSI</span>
+          <h1 class="header-title-text">Portal Admin Pendaftaran UNIX 2027</h1>
+        </div>
+        <div class="header-action-wrap">
+          <a href="/pengumuman" class="btn-back-portal">
+            &larr; Kembali ke Pengumuman
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main class="admin-pend-main">
+      <div class="admin-pend-container">
+        
+        <!-- 1. PENGATURAN JADWAL RILIS & LINK WHATSAPP GRUP -->
+        <section class="admin-card">
+          <div class="card-head-box">
+            <h2 class="card-heading">1. Pengaturan Jadwal Rilis & Tautan Grup WhatsApp</h2>
+            <p class="card-subheading">Atur waktu hitung mundur dan link grup WA resmi untuk barcode peserta yang lulus.</p>
+          </div>
+
+          <div class="config-grid-two">
+            <div class="form-group-item">
+              <label class="field-label">Tanggal & Jam Rilis Pengumuman</label>
+              <input type="datetime-local" id="conf-schedule-input" class="pend-input" />
+              <span class="field-hint">Waktu portal beralih dari H-6 jam ke formulir verifikasi akun.</span>
+            </div>
+            <div class="form-group-item">
+              <label class="field-label">Link Grup WhatsApp Resmi (Muncul Sebagai Barcode)</label>
+              <input type="url" id="conf-walink-input" placeholder="https://chat.whatsapp.com/..." class="pend-input" />
+              <span class="field-hint">Tautan ini otomatis dikonversi menjadi barcode QR bagi peserta yang LULUS.</span>
+            </div>
+          </div>
+
+          <div class="form-btn-row">
+            <button type="button" class="btn-pend-gold" id="btn-save-config">
+              Simpan Jadwal & Link WA
+            </button>
+          </div>
+        </section>
+
+        <!-- 2. IMPORT DATA DARI EXCEL & INPUT MANUAL -->
+        <div class="split-pane-grid">
+          
+          <!-- Import Copy-Paste dari Excel -->
+          <section class="admin-card">
+            <div class="card-head-box">
+              <h2 class="card-heading">2. Import Data Peserta dari Excel</h2>
+              <p class="card-subheading">Salin dan tempel baris sel tabel spreadsheet langsung ke kotak bawah.</p>
+            </div>
+
+            <p class="excel-format-note">
+              Urutan kolom Excel (Gunakan tombol Tab antar kolom):<br>
+              <code>[Nama Lengkap] [Tab] [Gmail] [Tab] [No Registrasi] [Tab] [Status LULUS / TIDAK LULUS] [Tab] [Password]</code>
+            </p>
+
+            <textarea 
+              id="excel-paste-area" 
+              class="pend-textarea" 
+              rows="6" 
+              placeholder="Contoh:&#10;Fazl Islami Pasha	fazl@gmail.com	A001-VOLUNTEERUNIX-2027	LULUS	fazl123"
+            ></textarea>
+
+            <button type="button" class="btn-pend-green" id="btn-import-excel">
+              Import Seluruh Data dari Excel
+            </button>
+          </section>
+
+          <!-- Input Manual 1 Data Peserta -->
+          <section class="admin-card">
+            <div class="card-head-box">
+              <h2 class="card-heading">Tambah Data Peserta (Manual)</h2>
+              <p class="card-subheading">Input peserta perorangan ke dalam database seleksi.</p>
+            </div>
+
+            <div class="form-stack-vertical">
+              <div class="form-group-item">
+                <label class="field-label">Nama Lengkap</label>
+                <input type="text" id="man-name" placeholder="Contoh: Fazl Islami Pasha" class="pend-input" />
+              </div>
+              <div class="form-group-item">
+                <label class="field-label">Alamat Gmail (Untuk Login)</label>
+                <input type="email" id="man-email" placeholder="contoh@gmail.com" class="pend-input" />
+              </div>
+              <div class="form-group-item">
+                <label class="field-label">No. Registrasi Peserta</label>
+                <input type="text" id="man-noreg" placeholder="Format: A001-VOLUNTEERUNIX-2027" class="pend-input" />
+              </div>
+              <div class="form-group-item">
+                <label class="field-label">Password Akun (Untuk Login)</label>
+                <input type="text" id="man-pass" placeholder="Password peserta" class="pend-input" />
+              </div>
+              <div class="form-group-item">
+                <label class="field-label">Keterangan Kelulusan</label>
+                <select id="man-status" class="pend-input">
+                  <option value="LULUS">LULUS (Hijau)</option>
+                  <option value="TIDAK LULUS">TIDAK LULUS (Merah)</option>
+                </select>
+              </div>
+
+              <button type="button" class="btn-pend-gold" id="btn-add-manual">
+                + Tambah Peserta
+              </button>
+            </div>
+          </section>
+
+        </div>
+
+        <!-- 3. DATABASE PESERTA & PENCARIAN -->
+        <section class="admin-card">
+          <div class="card-head-flex">
+            <div>
+              <h2 class="card-heading">3. Database Peserta Seleksi Volunteer UNIX 2027</h2>
+              <p class="card-subheading">Gmail & Password digunakan untuk login; Nama Lengkap & No. Registrasi tampil di pengumuman.</p>
+            </div>
+            <span class="badge-total-pill" id="badge-total-records">0 Peserta Terdata</span>
+          </div>
+
+          <div class="search-box-wrap">
+            <input type="text" id="search-candidate-input" placeholder="Cari nama lengkap, alamat Gmail, atau nomor registrasi..." class="pend-search-input" />
+          </div>
+
+          <div class="table-scroll-wrap">
+            <table class="pend-table">
+              <thead>
+                <tr>
+                  <th>No</th>
+                  <th>Nama Lengkap</th>
+                  <th>Alamat Gmail (Login)</th>
+                  <th>No. Registrasi</th>
+                  <th>Password (Login)</th>
+                  <th>Status Hasil</th>
+                  <th class="text-center">Aksi Hapus</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-candidates-list"></tbody>
+            </table>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <Footer />
+  </body>
+</html>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    // 1. CEK AUTENTIKASI PIN
+    const authGranted = sessionStorage.getItem('unix_pendaftaran_auth');
+    if (authGranted !== 'granted') {
+      alert('Akses Terbatas! Anda harus memasukkan PIN otorisasi melalui halaman pengumuman.');
+      window.location.href = '/pengumuman';
+      return;
+    }
+
+    // 2. LOAD CONFIG
+    let pendaftaranConfig = {
+      schedule: '',
+      waLink: 'https://chat.whatsapp.com/UNIX2027FamilyOfficial'
+    };
+
+    try {
+      const savedConfig = localStorage.getItem('unix_pendaftaran_config');
+      if (savedConfig) pendaftaranConfig = JSON.parse(savedConfig);
+    } catch (e) {
+      console.warn(e);
+    }
+
+    const confScheduleInput = document.getElementById('conf-schedule-input');
+    const confWaLinkInput = document.getElementById('conf-waLink-input');
+
+    if (confScheduleInput && pendaftaranConfig.schedule) {
+      confScheduleInput.value = pendaftaranConfig.schedule;
+    }
+    if (confWaLinkInput && pendaftaranConfig.waLink) {
+      confWaLinkInput.value = pendaftaranConfig.waLink;
+    }
+
+    document.getElementById('btn-save-config')?.addEventListener('click', () => {
+      pendaftaranConfig.schedule = confScheduleInput?.value || '';
+      pendaftaranConfig.waLink = confWaLinkInput?.value.trim() || '';
+      localStorage.setItem('unix_pendaftaran_config', JSON.stringify(pendaftaranConfig));
+      alert('Jadwal pengumuman dan Link WhatsApp resmi berhasil diperbarui!');
+    });
+
+    // 3. LOAD DATA PESERTA
+    let candidateList = [];
+    try {
+      candidateList = JSON.parse(localStorage.getItem('unix_pendaftaran_grad_data') || '[]');
+    } catch {
+      candidateList = [];
+    }
+
+    // Default 2 peserta jika database pendaftaran masih kosong
+    if (candidateList.length === 0) {
+      candidateList = [
+        { name: 'Fazl Islami Pasha', email: 'fazlislamipasha23@gmail.com', noreg: 'A001-VOLUNTEERUNIX-2027', status: 'LULUS', password: 'fazlpass123' },
+        { name: 'The Agent Of Change', email: 'the.agent.of.change.23@gmail.com', noreg: 'A002-VOLUNTEERUNIX-2027', status: 'TIDAK LULUS', password: 'agentpass123' }
+      ];
+      localStorage.setItem('unix_pendaftaran_grad_data', JSON.stringify(candidateList));
+    }
+
+    const tbody = document.getElementById('tbody-candidates-list');
+    const badgeTotal = document.getElementById('badge-total-records');
+    const searchInput = document.getElementById('search-candidate-input');
+
+    function renderTable(data) {
+      if (!tbody) return;
+      const list = data || candidateList;
+      if (badgeTotal) badgeTotal.textContent = `${candidateList.length} Peserta Terdata`;
+
+      if (list.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="text-center-empty">Belum ada data peserta yang terdaftar.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = list.map((c, idx) => {
+        const originalIdx = candidateList.findIndex((item) => item.email.toLowerCase() === c.email.toLowerCase());
+        const isPass = (c.status || '').toUpperCase().includes('LULUS') && !(c.status || '').toUpperCase().includes('TIDAK');
+
+        return `
+          <tr>
+            <td>${idx + 1}</td>
+            <td><strong>${c.name}</strong></td>
+            <td>${c.email}</td>
+            <td><code class="code-noreg">${c.noreg}</code></td>
+            <td><code class="code-pass">${c.password}</code></td>
+            <td>
+              <span class="status-chip ${isPass ? 'chip-pass' : 'chip-fail'}">
+                ${isPass ? 'LULUS' : 'TIDAK LULUS'}
+              </span>
+            </td>
+            <td class="text-center">
+              <button type="button" class="btn-del-item" data-del-idx="${originalIdx}">
+                Hapus
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    renderTable();
+
+    // Event Hapus Peserta
+    document.addEventListener('click', (e) => {
+      const delIdx = e.target?.getAttribute('data-del-idx');
+      if (delIdx !== null && delIdx !== undefined) {
+        const idx = parseInt(delIdx, 10);
+        if (confirm(`Hapus data peserta ${candidateList[idx]?.name} (${candidateList[idx]?.email})?`)) {
+          candidateList.splice(idx, 1);
+          localStorage.setItem('unix_pendaftaran_grad_data', JSON.stringify(candidateList));
+          renderTable();
+        }
+      }
+    });
+
+    // Pencarian Live
+    searchInput?.addEventListener('input', () => {
+      const q = searchInput.value.trim().toLowerCase();
+      const filtered = candidateList.filter((c) => 
+        (c.name || '').toLowerCase().includes(q) ||
+        (c.email || '').toLowerCase().includes(q) ||
+        (c.noreg || '').toLowerCase().includes(q)
+      );
+      renderTable(filtered);
+    });
+
+    // Tambah Manual
+    document.getElementById('btn-add-manual')?.addEventListener('click', () => {
+      const name = document.getElementById('man-name')?.value.trim();
+      const email = document.getElementById('man-email')?.value.trim().toLowerCase();
+      let noreg = document.getElementById('man-noreg')?.value.trim().toUpperCase();
+      const password = document.getElementById('man-pass')?.value.trim();
+      const status = document.getElementById('man-status')?.value || 'LULUS';
+
+      if (!name || !email || !password) {
+        alert('Nama lengkap, Gmail, dan Password wajib diisi!');
+        return;
+      }
+
+      if (candidateList.some((c) => c.email.toLowerCase() === email)) {
+        alert(`Gmail "${email}" sudah ada dalam database peserta!`);
+        return;
+      }
+
+      if (!noreg) {
+        const nextNum = candidateList.length + 1;
+        noreg = `A${nextNum.toString().padStart(3, '0')}-VOLUNTEERUNIX-2027`;
+      }
+
+      candidateList.push({ name, email, noreg, status, password });
+      localStorage.setItem('unix_pendaftaran_grad_data', JSON.stringify(candidateList));
+      renderTable();
+
+      document.getElementById('man-name').value = '';
+      document.getElementById('man-email').value = '';
+      document.getElementById('man-noreg').value = '';
+      document.getElementById('man-pass').value = '';
+
+      alert(`Peserta ${name} (${noreg}) berhasil ditambahkan!`);
+    });
+
+    // Import dari Excel (Copy-Paste)
+    document.getElementById('btn-import-excel')?.addEventListener('click', () => {
+      const rawText = document.getElementById('excel-paste-area')?.value.trim();
+      if (!rawText) {
+        alert('Silakan tempelkan data baris dari Excel terlebih dahulu!');
+        return;
+      }
+
+      const lines = rawText.split('\n');
+      let count = 0;
+
+      lines.forEach((line) => {
+        const parts = line.split('\t').map((p) => p.trim());
+        // [Nama Lengkap] [Gmail] [No Registrasi] [Status] [Password]
+        if (parts.length >= 4) {
+          const name = parts[0];
+          const email = parts[1].toLowerCase();
+          const noreg = parts[2] ? parts[2].toUpperCase() : `A${(candidateList.length + 1).toString().padStart(3, '0')}-VOLUNTEERUNIX-2027`;
+          const rawStatus = parts[3].toUpperCase();
+          const status = rawStatus.includes('LULUS') && !rawStatus.includes('TIDAK') ? 'LULUS' : 'TIDAK LULUS';
+          const password = parts[4] || 'unix2027';
+
+          if (email && !candidateList.some((c) => c.email.toLowerCase() === email)) {
+            candidateList.push({ name, email, noreg, status, password });
+            count++;
+          }
+        }
+      });
+
+      localStorage.setItem('unix_pendaftaran_grad_data', JSON.stringify(candidateList));
+      renderTable();
+      document.getElementById('excel-paste-area').value = '';
+      alert(`Berhasil mengimpor ${count} data peserta dari Excel!`);
+    });
+  });
+</script>
+
+<style>
+  .admin-pend-body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background-color: #f8fafc;
+    color: #0f172a;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .admin-pend-container {
+    width: 100%;
+    max-width: 1360px;
+    margin: 0 auto;
+    padding: 0 clamp(1.2rem, 3.5vw, 3rem);
+    box-sizing: border-box;
+  }
+
+  .admin-pend-header {
+    background: #12055f;
+    color: #ffffff;
+    padding: 1.8rem 0;
+    box-shadow: 0 4px 15px rgba(18, 5, 95, 0.2);
+  }
+
+  .header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .badge-role-tag {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background: #facc15;
+    color: #12055f;
+    font-size: 0.75rem;
+    font-weight: 850;
+    border-radius: 6px;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.35rem;
+  }
+
+  .header-title-text {
+    font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+    font-weight: 950;
+    color: #ffffff;
+    margin: 0;
+  }
+
+  .btn-back-portal {
+    padding: 0.65rem 1.4rem;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1.5px solid rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 800;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  .btn-back-portal:hover {
+    background: #facc15;
+    color: #12055f;
+    border-color: #facc15;
+  }
+
+  .admin-pend-main {
+    flex: 1;
+    padding: 3rem 0 5rem 0;
+  }
+
+  .admin-card {
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
+  }
+
+  .card-head-box { margin-bottom: 1.4rem; }
+  .card-head-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.4rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .card-heading {
+    font-size: 1.25rem;
+    font-weight: 900;
+    color: #12055f;
+    margin: 0 0 0.3rem 0;
+  }
+
+  .card-subheading {
+    font-size: 0.88rem;
+    color: #64748b;
+    margin: 0;
+  }
+
+  .config-grid-two {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.4rem;
+  }
+
+  .form-group-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .field-label {
+    font-size: 0.84rem;
+    font-weight: 750;
+    color: #334155;
+  }
+
+  .field-hint {
+    font-size: 0.78rem;
+    color: #94a3b8;
+  }
+
+  .pend-input {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 0.92rem;
+    font-family: inherit;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease;
+  }
+
+  .pend-input:focus { border-color: #12055f; }
+
+  .pend-textarea {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-family: inherit;
+    outline: none;
+    box-sizing: border-box;
+    resize: vertical;
+    margin-bottom: 1rem;
+  }
+
+  .pend-textarea:focus { border-color: #12055f; }
+
+  .excel-format-note {
+    font-size: 0.85rem;
+    color: #475569;
+    line-height: 1.5;
+    margin: 0 0 0.85rem 0;
+  }
+
+  .excel-format-note code {
+    display: inline-block;
+    background: #f1f5f9;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    color: #12055f;
+    font-weight: 800;
+    margin-top: 0.35rem;
+  }
+
+  .btn-pend-gold {
+    padding: 0.8rem 1.8rem;
+    background: #facc15;
+    color: #12055f;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.92rem;
+    font-weight: 850;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(250, 204, 21, 0.3);
+    transition: all 0.2s ease;
+  }
+
+  .btn-pend-gold:hover {
+    background: #eab308;
+    transform: translateY(-1px);
+  }
+
+  .btn-pend-green {
+    padding: 0.85rem 2rem;
+    background: #16a34a;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.92rem;
+    font-weight: 850;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25);
+    transition: all 0.2s ease;
+  }
+
+  .btn-pend-green:hover { background: #15803d; }
+
+  .split-pane-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 2rem;
+  }
+
+  .form-stack-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .badge-total-pill {
+    padding: 0.35rem 1.1rem;
+    background: #12055f;
+    color: #facc15;
+    font-size: 0.82rem;
+    font-weight: 850;
+    border-radius: 999px;
+  }
+
+  .search-box-wrap { margin-bottom: 1.4rem; }
+
+  .pend-search-input {
+    width: 100%;
+    padding: 0.85rem 1.2rem;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 0.92rem;
+    outline: none;
+    box-sizing: border-box;
+  }
+
+  .pend-search-input:focus { border-color: #12055f; }
+
+  .table-scroll-wrap { overflow-x: auto; }
+
+  .pend-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    text-align: left;
+  }
+
+  .pend-table th {
+    background: #f8fafc;
+    color: #475569;
+    font-weight: 800;
+    padding: 0.9rem 1.1rem;
+    border-bottom: 2px solid #e2e8f0;
+    white-space: nowrap;
+  }
+
+  .pend-table td {
+    padding: 0.95rem 1.1rem;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+  }
+
+  .code-noreg {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    color: #3730a3;
+    background: #e0e7ff;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-weight: 800;
+  }
+
+  .code-pass {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    color: #0f172a;
+    background: #f1f5f9;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+  }
+
+  .status-chip {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.78rem;
+    font-weight: 900;
+  }
+
+  .chip-pass { background: #16a34a; color: #ffffff; }
+  .chip-fail { background: #dc2626; color: #ffffff; }
+
+  .btn-del-item {
+    padding: 0.35rem 0.85rem;
+    background: #fee2e2;
+    border: 1px solid #fca5a5;
+    color: #dc2626;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    font-weight: 750;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-del-item:hover {
+    background: #dc2626;
+    color: #ffffff;
+  }
+
+  .text-center { text-align: center; }
+  .text-center-empty {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #94a3b8;
+    font-style: italic;
+  }
+
+  @media (max-width: 960px) {
+    .config-grid-two, .split-pane-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
